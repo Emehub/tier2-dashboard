@@ -1,0 +1,1054 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Ghana Tier 2 Baseline Dashboard</title>
+<meta name="theme-color" content="#0b5b3b"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<script>try{const t=localStorage.getItem('gt2-theme');if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
+<style>
+:root{
+  color-scheme:light;
+  --font:"Inter",ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  --bg:#f7f9f8;--bg2:#ffffff;
+  --ink:#111a16;--ink2:#2e3a34;--muted:#66726c;--faint:#98a29d;
+  --glass:rgba(255,255,255,.78);--glass-strong:rgba(255,255,255,.92);--glass-soft:rgba(248,250,249,.75);--glass-hover:rgba(240,246,243,.9);
+  --rim-a:rgba(255,255,255,1);--rim-b:rgba(255,255,255,.2);--rim-c:rgba(255,255,255,.7);
+  --hair:rgba(17,40,30,.09);--hair2:rgba(17,40,30,.055);
+  --shadow:0 0 0 1px rgba(17,40,30,.05),0 1px 2px rgba(17,40,30,.04),0 8px 24px -10px rgba(17,40,30,.12),0 24px 48px -28px rgba(17,40,30,.14);
+  --shadow-sm:0 0 0 1px rgba(17,40,30,.05),0 1px 2px rgba(17,40,30,.04),0 6px 16px -8px rgba(17,40,30,.12);
+  --blur:blur(24px) saturate(175%);
+  --green:#0b5b3b;--green2:#14794f;--green3:#2fa36b;--green4:#86d8ab;
+  --good:#11744a;--good-bg:rgba(47,163,107,.14);--good-line:rgba(47,163,107,.30);
+  --warn:#965800;--warn-bg:rgba(232,162,38,.17);--warn-line:rgba(232,162,38,.36);
+  --bad:#b0261b;--bad-bg:rgba(222,72,56,.12);--bad-line:rgba(222,72,56,.30);
+  --info:#1d5799;--info-bg:rgba(62,124,214,.12);--info-line:rgba(62,124,214,.28);
+  --purple:#6440bd;--purple-bg:rgba(120,82,222,.12);
+  --track:rgba(17,40,30,.07);--bar1:#3cb97b;--bar2:#0e6a43;
+  --th:rgba(250,251,250,.97);
+  --orb1:rgba(46,180,112,.16);--orb2:rgba(248,192,58,.14);--orb3:rgba(232,92,74,.08);--orb4:rgba(64,158,204,.10);
+  --top:rgba(255,255,255,.80);--top-ink:var(--ink);--top-muted:var(--muted);
+  --r-xl:26px;--r-lg:20px;--r-md:15px;--r-sm:11px;
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#05110c;--bg2:#0b1712;
+  --ink:#e6f2ea;--ink2:#c3d5ca;--muted:#93a99c;--faint:#6c8276;
+  --glass:rgba(24,46,36,.46);--glass-strong:rgba(26,50,39,.80);--glass-soft:rgba(255,255,255,.035);--glass-hover:rgba(255,255,255,.08);
+  --rim-a:rgba(255,255,255,.26);--rim-b:rgba(255,255,255,.03);--rim-c:rgba(255,255,255,.10);
+  --hair:rgba(255,255,255,.09);--hair2:rgba(255,255,255,.055);
+  --shadow:0 1px 1px rgba(0,0,0,.35),0 14px 36px -12px rgba(0,0,0,.6),0 30px 60px -30px rgba(0,0,0,.5);
+  --shadow-sm:0 1px 1px rgba(0,0,0,.3),0 8px 20px -10px rgba(0,0,0,.55);
+  --good:#62d69c;--good-bg:rgba(62,200,130,.14);--good-line:rgba(62,200,130,.30);
+  --warn:#f3bd58;--warn-bg:rgba(243,189,88,.13);--warn-line:rgba(243,189,88,.30);
+  --bad:#ff8f80;--bad-bg:rgba(255,120,100,.12);--bad-line:rgba(255,120,100,.28);
+  --info:#8ab9f4;--info-bg:rgba(120,170,240,.12);--info-line:rgba(120,170,240,.26);
+  --purple:#bba5ff;--purple-bg:rgba(170,140,255,.12);
+  --track:rgba(255,255,255,.08);--bar1:#46c486;--bar2:#1a8556;
+  --th:rgba(18,36,28,.96);
+  --orb1:rgba(28,150,92,.38);--orb2:rgba(214,156,36,.20);--orb3:rgba(200,68,56,.16);--orb4:rgba(36,118,170,.22);
+  --top:rgba(9,30,22,.64);
+}
+
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;min-height:100vh;color:var(--ink);font-family:var(--font);font-size:14px;line-height:1.45;-webkit-font-smoothing:antialiased;font-feature-settings:"cv11","ss01";
+  background:radial-gradient(1200px 700px at 8% -10%,var(--bg2),transparent 60%),linear-gradient(180deg,var(--bg),var(--bg2));background-attachment:fixed;background-color:var(--bg)}
+button,select,input{font:inherit;color:inherit}.app{min-height:100vh;position:relative;z-index:1}.hidden{display:none!important}
+
+/* ambient light field behind the glass */
+.ambient{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none}
+.orb{position:absolute;border-radius:50%;filter:blur(70px);opacity:1;will-change:transform}
+.orb.o1{width:46vw;height:46vw;left:-10vw;top:8vh;background:radial-gradient(circle,var(--orb1),transparent 68%);animation:drift1 28s ease-in-out infinite alternate}
+.orb.o2{width:38vw;height:38vw;right:-6vw;top:-8vh;background:radial-gradient(circle,var(--orb2),transparent 68%);animation:drift2 34s ease-in-out infinite alternate}
+.orb.o3{width:34vw;height:34vw;right:12vw;bottom:-14vh;background:radial-gradient(circle,var(--orb3),transparent 68%);animation:drift1 40s ease-in-out infinite alternate-reverse}
+.orb.o4{width:30vw;height:30vw;left:28vw;bottom:-6vh;background:radial-gradient(circle,var(--orb4),transparent 68%);animation:drift2 36s ease-in-out infinite alternate-reverse}
+.grain{position:absolute;inset:0;opacity:.035;mix-blend-mode:overlay;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>")}
+@keyframes drift1{to{transform:translate3d(6vw,4vh,0) scale(1.08)}}
+@keyframes drift2{to{transform:translate3d(-5vw,6vh,0) scale(.94)}}
+
+/* ---------- liquid glass material ---------- */
+.panel,.kpi,.filterbar,.hero,.notice,.modal,.sidebar{
+  position:relative;isolation:isolate;background:var(--glass);
+  -webkit-backdrop-filter:var(--blur);backdrop-filter:var(--blur);box-shadow:var(--shadow)}
+.panel::before,.kpi::before,.filterbar::before,.hero::before,.notice::before,.modal::before,.sidebar::before{
+  content:"";position:absolute;inset:0;border-radius:inherit;padding:1px;pointer-events:none;z-index:2;
+  background:linear-gradient(150deg,var(--rim-a),var(--rim-b) 38%,var(--rim-b) 62%,var(--rim-c));
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude}
+.panel::after,.hero::after,.modal::after{
+  content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;z-index:-1;
+  background:linear-gradient(170deg,rgba(255,255,255,.22),transparent 34%)}
+
+/* ---------- app frame: sidebar + content ---------- */
+.app{display:grid;grid-template-columns:280px minmax(0,1fr)}
+.sidebar{position:sticky;top:14px;height:calc(100vh - 28px);margin:14px 0 14px 14px;border-radius:var(--r-xl);display:flex;flex-direction:column;overflow:hidden;z-index:60;background:var(--top);color:var(--top-ink)}
+.side-scroll{flex:1;overflow-y:auto;padding:18px 14px 16px;scrollbar-width:thin;scrollbar-color:var(--hair) transparent}
+.flagline{height:4px;flex:none;background:linear-gradient(90deg,#ce1126 0 33.3%,#fcd116 33.3% 66.6%,#006b3f 66.6%)}
+.brand{display:flex;gap:12px;align-items:center;padding:2px 6px 18px;border-bottom:1px solid var(--hair2);margin-bottom:16px}
+.logo{width:42px;height:42px;border-radius:14px;flex:none;display:grid;place-items:center;font-size:19px;font-weight:800;color:#06351f;
+  background:radial-gradient(120% 120% at 25% 15%,#ffffff 0,#c8f2d9 30%,#46bf82 75%,#1d8a58 100%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.9),inset 0 -6px 12px rgba(0,60,30,.25),0 6px 14px -4px rgba(10,60,35,.35)}
+.brand h1{font-size:15px;margin:0;line-height:1.2;letter-spacing:-.01em;font-weight:750}
+.brand p{margin:3px 0 0;color:var(--top-muted);font-size:11.5px;line-height:1.35}
+.sidelabel{font-size:10.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);padding:0 10px;margin:0 0 8px}
+
+.mainnav{display:flex;flex-direction:column;gap:3px;margin-bottom:20px}
+.navbtn{width:100%;border:0;background:transparent;color:var(--ink2);border-radius:14px;padding:8px 10px;cursor:pointer;text-align:left;display:flex;gap:11px;align-items:center;min-width:0;
+  transition:background .22s ease,color .22s ease,box-shadow .22s ease,transform .18s ease}
+.navbtn:hover{background:var(--glass-hover);color:var(--ink)}
+.navbtn:active{transform:scale(.985)}
+.navbtn.active{color:#fff;background:linear-gradient(180deg,var(--green2),var(--green));box-shadow:inset 0 1px 0 rgba(255,255,255,.25),0 8px 18px -8px rgba(11,91,59,.6)}
+.navicon{width:34px;height:34px;border-radius:11px;display:grid;place-items:center;background:#fff;color:var(--green2);flex:none;box-shadow:0 0 0 1px var(--hair),0 1px 2px rgba(17,40,30,.06);transition:background .22s,color .22s}
+.navicon svg,.toolbtn svg,.menubtn svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.navbtn.active .navicon{background:rgba(255,255,255,.18);color:#fff;box-shadow:inset 0 1px 0 rgba(255,255,255,.22)}
+.navcopy{min-width:0}.navtitle{display:block;font-weight:650;font-size:13.5px;white-space:nowrap}
+.navsub{display:block;font-size:11.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:1px}
+.navbtn.active .navsub{color:rgba(225,245,233,.85)}
+
+.tools{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:18px}
+.toolbtn{display:flex;align-items:center;gap:8px;padding:9px 10px;border-radius:12px;border:1px solid var(--hair);background:var(--glass-strong);color:var(--ink2);font-size:12.5px;font-weight:600;cursor:pointer;transition:background .18s,color .18s,transform .18s}
+.toolbtn:hover{background:var(--glass-hover);color:var(--ink)}.toolbtn:active{transform:scale(.97)}
+.toolbtn svg{color:var(--green2);flex:none}
+
+.sidecard{border-radius:var(--r-md);padding:14px;background:var(--glass-soft);border:1px solid var(--hair2)}
+.sidecard .row{display:flex;justify-content:space-between;align-items:baseline;font-size:12px;color:var(--muted);margin-bottom:8px}
+.sidecard .row b{color:var(--ink);font-size:15px;font-weight:750;font-variant-numeric:tabular-nums}
+.sideprog{height:7px;border-radius:999px;background:var(--track);overflow:hidden;margin-bottom:6px}
+.sideprog span{display:block;height:100%;width:0;border-radius:999px;background:linear-gradient(90deg,var(--bar2),var(--bar1));transition:width 1s cubic-bezier(.2,.8,.2,1)}
+.sidecard small{display:block;font-size:11.5px;color:var(--muted);margin-bottom:12px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:5px 10px;border-radius:999px;font-size:11px;font-weight:650;border:1px solid transparent;white-space:nowrap}
+.chip.live{background:var(--good-bg);border-color:var(--good-line);color:var(--good)}
+.chip.demo{background:var(--warn-bg);border-color:var(--warn-line);color:var(--warn);letter-spacing:.03em}
+.pulse{display:inline-block;width:7px;height:7px;border-radius:50%;background:#2fc77a;box-shadow:0 0 0 0 rgba(47,199,122,.7);animation:pulse 2s infinite}
+@keyframes pulse{70%{box-shadow:0 0 0 7px rgba(47,199,122,0)}100%{box-shadow:0 0 0 0 rgba(47,199,122,0)}}
+:root[data-theme="dark"] .navicon{background:rgba(255,255,255,.07);color:var(--ink2);box-shadow:none}
+:root[data-theme="dark"] .toolbtn{background:rgba(255,255,255,.05)}
+:root[data-theme="dark"] .toolbtn svg{color:var(--good)}
+
+.navbadge{margin-left:auto;min-width:22px;height:22px;padding:0 7px;border-radius:999px;background:#d0453a;color:#fff;font-size:11px;font-weight:750;display:grid;place-items:center;flex:none;box-shadow:0 0 0 3px rgba(208,69,58,.16);font-variant-numeric:tabular-nums}
+.navbadge:empty{display:none}
+
+/* ---------- live data issues ---------- */
+.issues-panel{margin-bottom:16px}
+.issuechips{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.issuelist{display:grid;gap:7px;max-height:380px;overflow:auto;padding-right:2px}
+.issue{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;padding:10px 12px;border:1px solid var(--hair2);border-radius:var(--r-md);background:var(--glass-soft);transition:background .2s}
+.issue:hover{background:var(--glass-hover)}
+.issue b{font-size:13px;font-weight:650}.issue p{margin:2px 0 0;font-size:12px;color:var(--muted)}
+.issue .when{font-size:11.5px;color:var(--muted);white-space:nowrap;text-align:right}
+.issue.fresh{border-color:var(--bad-line);box-shadow:inset 3px 0 0 #d0453a}
+.issue.fresh .when::before{content:"NEW";display:inline-block;margin-right:6px;padding:1px 6px;border-radius:999px;background:#d0453a;color:#fff;font-size:9.5px;font-weight:800;letter-spacing:.05em}
+.issues-empty{padding:18px;text-align:center;color:var(--good);font-weight:600;font-size:13px;border:1px dashed var(--good-line);border-radius:var(--r-md);background:var(--good-bg)}
+.linkbtn{margin-top:12px;border:0;background:none;color:var(--good);font-weight:650;font-size:13px;cursor:pointer;padding:4px 0}
+.linkbtn:hover{text-decoration:underline}
+
+/* ---------- content header ---------- */
+.mainhead{display:flex;align-items:center;justify-content:space-between;gap:14px;margin:0 0 14px;min-height:40px}
+.crumb{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted);min-width:0}
+.crumb b{color:var(--ink);font-weight:650}.crumb .sep{color:var(--faint)}
+.headright{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted);white-space:nowrap}
+.headright .chip{background:var(--glass-strong);border-color:var(--hair);color:var(--ink2);font-weight:600}
+.menubtn{display:none;width:40px;height:40px;border-radius:12px;border:1px solid var(--hair);background:var(--glass-strong);color:var(--ink);place-items:center;cursor:pointer;flex:none;box-shadow:var(--shadow-sm)}
+.scrim{display:none}
+
+/* ---------- layout ---------- */
+.shell{max-width:1500px;width:100%;margin:0 auto;padding:20px 26px 40px;min-width:0}
+.notice{border-radius:var(--r-md);padding:11px 16px;margin-bottom:14px;color:var(--ink2);font-size:12.5px;display:flex;justify-content:space-between;gap:18px;align-items:center;
+  background:linear-gradient(90deg,var(--warn-bg),var(--glass) 55%);box-shadow:var(--shadow-sm)}
+.notice b{color:var(--warn)}.notice strong{white-space:nowrap;font-weight:650;color:var(--ink);font-variant-numeric:tabular-nums;padding:5px 11px;border-radius:999px;background:var(--glass-strong);border:1px solid var(--hair);font-size:12px}
+
+.filterbar{display:grid;grid-template-columns:1.25fr repeat(5,minmax(120px,1fr)) auto;gap:10px;padding:13px 14px;border-radius:var(--r-lg);margin-bottom:22px;align-items:end;box-shadow:var(--shadow-sm)}
+.filtertitle{align-self:center;padding-left:4px}.filtertitle b{display:block;font-size:13.5px;font-weight:700}.filtertitle span{font-size:12px;color:var(--muted)}
+.filtergroup label{display:block;font-size:10.5px;text-transform:uppercase;letter-spacing:.08em;font-weight:700;color:var(--muted);margin:0 0 5px 4px}
+.filtergroup select{width:100%;-webkit-appearance:none;appearance:none;border:1px solid var(--hair);border-radius:12px;background:var(--glass-strong) url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%237d8f85' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'><path d='m6 9 6 6 6-6'/></svg>") no-repeat right 10px center;
+  padding:9px 30px 9px 11px;color:var(--ink);font-size:13px;outline:none;cursor:pointer;box-shadow:inset 0 1px 0 rgba(255,255,255,.4);transition:border-color .2s,box-shadow .2s}
+.filtergroup select:hover{border-color:var(--good-line)}
+.filtergroup select:focus-visible{border-color:var(--green3);box-shadow:0 0 0 4px var(--good-bg)}
+.resetbtn{border:1px solid var(--good-line);background:var(--good-bg);border-radius:12px;padding:9px 16px;font-size:13px;font-weight:650;color:var(--good);cursor:pointer;transition:.2s}
+.resetbtn:hover{background:var(--green2);color:#fff;border-color:var(--green2)}
+
+.page{display:none}.page.active{display:block;animation:rise .45s cubic-bezier(.2,.8,.2,1)}
+@keyframes rise{from{opacity:0;transform:translateY(8px)}}
+.sectiontitle{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;margin:0 2px 14px}
+.sectiontitle h2{font-size:28px;margin:0;letter-spacing:-.03em;font-weight:780;line-height:1.1}
+.sectiontitle p{font-size:13.5px;color:var(--muted);margin:6px 0 0;line-height:1.55;max-width:880px}
+
+.pill,.mini-pill{font-weight:650;white-space:nowrap;border-radius:999px;border:1px solid var(--info-line);background:var(--info-bg);color:var(--info);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+.pill{font-size:12px;padding:7px 13px}.mini-pill{font-size:11px;padding:5px 10px}
+.pill.good,.mini-pill:not(.warn):not(.bad):not(.blue){background:var(--good-bg);color:var(--good);border-color:var(--good-line)}
+.pill.warn,.mini-pill.warn{background:var(--warn-bg);color:var(--warn);border-color:var(--warn-line)}
+.pill.bad,.mini-pill.bad{background:var(--bad-bg);color:var(--bad);border-color:var(--bad-line)}
+
+.subnav{display:inline-flex;max-width:100%;gap:3px;overflow-x:auto;margin:0 0 16px;padding:4px;border-radius:999px;background:var(--glass-soft);border:1px solid var(--hair);
+  -webkit-backdrop-filter:var(--blur);backdrop-filter:var(--blur);scrollbar-width:none}
+.subnav::-webkit-scrollbar{display:none}
+.subbtn{border:0;background:transparent;color:var(--ink2);border-radius:999px;padding:8px 15px;font-size:12.5px;font-weight:600;cursor:pointer;white-space:nowrap;transition:background .22s,color .22s,box-shadow .22s}
+.subbtn:hover{background:var(--glass-hover)}
+.subbtn.active{color:#fff;background:linear-gradient(180deg,var(--green2),var(--green));box-shadow:inset 0 1px 0 rgba(255,255,255,.25),0 4px 12px -4px rgba(11,91,59,.6)}
+.subpage{display:none}.subpage.active{display:block;animation:rise .35s cubic-bezier(.2,.8,.2,1)}
+
+/* ---------- hero ---------- */
+.hero{display:grid;grid-template-columns:auto 1fr;gap:28px;align-items:center;padding:22px 26px;border-radius:var(--r-xl);margin-bottom:16px;overflow:hidden}
+.hero .glow{position:absolute;right:-80px;top:-120px;width:380px;height:380px;border-radius:50%;background:radial-gradient(circle,var(--orb2),transparent 65%);z-index:-1;opacity:.7}
+.ring-wrap{position:relative;width:148px;height:148px;flex:none}
+.ring{width:100%;height:100%;transform:rotate(-90deg);overflow:visible}
+.ring circle{fill:none;stroke-width:12}
+.ring-track{stroke:var(--track)}
+.ring-fill{stroke:url(#ringGrad);stroke-linecap:round;stroke-dasharray:326.73;stroke-dashoffset:326.73;transition:stroke-dashoffset 1.1s cubic-bezier(.2,.8,.2,1);filter:drop-shadow(0 4px 8px rgba(30,140,90,.35))}
+.ring-label{position:absolute;inset:0;display:grid;place-content:center;text-align:center}
+.ring-label b{font-size:30px;font-weight:800;letter-spacing:-.04em;font-variant-numeric:tabular-nums;line-height:1}
+.ring-label span{font-size:11.5px;color:var(--muted);margin-top:4px}
+.hero-copy .eyebrow{font-size:11px;text-transform:uppercase;letter-spacing:.1em;font-weight:700;color:var(--good)}
+.hero-copy h3{font-size:22px;margin:6px 0 4px;letter-spacing:-.02em;font-weight:720;line-height:1.25}
+.hero-copy h3 span{font-variant-numeric:tabular-nums}
+.hero-copy p{margin:0 0 16px;color:var(--muted);font-size:13px}
+.hero-stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.hero-stats div{padding:11px 13px;border-radius:var(--r-md);background:var(--glass-soft);border:1px solid var(--hair2)}
+.hero-stats b{display:block;font-size:19px;font-weight:750;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.hero-stats span{font-size:11.5px;color:var(--muted)}
+
+/* ---------- KPI tiles ---------- */
+.kpis{display:grid;grid-template-columns:repeat(6,minmax(140px,1fr));gap:12px;margin-bottom:16px}
+.kpi{--accent:var(--green3);border-radius:var(--r-lg);padding:15px 16px 14px;min-height:118px;overflow:hidden;box-shadow:var(--shadow-sm);transition:transform .25s cubic-bezier(.2,.8,.2,1),box-shadow .25s}
+.kpi:hover{transform:translateY(-2px);box-shadow:var(--shadow)}
+.kpi::after{content:"";position:absolute;width:120px;height:120px;right:-42px;top:-52px;border-radius:50%;background:radial-gradient(circle,var(--accent),transparent 70%);opacity:.28;z-index:-1}
+.kpi.good{--accent:#2fb36f}.kpi.warn{--accent:#eba32a}.kpi.bad{--accent:#e2564a}.kpi.locked{--accent:#8fa198}
+.kpi .eyebrow{display:flex;align-items:center;gap:7px;font-size:10.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:700}
+.kpi .eyebrow::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 22%,transparent);flex:none}
+.kpi .value{font-size:30px;font-weight:780;letter-spacing:-.04em;margin-top:10px;line-height:1.05;font-variant-numeric:tabular-nums}
+.kpi .sub{font-size:12px;color:var(--muted);line-height:1.4;margin-top:6px}
+.kpi.good .value{color:var(--good)}.kpi.warn .value{color:var(--warn)}.kpi.bad .value{color:var(--bad)}
+.kpi.locked .value{color:var(--faint);font-size:20px;letter-spacing:.06em;margin-top:16px}
+
+/* ---------- grids & panels ---------- */
+.grid2{display:grid;grid-template-columns:1.55fr .95fr;gap:16px;margin-bottom:16px}
+.grid2eq{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+.grid3{display:grid;grid-template-columns:1.15fr 1fr 1fr;gap:16px;margin-bottom:16px;align-items:start}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}
+.panel{border-radius:var(--r-xl);padding:20px 20px 18px;min-width:0;margin-bottom:0}
+.page > .panel,.subpage > .panel,.subpage > .grid2 + .panel,.subpage > .grid2eq + .panel{margin-bottom:16px}
+.panelhead{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:6px}
+.panel h3{font-size:15.5px;margin:0;font-weight:700;letter-spacing:-.01em}
+.panel .desc{font-size:12.5px;color:var(--muted);line-height:1.5;margin:4px 0 16px}
+.panelhead .desc{margin-bottom:8px}
+
+/* ---------- tables ---------- */
+.tablewrap{overflow:auto;border:1px solid var(--hair);border-radius:var(--r-md);background:var(--glass-soft);max-height:560px}
+table{width:100%;border-collapse:collapse;font-size:13px;min-width:760px}
+th{background:var(--th);color:var(--muted);text-align:left;font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;padding:11px 12px;border-bottom:1px solid var(--hair);position:sticky;top:0;z-index:1}
+td{padding:11px 12px;border-bottom:1px solid var(--hair2);vertical-align:middle;color:var(--ink2)}
+td b{color:var(--ink);font-weight:650}
+tbody tr{transition:background .15s}tbody tr:hover{background:var(--glass-hover)}
+tr:last-child td{border-bottom:0}.num{text-align:right;font-variant-numeric:tabular-nums}.muted{color:var(--muted);font-size:12px}
+
+/* ---------- status ---------- */
+.status{display:inline-flex;gap:6px;align-items:center;padding:4px 10px 4px 8px;border-radius:999px;font-size:11.5px;font-weight:650;white-space:nowrap;border:1px solid transparent}
+.dot{width:7px;height:7px;border-radius:50%;background:currentColor;box-shadow:0 0 0 2.5px color-mix(in srgb,currentColor 20%,transparent)}
+.s-good{background:var(--good-bg);color:var(--good);border-color:var(--good-line)}
+.s-warn{background:var(--warn-bg);color:var(--warn);border-color:var(--warn-line)}
+.s-bad{background:var(--bad-bg);color:var(--bad);border-color:var(--bad-line)}
+.s-blue{background:var(--info-bg);color:var(--info);border-color:var(--info-line)}
+.s-purple{background:var(--purple-bg);color:var(--purple)}
+
+.progress{height:8px;background:var(--track);border-radius:999px;overflow:hidden;min-width:90px}.progress span{display:block;height:100%;background:linear-gradient(90deg,var(--bar2),var(--bar1));border-radius:999px}
+
+/* ---------- bar charts ---------- */
+.chartbar{display:flex;flex-direction:column;gap:6px}
+.barrow{display:grid;grid-template-columns:minmax(130px,190px) 1fr 70px;gap:12px;align-items:center;font-size:12.5px;color:var(--ink2);padding:5px 8px;margin:0 -8px;border-radius:10px;transition:background .15s;cursor:default}
+.barrow:hover{background:var(--glass-hover)}
+.barrow > span:first-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.barrow .bar{height:12px;background:var(--track);border-radius:999px;overflow:hidden;box-shadow:inset 0 1px 2px rgba(0,0,0,.06)}
+.barrow .bar span{position:relative;height:100%;display:block;border-radius:999px;background:linear-gradient(90deg,var(--bar2),var(--bar1));transform-origin:left center;animation:grow .9s cubic-bezier(.2,.8,.2,1) both;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.35)}
+.barrow .bar span::after{content:"";position:absolute;left:4px;right:4px;top:2px;height:3px;border-radius:999px;background:rgba(255,255,255,.35)}
+@keyframes grow{from{transform:scaleX(0)}}
+.barrow .pct{text-align:right;font-weight:700;color:var(--ink);font-variant-numeric:tabular-nums}
+.barrow .pct small{display:block;font-size:10.5px;color:var(--muted);font-weight:500}
+
+/* ---------- funnel ---------- */
+.funnel{display:flex;align-items:stretch;gap:14px;overflow:auto;padding:4px 2px 8px}
+.funnelstep{flex:1;min-width:112px;text-align:center;padding:16px 10px;border-radius:var(--r-md);background:var(--glass-soft);border:1px solid var(--hair);position:relative;box-shadow:inset 0 1px 0 rgba(255,255,255,.3)}
+.funnelstep:not(:last-child):after{content:"";position:absolute;right:-11px;top:50%;width:8px;height:8px;border-top:2px solid var(--faint);border-right:2px solid var(--faint);transform:translateY(-50%) rotate(45deg)}
+.funnelstep b{display:block;font-size:24px;font-weight:780;letter-spacing:-.03em;font-variant-numeric:tabular-nums}
+.funnelstep span{font-size:10.5px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);font-weight:700}
+.funnelstep.good{background:var(--good-bg);border-color:var(--good-line)}.funnelstep.good b{color:var(--good)}
+.funnelstep.bad{background:var(--bad-bg);border-color:var(--bad-line)}.funnelstep.bad b{color:var(--bad)}
+
+/* ---------- lists ---------- */
+.actionlist{display:flex;flex-direction:column;gap:8px}
+.action{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:start;padding:12px;border:1px solid var(--hair2);border-radius:var(--r-md);background:var(--glass-soft);transition:background .2s}
+.action:hover{background:var(--glass-hover)}
+.sev{font-size:10px;font-weight:800;letter-spacing:.05em;padding:4px 8px;border-radius:999px;border:1px solid transparent}
+.sev.critical{background:var(--bad-bg);color:var(--bad);border-color:var(--bad-line)}.sev.warning{background:var(--warn-bg);color:var(--warn);border-color:var(--warn-line)}.sev.review{background:var(--info-bg);color:var(--info);border-color:var(--info-line)}
+.action b{font-size:13px;font-weight:650}.action p{font-size:12px;color:var(--muted);line-height:1.45;margin:3px 0 0}
+.owner{text-align:right;font-size:11.5px;color:var(--muted);white-space:nowrap}.owner strong{display:block;color:var(--ink);font-size:12.5px;font-weight:650}
+.readiness{display:grid;grid-template-columns:1fr;gap:7px}
+.readyitem{display:flex;justify-content:space-between;gap:10px;align-items:center;border:1px solid var(--hair2);border-radius:var(--r-sm);padding:9px 11px;background:var(--glass-soft)}
+.readyitem b{font-size:12.5px;font-weight:600}
+.timeline{display:flex;flex-direction:column;gap:8px}
+.event{display:grid;grid-template-columns:58px 1fr auto;gap:12px;align-items:center;padding:10px 12px;background:var(--glass-soft);border:1px solid var(--hair2);border-radius:var(--r-sm);position:relative;overflow:hidden}
+.event::before{content:"";position:absolute;left:0;top:8px;bottom:8px;width:3px;border-radius:0 3px 3px 0;background:var(--green3)}
+.event.upcoming::before{background:var(--faint)}.event.risk::before{background:#e5a02a}
+.event .date{font-size:12px;font-weight:750;color:var(--good);text-transform:uppercase;letter-spacing:.03em}
+.event b{font-size:13px;font-weight:650}.event p{font-size:11.5px;color:var(--muted);margin:2px 0 0}
+.qa-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.qabox{padding:14px;border:1px solid var(--hair);border-radius:var(--r-md);background:var(--glass-soft)}.qabox .n{font-size:24px;font-weight:780}.qabox .l{font-size:12px;color:var(--muted);margin-top:2px}.qabox.warn .n{color:var(--warn)}.qabox.bad .n{color:var(--bad)}
+.metriclist{display:grid;gap:0}
+.metricrow{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center;border-bottom:1px solid var(--hair2);padding:11px 2px}
+.metricrow:last-child{border-bottom:0}
+.metricrow b{font-size:13px;font-weight:600;display:block}.metricrow span{font-size:11.5px;color:var(--muted)}
+.metricrow .mv{text-align:right;font-size:16px;font-weight:750;color:var(--ink);font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+.metricrow .mv small{display:block;font-size:10.5px;color:var(--muted);font-weight:500}
+
+.callout{position:relative;border-radius:var(--r-md);padding:13px 16px 13px 44px;background:var(--info-bg);border:1px solid var(--info-line);color:var(--ink2);font-size:12.5px;line-height:1.55;margin-bottom:16px;-webkit-backdrop-filter:var(--blur);backdrop-filter:var(--blur)}
+.callout::before{content:"i";position:absolute;left:14px;top:13px;width:19px;height:19px;border-radius:50%;display:grid;place-items:center;font-size:11px;font-weight:800;font-style:italic;font-family:Georgia,serif;color:#fff;background:var(--info)}
+.callout.warn{background:var(--warn-bg);border-color:var(--warn-line)}.callout.warn::before{content:"!";background:#d98f12;font-style:normal;font-family:var(--font)}
+.callout.bad{background:var(--bad-bg);border-color:var(--bad-line)}.callout.bad::before{content:"!";background:#d0453a;font-style:normal;font-family:var(--font)}
+.callout.good{background:var(--good-bg);border-color:var(--good-line)}.callout.good::before{content:"✓";background:#1f9a60;font-style:normal;font-family:var(--font)}
+.callout b{display:block;margin-bottom:3px;color:var(--ink)}
+.panel .callout{margin-bottom:0}
+
+.feedback-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.feedback-card{border:1px solid var(--hair);border-radius:var(--r-md);padding:14px;background:var(--glass-soft);transition:transform .2s,background .2s}
+.feedback-card:hover{transform:translateY(-2px);background:var(--glass-hover)}
+.feedback-card .meta{display:flex;gap:6px;flex-wrap:wrap;font-size:11px;color:var(--muted);margin-bottom:8px}
+.feedback-card b{font-size:13.5px;font-weight:680}.feedback-card p{font-size:12.5px;color:var(--muted);line-height:1.5;margin:5px 0 10px}
+
+/* ---------- modals / toast / tooltip ---------- */
+.modalback{position:fixed;inset:0;background:rgba(4,22,14,.35);-webkit-backdrop-filter:blur(8px) saturate(120%);backdrop-filter:blur(8px) saturate(120%);display:none;align-items:center;justify-content:center;z-index:100;padding:22px}
+.modalback.open{display:flex;animation:fade .25s ease}
+@keyframes fade{from{opacity:0}}
+.modal{background:var(--glass-strong);border-radius:var(--r-xl);width:min(880px,100%);max-height:88vh;overflow:auto;box-shadow:0 40px 80px -20px rgba(0,0,0,.45);animation:pop .35s cubic-bezier(.2,.9,.3,1.2)}
+@keyframes pop{from{opacity:0;transform:translateY(10px) scale(.97)}}
+.modalhead{display:flex;justify-content:space-between;align-items:center;padding:18px 22px;border-bottom:1px solid var(--hair);position:sticky;top:0;background:var(--glass-strong);-webkit-backdrop-filter:var(--blur);backdrop-filter:var(--blur);z-index:3}
+.modalhead h3{margin:0;font-size:17px;font-weight:720}
+.closebtn{border:1px solid var(--hair);background:var(--glass-soft);border-radius:999px;padding:7px 14px;cursor:pointer;font-weight:650;font-size:12.5px;transition:background .2s}.closebtn:hover{background:var(--glass-hover)}
+.modalbody{padding:18px 22px}
+.definition{padding:12px 0;border-bottom:1px solid var(--hair2)}.definition:last-child{border-bottom:0}.definition b{font-size:13.5px}.definition p{font-size:12.5px;color:var(--muted);line-height:1.5;margin:3px 0 0}
+.exportgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.exportbtn{border:1px solid var(--hair);background:var(--glass-soft);border-radius:var(--r-md);padding:14px 16px;text-align:left;cursor:pointer;transition:transform .2s,background .2s,border-color .2s}
+.exportbtn:hover{background:var(--good-bg);border-color:var(--good-line);transform:translateY(-1px)}
+.exportbtn b{display:block;font-size:13.5px;margin-bottom:3px}.exportbtn span{font-size:12px;color:var(--muted)}
+.toast{position:fixed;right:22px;bottom:22px;z-index:120;background:rgba(9,60,40,.82);-webkit-backdrop-filter:var(--blur);backdrop-filter:var(--blur);color:#fff;padding:12px 16px;border-radius:14px;font-size:13px;border:1px solid rgba(255,255,255,.18);box-shadow:0 14px 30px -10px rgba(0,0,0,.4);opacity:0;transform:translateY(10px);pointer-events:none;transition:.25s}
+.toast.show{opacity:1;transform:none}
+.tip{position:fixed;z-index:130;pointer-events:none;padding:8px 11px;border-radius:11px;font-size:12px;line-height:1.35;color:var(--ink);background:var(--glass-strong);-webkit-backdrop-filter:var(--blur);backdrop-filter:var(--blur);border:1px solid var(--hair);box-shadow:var(--shadow);opacity:0;transform:translateY(4px);transition:opacity .12s,transform .12s;max-width:260px}
+.tip.show{opacity:1;transform:none}.tip b{display:block;font-weight:700}
+
+.footer{margin-top:22px;color:var(--muted);font-size:11.5px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:14px 4px 0;border-top:1px solid var(--hair)}
+
+:focus-visible{outline:2px solid var(--green3);outline-offset:2px}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+
+/* ---------- responsive ---------- */
+@media(max-width:1360px){.filterbar{grid-template-columns:repeat(3,1fr)}.filtertitle{grid-column:1/-1}.kpis{grid-template-columns:repeat(3,1fr)}.grid3{grid-template-columns:1fr 1fr}.grid2,.grid2eq{grid-template-columns:1fr}.qa-grid{grid-template-columns:repeat(2,1fr)}.feedback-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:1000px){
+  .app{grid-template-columns:minmax(0,1fr)}
+  .sidebar{position:fixed;left:0;top:0;bottom:0;height:auto;width:min(290px,calc(100vw - 40px));margin:10px;transform:translateX(calc(-100% - 20px));transition:transform .35s cubic-bezier(.2,.8,.2,1);z-index:90}
+  body.nav-open .sidebar{transform:none}
+  .scrim{display:block;position:fixed;inset:0;z-index:80;background:rgba(10,25,18,.28);-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);opacity:0;pointer-events:none;transition:opacity .3s}
+  body.nav-open .scrim{opacity:1;pointer-events:auto}
+  .menubtn{display:grid}
+  .mainhead{position:sticky;top:10px;z-index:40;padding:8px 10px 8px 8px;border-radius:18px;background:var(--glass-strong);-webkit-backdrop-filter:var(--blur);backdrop-filter:var(--blur);box-shadow:var(--shadow-sm)}
+  .mainhead .crumb{flex:1}
+}
+@media(max-width:860px){.hero{grid-template-columns:1fr;justify-items:start}.hero-stats{grid-template-columns:repeat(2,1fr);width:100%}}
+@media(max-width:720px){
+  .headright .chip:not(.demo),.crumb .home,.crumb .sep{display:none}
+  .shell{padding:16px 16px 28px}.filterbar{grid-template-columns:1fr 1fr}.filtertitle{grid-column:1/-1}
+  .kpis{grid-template-columns:1fr 1fr}.kpi .value{font-size:25px}.grid3,.grid4{grid-template-columns:1fr}
+  .feedback-grid,.exportgrid{grid-template-columns:1fr}.notice{align-items:flex-start;flex-direction:column}.sectiontitle{flex-direction:column;align-items:flex-start}.sectiontitle h2{font-size:23px}
+  .barrow{grid-template-columns:110px 1fr 58px;gap:8px}.hero{padding:18px}.ring-wrap{width:124px;height:124px}.action{grid-template-columns:1fr}.owner{text-align:left}
+}
+</style>
+</head>
+<body>
+<div class="ambient" aria-hidden="true"><div class="orb o1"></div><div class="orb o2"></div><div class="orb o3"></div><div class="orb o4"></div><div class="grain"></div></div>
+<div class="app">
+<aside class="sidebar" id="sidebar" aria-label="Dashboard sidebar">
+  <span class="flagline" aria-hidden="true"></span>
+  <div class="side-scroll">
+    <div class="brand">
+      <div class="logo">C</div>
+      <div><h1>Ghana Tier 2 Baseline</h1><p>Field implementation, research quality &amp; learning</p></div>
+    </div>
+    <div class="sidelabel">Dashboard</div>
+    <nav class="mainnav" aria-label="Main dashboard navigation">
+      <button class="navbtn active" data-page="overview"><span class="navicon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg></span><span class="navcopy"><span class="navtitle">Overview</span><span class="navsub">Executive control and alerts</span></span></button>
+      <button class="navbtn" data-page="attendance"><span class="navicon"><svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span><span class="navcopy"><span class="navtitle">Attendance</span><span class="navsub">Mobilisation and meeting turnout</span></span></button>
+      <button class="navbtn" data-page="recruitment"><span class="navicon"><svg viewBox="0 0 24 24"><path d="M3 4h18l-7 8.5V19l-4 2v-8.5z"/></svg></span><span class="navcopy"><span class="navtitle">Recruitment</span><span class="navsub">Screening, consent and enrolment</span></span></button>
+      <button class="navbtn" data-page="results"><span class="navicon"><svg viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M8 17v-5"/><path d="M13 17V8"/><path d="M18 17v-8"/></svg></span><span class="navcopy"><span class="navtitle">Survey Results</span><span class="navsub">Baseline findings and cohort</span></span></button>
+      <button class="navbtn" data-page="quality"><span class="navicon"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg></span><span class="navcopy"><span class="navtitle">Data Quality</span><span class="navsub">QA, back-checks and safeguards</span></span><span class="navbadge" id="qaBadge" title="Open data issues"></span></button>
+      <button class="navbtn" data-page="feedback"><span class="navicon"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span><span class="navcopy"><span class="navtitle">Feedback</span><span class="navsub">Farmer, stakeholder and field insight</span></span></button>
+    </nav>
+    <div class="sidelabel">Tools</div>
+    <div class="tools">
+      <button class="toolbtn" data-modal="exportModal"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/><path d="M12 15V3"/></svg>Export</button>
+      <button class="toolbtn" data-modal="definitionsModal"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>Definitions</button>
+      <button class="toolbtn" data-modal="adminModal"><svg viewBox="0 0 24 24"><path d="M4 21v-7"/><path d="M4 10V3"/><path d="M12 21v-9"/><path d="M12 8V3"/><path d="M20 21v-5"/><path d="M20 12V3"/><path d="M1 14h6"/><path d="M9 8h6"/><path d="M17 16h6"/></svg>Admin</button>
+      <button class="toolbtn" id="themeToggle" aria-label="Toggle light or dark theme"><svg viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>Theme</button>
+    </div>
+    <div class="sidecard">
+      <div class="row"><span>Baseline progress</span><b id="sidePct">0%</b></div>
+      <div class="sideprog"><span id="sideProg"></span></div>
+      <small id="sideNote">0 of 0 Accepted Valid</small>
+      <div class="chips"><span class="chip live" id="syncChip"><span class="pulse"></span><span id="syncText">Kobo sync: demo</span></span><span class="chip demo" id="demoChip">ILLUSTRATIVE DATA</span></div>
+    </div>
+  </div>
+</aside>
+<div class="scrim" id="scrim"></div>
+<main class="shell">
+  <div class="mainhead">
+    <button class="menubtn" id="menuBtn" aria-label="Open navigation"><svg viewBox="0 0 24 24"><path d="M4 6h16"/><path d="M4 12h16"/><path d="M4 18h16"/></svg></button>
+    <div class="crumb"><span class="home">Ghana Tier 2 Baseline</span><span class="sep">/</span><b id="crumb">Overview</b></div>
+    <div class="headright"><span class="chip" id="headDate"></span></div>
+  </div>
+  <section class="filterbar" aria-label="Global filters">
+    <div class="filtertitle"><b>Dashboard scope</b><span>Filters apply to attendance, recruitment, results, quality and feedback.</span></div>
+    <div class="filtergroup"><label>Team</label><select id="teamFilter"><option>All</option><option>Team A</option><option>Team B</option></select></div>
+    <div class="filtergroup"><label>District</label><select id="districtFilter"><option>All</option></select></div>
+    <div class="filtergroup"><label>Sentinel</label><select id="sentinelFilter"><option>All</option></select></div>
+    <div class="filtergroup"><label>Sex</label><select id="sexFilter"><option>All</option><option>Female</option><option>Male</option></select></div>
+    <div class="filtergroup"><label>Production type</label><select id="productionFilter"><option>All</option><option>Backyard</option><option>Semi-commercial</option><option>Commercial</option></select></div>
+    <button class="resetbtn" id="resetFilters">Reset</button>
+  </section>
+
+  <section class="page active" id="page-overview">
+    <div class="sectiontitle"><div><h2>Executive Overview</h2><p>A single management view combining field readiness, attendance, recruitment, Accepted Valid progress, data quality, preliminary baseline signals and unresolved actions.</p></div><span class="pill good" id="overviewN">Accepted-valid n=0</span></div>
+    <div class="hero">
+      <span class="glow" aria-hidden="true"></span>
+      <div class="ring-wrap">
+        <svg class="ring" viewBox="0 0 120 120" role="img" aria-labelledby="heroPct"><defs><linearGradient id="ringGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7fe0aa"/><stop offset="1" stop-color="#0e6a43"/></linearGradient></defs><circle class="ring-track" cx="60" cy="60" r="52"/><circle class="ring-fill" id="heroRing" cx="60" cy="60" r="52"/></svg>
+        <div class="ring-label"><b id="heroPct">0%</b><span>of target</span></div>
+      </div>
+      <div class="hero-copy">
+        <span class="eyebrow">Baseline progress</span>
+        <h3><span id="heroAccepted">0</span> of <span id="heroTarget">0</span> Accepted Valid interviews</h3>
+        <p id="heroNote">Preliminary · QA-approved records only</p>
+        <div class="hero-stats">
+          <div><b id="heroSentinels">0/0</b><span>Sentinels complete</span></div>
+          <div><b id="heroActive">0</b><span>Sentinels active now</span></div>
+          <div><b id="heroNext">—</b><span>Next event</span></div>
+          <div><b id="heroYield">0%</b><span>Recruitment yield</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="kpis">
+      <div class="kpi good"><div class="eyebrow">Accepted Valid</div><div class="value" id="ovAccepted">0</div><div class="sub" id="ovAcceptedSub">0% of target</div></div>
+      <div class="kpi"><div class="eyebrow">Attendance</div><div class="value" id="ovAttendance">0</div><div class="sub" id="ovAttendanceSub">0% of mobilised</div></div>
+      <div class="kpi"><div class="eyebrow">Recruitment Yield</div><div class="value" id="ovYield">0%</div><div class="sub">Accepted Valid ÷ attended</div></div>
+      <div class="kpi warn"><div class="eyebrow">Pending QA</div><div class="value" id="ovPending">0</div><div class="sub">Requires review before analysis</div></div>
+      <div class="kpi"><div class="eyebrow">Sentinels Complete</div><div class="value" id="ovSentinels">0/0</div><div class="sub">Quota achieved</div></div>
+      <div class="kpi bad"><div class="eyebrow">Open Actions</div><div class="value" id="ovOpenActions">0</div><div class="sub">Operational or research issues</div></div>
+    </div>
+    <div class="panel issues-panel">
+      <div class="panelhead"><div><h3>Live data issues</h3><div class="desc">Problems detected automatically in incoming submissions, newest first. An issue clears when a supervisor approves or rejects the record in Kobo, or when the team marks it resolved in the Sheet.</div></div><div class="issuechips" id="issueChips"></div></div>
+      <div class="issuelist" id="issueList"></div>
+      <button class="linkbtn" id="openQueue">Open the full QA queue →</button>
+    </div>
+    <div class="grid2">
+      <div class="panel"><div class="panelhead"><div><h3>Progress by district</h3><div class="desc">Accepted Valid interviews against the approved sentinel quota table.</div></div><span class="mini-pill" id="districtProgressPill">10 districts</span></div><div class="chartbar" id="overviewDistrictBars"></div></div>
+      <div class="panel"><div class="panelhead"><div><h3>Actions & alerts</h3><div class="desc">Issues requiring owner, due date and documented resolution.</div></div><span class="mini-pill bad" id="actionCountPill">0 open</span></div><div class="actionlist" id="overviewActions"></div></div>
+    </div>
+    <div class="grid3">
+      <div class="panel"><div class="panelhead"><div><h3>Field readiness</h3><div class="desc">Compact deployment controls; detailed logistics remain outside the research dashboard.</div></div><span class="mini-pill warn">GO gate</span></div><div class="readiness" id="readinessGrid"></div></div>
+      <div class="panel"><div class="panelhead"><div><h3>Upcoming / active events</h3><div class="desc">Event sequence, quota and readiness status.</div></div><span class="mini-pill blue">Schedule</span></div><div class="timeline" id="eventTimeline"></div></div>
+      <div class="panel"><div class="panelhead"><div><h3>Preliminary baseline snapshot</h3><div class="desc">Only Accepted Valid records; indicators remain provisional until field closeout.</div></div><span class="mini-pill" id="snapshotN">n=0</span></div><div class="metriclist" id="snapshotMetrics"></div></div>
+    </div>
+  </section>
+
+  <section class="page" id="page-attendance">
+    <div class="sectiontitle"><div><h2>Attendance</h2><p>Tracks whether mobilisation produced the expected meeting turnout and whether attendance, reimbursement and survey records reconcile.</p></div><span class="pill" id="attendanceN">Filtered attendance n=0</span></div>
+    <div class="subnav" data-group="attendance"><button class="subbtn active" data-sub="att-summary">Summary</button><button class="subbtn" data-sub="att-location">By Location</button><button class="subbtn" data-sub="att-profile">Participant Mix</button><button class="subbtn" data-sub="att-reconcile">Reconciliation</button></div>
+    <div class="subpage active" id="att-summary">
+      <div class="kpis">
+        <div class="kpi"><div class="eyebrow">Mobilised</div><div class="value" id="attMobilised">0</div><div class="sub">Expected / invited farmers</div></div>
+        <div class="kpi good"><div class="eyebrow">Attended</div><div class="value" id="attAttended">0</div><div class="sub" id="attRateSub">Attendance rate</div></div>
+        <div class="kpi warn"><div class="eyebrow">No-shows</div><div class="value" id="attNoShows">0</div><div class="sub">Mobilised minus attended</div></div>
+        <div class="kpi"><div class="eyebrow">Female Attendees</div><div class="value" id="attFemale">0%</div><div class="sub">From attendance register</div></div>
+        <div class="kpi"><div class="eyebrow">Meetings Opened</div><div class="value" id="attEvents">0</div><div class="sub">Events with recorded attendance</div></div>
+        <div class="kpi bad"><div class="eyebrow">Reconciliation Flags</div><div class="value" id="attFlags">0</div><div class="sub">Register / payment / survey mismatch</div></div>
+      </div>
+      <div class="grid2"><div class="panel"><h3>Attendance rate by district</h3><div class="desc">Attended as a share of mobilisation target.</div><div class="chartbar" id="attendanceDistrictBars"></div></div><div class="panel"><h3>Attendance loss</h3><div class="desc">Where mobilisation did not convert into physical turnout.</div><div class="chartbar" id="noShowBars"></div></div></div>
+      <div class="panel"><div class="panelhead"><div><h3>Event attendance summary</h3><div class="desc">Meeting-level mobilisation, turnout and reconciliation status.</div></div><span class="mini-pill">10 planned events</span></div><div class="tablewrap"><table><thead><tr><th>Date</th><th>District / town</th><th>Team</th><th class="num">Mobilised</th><th class="num">Attended</th><th class="num">Rate</th><th class="num">Surveys submitted</th><th>Reconciliation</th></tr></thead><tbody id="attendanceEventBody"></tbody></table></div></div>
+    </div>
+    <div class="subpage" id="att-location"><div class="panel"><div class="panelhead"><div><h3>Attendance by sentinel catchment</h3><div class="desc">Location detail used to identify weak mobilisation and catchment overlap.</div></div><span class="mini-pill blue">Sentinel detail</span></div><div class="tablewrap"><table><thead><tr><th>Sentinel</th><th>District</th><th>Community</th><th>Team</th><th class="num">Mobilised</th><th class="num">Attended</th><th class="num">No-show</th><th class="num">Rate</th><th>Status</th></tr></thead><tbody id="attendanceLocationBody"></tbody></table></div></div></div>
+    <div class="subpage" id="att-profile"><div class="grid2eq"><div class="panel"><h3>Attendee sex distribution</h3><div class="desc">Captured at registration; not inferred from the survey sample.</div><div class="chartbar" id="attendeeSexBars"></div></div><div class="panel"><h3>Recruitment channel among attendees</h3><div class="desc">How participants heard about or were invited to the meeting.</div><div class="chartbar" id="attendeeSourceBars"></div></div></div><div class="callout">Attendance records should remain separate from survey responses. Refusing or being ineligible for the survey must not affect meeting participation, reimbursement or routine service access.</div></div>
+    <div class="subpage" id="att-reconcile"><div class="panel"><div class="panelhead"><div><h3>Attendance reconciliation</h3><div class="desc">Attendance register, transport reimbursement, materials distribution and survey submissions.</div></div><span class="mini-pill warn">Finance + field QA</span></div><div class="tablewrap"><table><thead><tr><th>Event</th><th class="num">Register</th><th class="num">Transport paid</th><th class="num">Materials issued</th><th class="num">Survey submitted</th><th class="num">Difference</th><th>Owner</th><th>Status</th></tr></thead><tbody id="attendanceReconcileBody"></tbody></table></div></div></div>
+  </section>
+
+  <section class="page" id="page-recruitment">
+    <div class="sectiontitle"><div><h2>Recruitment</h2><p>Shows how meeting attendees moved through screening, eligibility, selection, consent, submission and QA acceptance.</p></div><span class="pill good" id="recruitmentN">Accepted-valid n=0</span></div>
+    <div class="subnav" data-group="recruitment"><button class="subbtn active" data-sub="rec-funnel">Recruitment Funnel</button><button class="subbtn" data-sub="rec-eligibility">Eligibility & Refusals</button><button class="subbtn" data-sub="rec-source">Source & Selection</button></div>
+    <div class="subpage active" id="rec-funnel">
+      <div class="panel"><div class="panelhead"><div><h3>End-to-end recruitment funnel</h3><div class="desc">Every stage must be separately recorded; counts are not interchangeable.</div></div><span class="mini-pill">Screening flow</span></div><div class="funnel" id="recruitmentFunnel"></div></div>
+      <div class="kpis" style="margin-top:13px"><div class="kpi"><div class="eyebrow">Eligibility Rate</div><div class="value" id="eligibilityRate">0%</div><div class="sub">Eligible ÷ screened</div></div><div class="kpi"><div class="eyebrow">Consent Rate</div><div class="value" id="consentRate">0%</div><div class="sub">Consented ÷ selected</div></div><div class="kpi good"><div class="eyebrow">Acceptance Rate</div><div class="value" id="acceptanceRate">0%</div><div class="sub">Accepted Valid ÷ submitted</div></div><div class="kpi"><div class="eyebrow">Recruitment Yield</div><div class="value" id="recruitYield">0%</div><div class="sub">Accepted Valid ÷ attended</div></div><div class="kpi warn"><div class="eyebrow">Pending QA</div><div class="value" id="recPending">0</div><div class="sub">Submitted but not accepted</div></div><div class="kpi bad"><div class="eyebrow">QA Rejected</div><div class="value" id="recRejected">0</div><div class="sub">Not included in analysis</div></div></div>
+      <div class="grid2"><div class="panel"><h3>Funnel loss by stage</h3><div class="desc">Absolute number lost between adjacent stages.</div><div class="chartbar" id="funnelLossBars"></div></div><div class="panel"><h3>Recruitment yield by district</h3><div class="desc">Accepted Valid interviews as a share of district attendance.</div><div class="chartbar" id="yieldDistrictBars"></div></div></div>
+    </div>
+    <div class="subpage" id="rec-eligibility"><div class="grid2eq"><div class="panel"><h3>Ineligibility reasons</h3><div class="desc">Recorded at screening; multiple reasons should follow the approved hierarchy.</div><div class="chartbar" id="ineligibleReasonBars"></div></div><div class="panel"><h3>Refusal / non-consent reasons</h3><div class="desc">Voluntary refusal is distinct from ineligibility or QA rejection.</div><div class="chartbar" id="refusalReasonBars"></div></div></div><div class="panel"><h3>Eligibility and consent by district</h3><div class="desc">Supports targeted mobilisation or consent-script correction.</div><div class="tablewrap"><table><thead><tr><th>District</th><th class="num">Screened</th><th class="num">Eligible</th><th class="num">Eligibility rate</th><th class="num">Selected</th><th class="num">Consented</th><th class="num">Consent rate</th><th>Status</th></tr></thead><tbody id="eligibilityDistrictBody"></tbody></table></div></div></div>
+    <div class="subpage" id="rec-source"><div class="grid2"><div class="panel"><h3>Recruitment sources</h3><div class="desc">Candidate lists should not rely exclusively on existing agrovet customers.</div><div class="chartbar" id="recruitmentSourceBars"></div></div><div class="panel"><h3>Selection disposition</h3><div class="desc">Documents whether eligible attendees were selected, held as reserve, missed or excluded.</div><div class="chartbar" id="selectionDispositionBars"></div></div></div><div class="callout warn"><b>Sampling control</b> Attendance is not the sampling frame unless explicitly approved. The dashboard should retain recruitment source, eligibility outcome, selection disposition, refusal and replacement decisions by sentinel.</div></div>
+  </section>
+
+  <section class="page" id="page-results">
+    <div class="sectiontitle"><div><h2>Survey Results</h2><p>The baseline analytical workspace. All findings are calculated only from Accepted Valid records and display the current analysis n.</p></div><span class="pill" id="resultsN">Accepted-valid n=0</span></div>
+    <div class="subnav" data-group="results"><button class="subbtn active" data-sub="res-profile">Farmer Profile</button><button class="subbtn" data-sub="res-flock">Flock & Mortality</button><button class="subbtn" data-sub="res-vaccination">Vaccination</button><button class="subbtn" data-sub="res-access">Access & Services</button><button class="subbtn" data-sub="res-economics">Economics</button><button class="subbtn" data-sub="res-geography">Geography</button><button class="subbtn" data-sub="res-cohort">Cohort & Follow-up</button></div>
+    <div class="subpage active" id="res-profile">
+      <div class="kpis"><div class="kpi"><div class="eyebrow">Female Respondents</div><div class="value" id="pfFemale">0%</div><div class="sub">Sex of primary poultry decision-maker</div></div><div class="kpi"><div class="eyebrow">Median Age</div><div class="value" id="pfAge">0</div><div class="sub">Years</div></div><div class="kpi"><div class="eyebrow">Backyard</div><div class="value" id="pfBackyard">0%</div><div class="sub">Production type</div></div><div class="kpi"><div class="eyebrow">Semi-commercial</div><div class="value" id="pfSemi">0%</div><div class="sub">Production type</div></div><div class="kpi"><div class="eyebrow">Commercial</div><div class="value" id="pfCommercial">0%</div><div class="sub">Production type</div></div><div class="kpi good"><div class="eyebrow">Median Current Flock</div><div class="value" id="pfFlock">0</div><div class="sub">Birds per enterprise</div></div></div>
+      <div class="grid3"><div class="panel"><h3>Respondent sex</h3><div class="desc">Accepted Valid respondents.</div><div class="chartbar" id="respondentSexBars"></div></div><div class="panel"><h3>Age groups</h3><div class="desc">Age of the primary poultry manager.</div><div class="chartbar" id="ageGroupBars"></div></div><div class="panel"><h3>Production type</h3><div class="desc">Operational segmentation for baseline analysis.</div><div class="chartbar" id="productionTypeBars"></div></div></div>
+    </div>
+    <div class="subpage" id="res-flock">
+      <div class="kpis"><div class="kpi"><div class="eyebrow">Median Opening Flock</div><div class="value" id="flOpening">0</div><div class="sub">Beginning of recall window</div></div><div class="kpi good"><div class="eyebrow">Median Closing Flock</div><div class="value" id="flClosing">0</div><div class="sub">At baseline interview</div></div><div class="kpi warn"><div class="eyebrow">Households Reporting Deaths</div><div class="value" id="flDeathHH">0%</div><div class="sub">Any death in recall window</div></div><div class="kpi"><div class="eyebrow">Total Reported Deaths</div><div class="value" id="flDeaths">0</div><div class="sub">Farmer reported</div></div><div class="kpi locked"><div class="eyebrow">Mortality Rate</div><div class="value">LOCKED</div><div class="sub">Pending approved denominator</div></div><div class="kpi"><div class="eyebrow">Flock-balance Pass</div><div class="value" id="flBalancePass">0%</div><div class="sub">Within approved tolerance</div></div></div>
+      <div class="grid2"><div class="panel"><h3>Households reporting deaths by district</h3><div class="desc">Descriptive only; not a nationally representative estimate.</div><div class="chartbar" id="deathDistrictBars"></div></div><div class="panel"><h3>Farmer-reported suspected causes</h3><div class="desc">Suspected cause is not a confirmed veterinary diagnosis.</div><div class="chartbar" id="causeBars"></div></div></div><div class="callout warn"><b>Mortality metric lock</b> The dashboard must not publish a mortality percentage until the technical plan approves the denominator, recall-window treatment and handling of opening stock, additions and age transitions.</div>
+    </div>
+    <div class="subpage" id="res-vaccination">
+      <div class="kpis"><div class="kpi good"><div class="eyebrow">Any Vaccination</div><div class="value" id="vAny">0%</div><div class="sub">Household practice</div></div><div class="kpi"><div class="eyebrow">Newcastle</div><div class="value" id="vND">0%</div><div class="sub">Reported use</div></div><div class="kpi"><div class="eyebrow">Gumboro</div><div class="value" id="vGumboro">0%</div><div class="sub">Reported use</div></div><div class="kpi"><div class="eyebrow">Fowl Pox</div><div class="value" id="vFowlPox">0%</div><div class="sub">Reported use</div></div><div class="kpi warn"><div class="eyebrow">Stock-out Experience</div><div class="value" id="vStockout">0%</div><div class="sub">Reported access constraint</div></div><div class="kpi"><div class="eyebrow">Median Vaccine Spend</div><div class="value" id="vSpend">GH₵0</div><div class="sub">Recall-period spend</div></div></div>
+      <div class="grid2"><div class="panel"><h3>Vaccination adoption by disease</h3><div class="desc">Household-level vaccination practice, not unique birds protected.</div><div class="chartbar" id="vaccineDiseaseBars"></div></div><div class="panel"><h3>Vaccine / service source</h3><div class="desc">Where farmers report obtaining preventive products or support.</div><div class="chartbar" id="vaccineSourceBars"></div></div></div><div class="callout">Dose purchases, vials sold or administered doses must not be converted into unique birds protected unless the survey consistently records distinct animals and repeat dosing.</div>
+    </div>
+    <div class="subpage" id="res-access">
+      <div class="kpis"><div class="kpi"><div class="eyebrow">Median Distance</div><div class="value" id="aDistance">0 km</div><div class="sub">To usual product/service source</div></div><div class="kpi"><div class="eyebrow">Median Travel Time</div><div class="value" id="aTravel">0 min</div><div class="sub">One-way</div></div><div class="kpi warn"><div class="eyebrow">Reported Stock-outs</div><div class="value" id="aStockout">0%</div><div class="sub">During recall window</div></div><div class="kpi"><div class="eyebrow">Median Service Charge</div><div class="value" id="aService">GH₵0</div><div class="sub">When applicable</div></div><div class="kpi"><div class="eyebrow">Agrovet Channel</div><div class="value" id="aAgrovet">0%</div><div class="sub">Usual source</div></div><div class="kpi"><div class="eyebrow">Vet / CLV Channel</div><div class="value" id="aProvider">0%</div><div class="sub">Usual service source</div></div></div>
+      <div class="grid2"><div class="panel"><h3>Service channel</h3><div class="desc">Reported usual channel for vaccines or preventive support.</div><div class="chartbar" id="serviceChannelBars"></div></div><div class="panel"><h3>Access barriers</h3><div class="desc">Multiple responses permitted where instrument design allows.</div><div class="chartbar" id="barrierBars"></div></div></div>
+    </div>
+    <div class="subpage" id="res-economics">
+      <div class="kpis"><div class="kpi"><div class="eyebrow">Median Poultry Sales</div><div class="value" id="eSales">GH₵0</div><div class="sub">Cash revenue in recall window</div></div><div class="kpi"><div class="eyebrow">Median Feed Cost</div><div class="value" id="eFeed">GH₵0</div><div class="sub">Reported operating cost</div></div><div class="kpi"><div class="eyebrow">Median Other Cost</div><div class="value" id="eOther">GH₵0</div><div class="sub">Labour and other costs</div></div><div class="kpi"><div class="eyebrow">Median Prevention Spend</div><div class="value" id="ePrevention">GH₵0</div><div class="sub">Vaccines + service charge</div></div><div class="kpi"><div class="eyebrow">Median Retained Flock Value</div><div class="value" id="eRetained">GH₵0</div><div class="sub">Asset value, separate from revenue</div></div><div class="kpi locked"><div class="eyebrow">Modelled Farmer Value</div><div class="value">SEPARATE</div><div class="sub">Not an observed baseline outcome</div></div></div>
+      <div class="grid2"><div class="panel"><h3>Economic indicators by production type</h3><div class="desc">Medians reduce distortion from extreme values.</div><div class="tablewrap"><table><thead><tr><th>Production type</th><th class="num">n</th><th class="num">Poultry sales</th><th class="num">Feed cost</th><th class="num">Other cost</th><th class="num">Prevention spend</th><th class="num">Retained value</th></tr></thead><tbody id="economicTypeBody"></tbody></table></div></div><div class="panel"><h3>Economic data-quality watch</h3><div class="desc">Flags that must be resolved before economic reporting.</div><div class="metriclist" id="economicWatch"></div></div></div>
+    </div>
+    <div class="subpage" id="res-geography"><div class="panel"><div class="panelhead"><div><h3>District comparison</h3><div class="desc">Comparison is descriptive for approved sentinel catchments and must show analysis n.</div></div><span class="mini-pill blue">Accepted Valid only</span></div><div class="tablewrap"><table><thead><tr><th>District</th><th class="num">n</th><th class="num">Median flock</th><th class="num">Any vaccination</th><th class="num">Households with deaths</th><th class="num">Stock-out</th><th class="num">Median distance</th><th class="num">Median prevention spend</th></tr></thead><tbody id="geographyBody"></tbody></table></div></div></div>
+    <div class="subpage" id="res-cohort">
+      <div class="kpis"><div class="kpi good"><div class="eyebrow">Baseline Cohort</div><div class="value" id="cBaseline">0</div><div class="sub">Accepted Valid enrolments</div></div><div class="kpi"><div class="eyebrow">Recontact Consent</div><div class="value" id="cConsent">0%</div><div class="sub">Agreed to follow-up</div></div><div class="kpi"><div class="eyebrow">Contact Complete</div><div class="value" id="cContact">0%</div><div class="sub">Follow-up-ready contact details</div></div><div class="kpi"><div class="eyebrow">3-month Due</div><div class="value" id="cDue">0</div><div class="sub">Based on baseline date</div></div><div class="kpi warn"><div class="eyebrow">At-risk for Attrition</div><div class="value" id="cRisk">0</div><div class="sub">Missing/weak contact pathway</div></div><div class="kpi"><div class="eyebrow">Retention Target</div><div class="value">≥80%</div><div class="sub">Approximately 400 of 500</div></div></div>
+      <div class="grid2"><div class="panel"><h3>Follow-up readiness by district</h3><div class="desc">Contact completeness and recontact consent.</div><div class="chartbar" id="cohortDistrictBars"></div></div><div class="panel"><h3>Longitudinal operating rule</h3><div class="desc">Baseline participants remain in the original cohort even if vaccination practice, flock size, production status or commercial relationship changes.</div><div class="callout good"><b>Fixed cohort</b> Participants lost to follow-up are not replaced. Attrition reasons and differences between retained and lost participants must be analysed.</div></div></div>
+    </div>
+  </section>
+
+  <section class="page" id="page-quality">
+    <div class="sectiontitle"><div><h2>Data Quality</h2><p>Controls whether data are safe to accept, analyse and retain for longitudinal follow-up.</p></div><span class="pill warn" id="qualityN">0 records pending or flagged</span></div>
+    <div class="subnav" data-group="quality"><button class="subbtn active" data-sub="qa-overview">Overview</button><button class="subbtn" data-sub="qa-queue">QA Queue</button><button class="subbtn" data-sub="qa-enumerators">Enumerator Performance</button><button class="subbtn" data-sub="qa-backchecks">Back-checks</button><button class="subbtn" data-sub="qa-consent">Consent & Safeguarding</button></div>
+    <div class="subpage active" id="qa-overview">
+      <div class="kpis"><div class="kpi good"><div class="eyebrow">Accepted Valid</div><div class="value" id="qaAccepted">0</div><div class="sub">Eligible for analysis</div></div><div class="kpi warn"><div class="eyebrow">Pending QA</div><div class="value" id="qaPending">0</div><div class="sub">Under review</div></div><div class="kpi bad"><div class="eyebrow">Rejected</div><div class="value" id="qaRejected">0</div><div class="sub">Excluded from analysis</div></div><div class="kpi"><div class="eyebrow">QA Pass Rate</div><div class="value" id="qaPass">0%</div><div class="sub">Accepted ÷ submitted</div></div><div class="kpi"><div class="eyebrow">Back-check Coverage</div><div class="value" id="qaBackcheck">0%</div><div class="sub">Target 5–10%</div></div><div class="kpi bad"><div class="eyebrow">Critical Flags</div><div class="value" id="qaCritical">0</div><div class="sub">Requires immediate action</div></div></div>
+      <div class="grid2"><div class="panel"><h3>Automated flags</h3><div class="desc">Record counts by flag type; one record may have multiple flags.</div><div class="chartbar" id="qaFlagBars"></div></div><div class="panel"><h3>QA status by district</h3><div class="desc">Pending and rejected records relative to submitted records.</div><div class="chartbar" id="qaDistrictBars"></div></div></div>
+    </div>
+    <div class="subpage" id="qa-queue"><div class="panel"><div class="panelhead"><div><h3>Anonymised QA queue</h3><div class="desc">Record-level review worklist. Identifiers shown here are synthetic.</div></div><span class="mini-pill warn">Supervisor action</span></div><div class="tablewrap"><table><thead><tr><th>Study ID</th><th>District</th><th>Sentinel</th><th>Enumerator</th><th>Flag</th><th>Severity</th><th>Status</th><th>Owner</th><th>Received / due</th></tr></thead><tbody id="qaQueueBody"></tbody></table></div></div></div>
+    <div class="subpage" id="qa-enumerators"><div class="panel"><div class="panelhead"><div><h3>Enumerator performance</h3><div class="desc">Workload, acceptance, duration and quality indicators; not a punitive ranking without supervisor review.</div></div><span class="mini-pill blue">Field supervision</span></div><div class="tablewrap"><table><thead><tr><th>Enumerator</th><th>Team</th><th class="num">Submitted</th><th class="num">Accepted</th><th class="num">Acceptance</th><th class="num">Median duration</th><th class="num">Flags</th><th class="num">Back-check issues</th><th>Status</th></tr></thead><tbody id="enumeratorBody"></tbody></table></div></div></div>
+    <div class="subpage" id="qa-backchecks"><div class="grid2eq"><div class="panel"><h3>Back-check completion</h3><div class="desc">Independent non-sensitive verification.</div><div class="chartbar" id="backcheckDistrictBars"></div></div><div class="panel"><h3>Back-check outcomes</h3><div class="desc">Outcome categories should remain separate from refusals and eligibility decisions.</div><div class="chartbar" id="backcheckOutcomeBars"></div></div></div><div class="callout">Back-checks should verify selected facts without repeating the full survey or disclosing sensitive responses to commercial staff or sentinels.</div></div>
+    <div class="subpage" id="qa-consent"><div class="grid2"><div class="panel"><h3>Consent compliance</h3><div class="desc">Research consent and recontact consent are separate fields.</div><div class="metriclist" id="consentMetrics"></div></div><div class="panel"><h3>Safeguarding and privacy</h3><div class="desc">Restricted management view; no identifiable details are displayed here.</div><div class="metriclist" id="safeguardMetrics"></div></div></div><div class="callout bad"><b>Restricted access</b> Participant identifiers, complaint details and safeguarding case notes must be stored separately with role-based access. The dashboard should show only case counts, severity, owner and resolution status to general management users.</div></div>
+  </section>
+
+  <section class="page" id="page-feedback">
+    <div class="sectiontitle"><div><h2>Feedback</h2><p>Captures structured learning that does not sit cleanly within the questionnaire: farmer questions, service barriers, stakeholder observations, complaints and actions.</p></div><span class="pill" id="feedbackN">0 feedback items</span></div>
+    <div class="subnav" data-group="feedback"><button class="subbtn active" data-sub="fb-overview">Overview</button><button class="subbtn" data-sub="fb-farmer">Farmer Feedback</button><button class="subbtn" data-sub="fb-stakeholder">Agrovet & Stakeholder</button><button class="subbtn" data-sub="fb-field">Field Team</button><button class="subbtn" data-sub="fb-incidents">Complaints & Incidents</button><button class="subbtn" data-sub="fb-actions">Action Tracker</button></div>
+    <div class="subpage active" id="fb-overview">
+      <div class="kpis"><div class="kpi"><div class="eyebrow">Feedback Items</div><div class="value" id="fbTotal">0</div><div class="sub">Post-survey qualitative inputs</div></div><div class="kpi warn"><div class="eyebrow">Open</div><div class="value" id="fbOpen">0</div><div class="sub">Awaiting action or response</div></div><div class="kpi bad"><div class="eyebrow">Urgent</div><div class="value" id="fbUrgent">0</div><div class="sub">Escalation required</div></div><div class="kpi good"><div class="eyebrow">Resolved</div><div class="value" id="fbResolved">0</div><div class="sub">Closed with evidence</div></div><div class="kpi"><div class="eyebrow">Top Theme</div><div class="value" id="fbTopTheme" style="font-size:18px">—</div><div class="sub">Most frequently recorded</div></div><div class="kpi"><div class="eyebrow">Action Conversion</div><div class="value" id="fbActionRate">0%</div><div class="sub">Items assigned to an owner</div></div></div>
+      <div class="grid2"><div class="panel"><h3>Feedback themes</h3><div class="desc">Frequency by coded theme; qualitative detail remains available in the item list.</div><div class="chartbar" id="feedbackThemeBars"></div></div><div class="panel"><h3>Feedback by source</h3><div class="desc">Farmer, agrovet, district/stakeholder and field-team sources.</div><div class="chartbar" id="feedbackSourceBars"></div></div></div>
+      <div class="panel"><div class="panelhead"><div><h3>Recent feedback</h3><div class="desc">Collected after the protected survey window unless explicitly marked as an operational observation.</div></div><span class="mini-pill blue">Qualitative learning</span></div><div class="feedback-grid" id="recentFeedback"></div></div>
+    </div>
+    <div class="subpage" id="fb-farmer"><div class="panel"><h3>Farmer feedback</h3><div class="desc">Questions, barriers, service requests and learning priorities raised by farmers.</div><div class="tablewrap"><table><thead><tr><th>Date</th><th>District</th><th>Theme</th><th>Feedback</th><th>Stage</th><th>Severity</th><th>Status</th></tr></thead><tbody id="farmerFeedbackBody"></tbody></table></div></div></div>
+    <div class="subpage" id="fb-stakeholder"><div class="panel"><h3>Agrovet and stakeholder feedback</h3><div class="desc">Operational and market insight from agrovets, district officers and meeting partners.</div><div class="tablewrap"><table><thead><tr><th>Date</th><th>Source</th><th>District</th><th>Theme</th><th>Observation</th><th>Owner</th><th>Status</th></tr></thead><tbody id="stakeholderFeedbackBody"></tbody></table></div></div></div>
+    <div class="subpage" id="fb-field"><div class="panel"><h3>Field-team observations</h3><div class="desc">Implementation learning, questionnaire issues, logistics and recommended changes.</div><div class="tablewrap"><table><thead><tr><th>Date</th><th>Team</th><th>District</th><th>Category</th><th>Observation</th><th>Proposed response</th><th>Status</th></tr></thead><tbody id="fieldFeedbackBody"></tbody></table></div></div></div>
+    <div class="subpage" id="fb-incidents"><div class="grid2"><div class="panel"><h3>Complaints and incidents summary</h3><div class="desc">No identifiable case details are shown.</div><div class="metriclist" id="incidentMetrics"></div></div><div class="panel"><h3>Case status</h3><div class="desc">Restricted owners manage case detail outside this dashboard.</div><div class="chartbar" id="incidentStatusBars"></div></div></div><div class="callout bad"><b>Safeguarding separation</b> Serious complaints or safeguarding incidents require the approved escalation pathway. They should not be handled as ordinary survey feedback.</div></div>
+    <div class="subpage" id="fb-actions"><div class="panel"><div class="panelhead"><div><h3>Feedback action tracker</h3><div class="desc">Every action must have an owner, due date, status and evidence of closure.</div></div><span class="mini-pill warn">Management follow-up</span></div><div class="tablewrap"><table><thead><tr><th>Action</th><th>Origin</th><th>District</th><th>Owner</th><th>Due</th><th>Priority</th><th>Status</th><th>Closure evidence</th></tr></thead><tbody id="feedbackActionBody"></tbody></table></div></div></div>
+  </section>
+
+  <div class="footer"><span>Ghana Tier 2 Baseline · Prototype interface</span><span>Source logic: Kobo → Raw → QA → Accepted Valid → Analysis → Follow-up</span><span id="lastRefresh">Last refreshed: demo</span></div>
+</main>
+</div>
+
+<div class="modalback" id="definitionsModal"><div class="modal"><div class="modalhead"><h3>Metric definitions</h3><button class="closebtn" data-close>Close</button></div><div class="modalbody" id="definitionsBody"></div></div></div>
+<div class="modalback" id="exportModal"><div class="modal"><div class="modalhead"><h3>Exports</h3><button class="closebtn" data-close>Close</button></div><div class="modalbody"><div class="exportgrid">
+  <button class="exportbtn" data-export="attendance"><b>Attendance register summary</b><span>Event and sentinel mobilisation, turnout and reconciliation.</span></button>
+  <button class="exportbtn" data-export="recruitment"><b>Recruitment funnel</b><span>Screening, eligibility, consent, submissions and acceptance.</span></button>
+  <button class="exportbtn" data-export="results"><b>Baseline indicator summary</b><span>Accepted Valid descriptive indicators by district.</span></button>
+  <button class="exportbtn" data-export="quality"><b>QA exception list</b><span>Anonymised pending flags and owners.</span></button>
+  <button class="exportbtn" data-export="feedback"><b>Feedback action report</b><span>Qualitative issues, actions and closure status.</span></button>
+  <button class="exportbtn" data-export="cohort"><b>Follow-up readiness summary</b><span>Recontact consent, contact completeness and due dates.</span></button>
+</div></div></div></div>
+<div class="modalback" id="adminModal"><div class="modal"><div class="modalhead"><h3>Admin / Settings — restricted view</h3><button class="closebtn" data-close>Close</button></div><div class="modalbody"><div class="metriclist">
+  <div class="metricrow"><div><b>Primary data source</b><span>Kobo production form</span></div><div class="mv">Demo connection</div></div>
+  <div class="metricrow"><div><b>Approved form version</b><span>Both teams must use the same locked version.</span></div><div class="mv">v1.0-demo</div></div>
+  <div class="metricrow"><div><b>Quota source</b><span>Versioned MERL-approved sentinel configuration table.</span></div><div class="mv">20 × 25</div></div>
+  <div class="metricrow"><div><b>Refresh cadence</b><span>During field events and at end-of-day QA.</span></div><div class="mv">15 min</div></div>
+  <div class="metricrow"><div><b>Access roles</b><span>CEO, MERL supervisor, data team, field coordinator, restricted case owner.</span></div><div class="mv">Role based</div></div>
+  <div class="metricrow"><div><b>Analysis rule</b><span>Research findings use Accepted Valid records only.</span></div><div class="mv">Enforced</div></div>
+</div><div class="callout warn" style="margin-top:12px">Production administrators should manage sentinel quotas, district/community masters, enumerators, form versions, access rights, indicator definitions and pipeline logs here rather than through the main navigation.</div></div></div></div>
+<div class="toast" id="toast">Export prepared.</div>
+<div class="tip" id="tip" role="tooltip"></div>
+
+<script>
+let sentinels=[
+{id:'AWE-01',district:'Awutu Senya East',town:'Kasoa',community:'Kasoa East',team:'Team A',date:'2026-10-23',quota:25,status:'Complete'},
+{id:'AWE-02',district:'Awutu Senya East',town:'Kasoa',community:'Odupong',team:'Team A',date:'2026-10-23',quota:25,status:'Complete'},
+{id:'HO-01',district:'Ho Municipal',town:'Ho',community:'Ho Central',team:'Team A',date:'2026-10-27',quota:25,status:'Complete'},
+{id:'UWA-01',district:'Upper West Akim',town:'Adeiso',community:'Adeiso',team:'Team A',date:'2026-10-29',quota:25,status:'Complete'},
+{id:'UWA-02',district:'Upper West Akim',town:'Adeiso',community:'Asamankese Road',team:'Team A',date:'2026-10-29',quota:25,status:'Complete'},
+{id:'NJS-01',district:'New Juaben South',town:'Koforidua',community:'Koforidua Central',team:'Team A',date:'2026-11-03',quota:25,status:'Active'},
+{id:'NJS-02',district:'New Juaben South',town:'Koforidua',community:'Effiduase',team:'Team A',date:'2026-11-03',quota:25,status:'Active'},
+{id:'ATW-01',district:'Atiwa West',town:'Kwabeng',community:'Kwabeng',team:'Team A',date:'2026-11-05',quota:25,status:'Upcoming'},
+{id:'SAG-01',district:'Sagnarigu',town:'Sagnarigu',community:'Danjima North',team:'Team B',date:'2026-11-03',quota:25,status:'Active'},
+{id:'SAG-02',district:'Sagnarigu',town:'Sagnarigu',community:'Danjima South',team:'Team B',date:'2026-11-03',quota:25,status:'Active'},
+{id:'TEC-01',district:'Techiman South',town:'Techiman',community:'Techiman Central',team:'Team B',date:'2026-11-09',quota:25,status:'Upcoming'},
+{id:'TEC-02',district:'Techiman South',town:'Techiman',community:'Tanoso',team:'Team B',date:'2026-11-09',quota:25,status:'Upcoming'},
+{id:'TEC-03',district:'Techiman South',town:'Techiman',community:'Kenten',team:'Team B',date:'2026-11-09',quota:25,status:'Upcoming'},
+{id:'ASU-01',district:'Asutifi North',town:'Kenyasi',community:'Kenyasi',team:'Team B',date:'2026-11-11',quota:25,status:'Upcoming'},
+{id:'MAM-01',district:'Mampong Municipal',town:'Mampong',community:'Mampong Central',team:'Team B',date:'2026-11-13',quota:25,status:'Upcoming'},
+{id:'MAM-02',district:'Mampong Municipal',town:'Mampong',community:'Kofiase',team:'Team B',date:'2026-11-13',quota:25,status:'Upcoming'},
+{id:'MAM-03',district:'Mampong Municipal',town:'Mampong',community:'Nintin',team:'Team B',date:'2026-11-13',quota:25,status:'Upcoming'},
+{id:'BIB-01',district:'Bibiani Anhwiaso Bekwai',town:'Bibiani',community:'Bibiani Central',team:'Team B',date:'2026-11-16',quota:25,status:'Upcoming'},
+{id:'BIB-02',district:'Bibiani Anhwiaso Bekwai',town:'Bibiani',community:'Sefwi Bekwai',team:'Team B',date:'2026-11-16',quota:25,status:'Upcoming'},
+{id:'BIB-03',district:'Bibiani Anhwiaso Bekwai',town:'Bibiani',community:'Chirano',team:'Team B',date:'2026-11-16',quota:25,status:'Upcoming'}
+];
+function hash(s){let h=2166136261;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619)}return (h>>>0)/4294967295}
+function r(seed,key='x'){return hash(seed+'|'+key)}
+const sourceTypes=['Agrovet referral','Community mobiliser','Farmer group','District officer','Peer farmer','Walk-in'];
+const attendanceSources=['Agrovet invitation','Community announcement','Farmer group','District outreach','Peer invitation'];
+const ineligReasons=['Outside approved catchment','Not primary poultry manager','No current poultry enterprise','Duplicate production unit','Under 18'];
+const refusalReasons=['No time available','Declined recontact','Privacy concern','Not interested','Family / manager unavailable'];
+function buildSentinelStats(){
+  return sentinels.map((s,i)=>{
+    const stage=s.status==='Complete'?1:s.status==='Active'?.72:0;
+    const mobilised=s.status==='Upcoming'?0:Math.round(31+r(s.id,'mob')*8);
+    const attended=s.status==='Upcoming'?0:Math.min(mobilised,Math.round(mobilised*(.78+r(s.id,'att')*.17)));
+    const screened=Math.max(0,attended-Math.round(r(s.id,'unscreen')*3));
+    const ineligible=Math.round(screened*(.025+r(s.id,'inelig')*.075));
+    const eligible=Math.max(0,screened-ineligible);
+    const selected=Math.min(s.quota,Math.max(0,eligible-Math.round(r(s.id,'reserve')*3)));
+    const refused=Math.round(selected*(.01+r(s.id,'ref')*.05));
+    const consented=Math.max(0,selected-refused);
+    const submitted=Math.max(0,consented-Math.round(r(s.id,'nosub')*2));
+    const rejected=Math.min(submitted,Math.round(submitted*(.005+r(s.id,'rej')*.025)));
+    const pending=s.status==='Active'?Math.min(submitted-rejected,1+Math.round(r(s.id,'pend')*3)):0;
+    const accepted=Math.min(s.quota,Math.max(0,submitted-rejected-pending));
+    const femaleAtt=Math.round(attended*(.35+r(s.id,'fatt')*.23));
+    const transport=Math.max(0,attended-(r(s.id,'transport')>.78?1:0));
+    const materials=Math.max(0,attended-(r(s.id,'materials')>.83?1:0));
+    return {...s,mobilised,attended,screened,ineligible,eligible,selected,refused,consented,submitted,rejected,pending,accepted,femaleAtt,transport,materials,
+      attendanceSource:attendanceSources[i%attendanceSources.length],recruitSource:sourceTypes[i%sourceTypes.length],reconcileFlag:Math.abs(attended-transport)+Math.abs(attended-materials)>0||Math.abs(submitted-consented)>1};
+  });
+}
+let sentinelStats=buildSentinelStats();
+function buildRecords(){
+  const out=[];sentinelStats.forEach(s=>{for(let i=0;i<s.accepted;i++){
+    const id=`${s.id}-${String(i+1).padStart(3,'0')}`;const sex=r(id,'sex')<.43?'Female':'Male';const age=Math.round(20+r(id,'age')*49);
+    const p=r(id,'prod');const production=p<.5?'Backyard':p<.88?'Semi-commercial':'Commercial';
+    const base=production==='Backyard'?25:production==='Semi-commercial'?135:560;const opening=Math.round(base*(.45+r(id,'open')*1.45));
+    const additions=Math.round(opening*(.05+r(id,'add')*.35));const salesBirds=Math.round(opening*(.02+r(id,'sales')*.27));const consumption=Math.round(r(id,'cons')*Math.min(14,opening*.06));
+    const deathProb=production==='Backyard'?.52:production==='Semi-commercial'?.42:.32;const deathsOccurred=r(id,'death')<deathProb;const deaths=deathsOccurred?Math.max(1,Math.round(opening*(.01+r(id,'deathn')*.16))):0;
+    const closing=Math.max(1,opening+additions-salesBirds-consumption-deaths+Math.round((r(id,'resid')-.5)*4));
+    const causes=['Newcastle-like signs','Other illness','Predation / injury','Unknown','Weather / stress'];const cause=deathsOccurred?causes[Math.floor(r(id,'cause')*causes.length)]:'None';
+    const vaccinated=r(id,'vacc')<(production==='Backyard'?.56:production==='Semi-commercial'?.77:.89);const nd=vaccinated&&r(id,'nd')<.84;const gumboro=vaccinated&&r(id,'gum')<.59;const fowlpox=vaccinated&&r(id,'pox')<.43;
+    const channels=['Agrovet','Veterinary officer','Community livestock volunteer','Farmer group','Other retailer'];const source=channels[Math.floor(r(id,'source')*channels.length)];
+    const stockout=r(id,'stock')<.29;const distance=+(0.5+r(id,'dist')*24).toFixed(1);const travel=Math.round(8+r(id,'travel')*88);
+    const vaxSpend=vaccinated?Math.round(12+r(id,'spend')*(production==='Commercial'?520:production==='Semi-commercial'?190:75)):0;const serviceCharge=vaccinated&&r(id,'svcflag')<.62?Math.round(5+r(id,'svc')*90):0;
+    const cashSales=Math.round(salesBirds*(18+r(id,'price')*24)+r(id,'egg')*(production==='Commercial'?2800:production==='Semi-commercial'?900:250));
+    const feed=Math.round(closing*(production==='Commercial'?6.3:production==='Semi-commercial'?2.8:.8)*(.7+r(id,'feed')*.7));const other=Math.round(40+r(id,'other')*(production==='Commercial'?1700:production==='Semi-commercial'?700:250));const retained=Math.round(closing*(22+r(id,'ret')*24));
+    const followConsent=r(id,'fu')<.96;const contactComplete=followConsent&&r(id,'contact')<.94;const duration=Math.round(17+r(id,'dur')*20);const gpsOk=r(id,'gps')>.035;const balanceOk=Math.abs((opening+additions-salesBirds-consumption-deaths)-closing)<=4;
+    const barrierList=['Price','Distance / transport','Stock-out','Limited information','Service timing','No major barrier'];const barrier=barrierList[Math.floor(r(id,'barrier')*barrierList.length)];
+    out.push({...s,studyId:id,sex,age,production,opening,additions,salesBirds,consumption,deathsOccurred,deaths,closing,cause,vaccinated,nd,gumboro,fowlpox,source,stockout,distance,travel,vaxSpend,serviceCharge,cashSales,feed,other,retained,followConsent,contactComplete,duration,gpsOk,balanceOk,barrier,enumerator:`${s.team==='Team A'?'A':'B'}-E${1+(i%9)}`,baselineDate:s.date});
+  }});return out;
+}
+let records=buildRecords();
+function buildFeedback(){
+  const themes=['Vaccine availability','Price and affordability','Disease prevention knowledge','Travel and access','Service timing','Product packaging','Cold-chain confidence','Follow-up request'];
+  const sources=['Farmer','Farmer','Farmer','Agrovet','District stakeholder','Field Team'];const statuses=['Open','In progress','Resolved'];const priorities=['Normal','Normal','High','Urgent'];
+  const messages={
+    'Vaccine availability':'Farmers reported that some vaccines are not consistently available when disease risk rises.',
+    'Price and affordability':'Participants asked for clearer price information and smaller affordable purchase options.',
+    'Disease prevention knowledge':'Farmers requested practical guidance on timing, storage and administration of vaccines.',
+    'Travel and access':'Some participants travel long distances to obtain vaccines or qualified support.',
+    'Service timing':'Farmers asked for advance notice of vaccination services and more predictable service days.',
+    'Product packaging':'Participants requested simpler labels and clearer dose instructions.',
+    'Cold-chain confidence':'Agrovets asked for stronger communication on cold-chain handling and delivery assurance.',
+    'Follow-up request':'Participants requested a later check-in and continued animal-health education.'
+  };
+  const out=[];sentinelStats.filter(s=>s.attended>0).forEach((s,si)=>{const count=1+Math.floor(r(s.id,'fbc')*3);for(let j=0;j<count;j++){
+    const theme=themes[(si+j)%themes.length],source=sources[(si+j*2)%sources.length],priority=priorities[Math.floor(r(s.id+j,'prio')*priorities.length)],status=statuses[Math.floor(r(s.id+j,'status')*statuses.length)];
+    out.push({id:`FB-${String(out.length+1).padStart(3,'0')}`,date:s.date,team:s.team,district:s.district,sentinel:s.id,source,theme,priority,status,stage:source==='Field Team'?'Operational observation':'Post-survey discussion',message:messages[theme],owner:theme.includes('availability')?'Supply Chain':theme.includes('Price')?'Commercial':theme.includes('knowledge')?'MERL / Technical':'Field Operations',due:'2026-11-'+String(5+(out.length%20)).padStart(2,'0'),closure:status==='Resolved'?'Response documented':'Pending'});
+  }});return out;
+}
+let feedback=buildFeedback();
+let actions=[
+{id:'A1',title:'Clear active-event QA backlog',detail:'Pending records must be resolved within two working days of each district event.',severity:'critical',owner:'Hajara / Data',due:'Next morning',status:'Open'},
+{id:'A2',title:'Confirm upcoming venue and enumerator roster',detail:'Do not open the location on attendance readiness alone.',severity:'warning',owner:'Field Coord.',due:'48 hours before',status:'In progress'},
+{id:'A3',title:'Resolve attendance-payment mismatch',detail:'One completed event has a small register and reimbursement variance.',severity:'review',owner:'Rawda',due:'2 days',status:'Open'},
+{id:'A4',title:'Lock mortality denominator',detail:'Dashboard publication remains blocked until the technical rule is approved.',severity:'warning',owner:'Peter / MERL',due:'Before analysis',status:'Open'}
+];
+let readiness=[['Sentinel register','Approved','good'],['Communities / catchments','Verify active sites','warn'],['Kobo production version','Locked demo','good'],['Enumerator certification','In progress','warn'],['Devices and power','Ready','good'],['Venue confirmations','Partial','warn'],['Transport / vehicles','Ready','good'],['Cash advances','Awaiting release','bad']];
+let qaFlags=[['Interview duration',9],['Flock-balance variance',13],['Duplicate contact / ID',4],['GPS anomaly',6],['Missing required item',8],['Economic outlier',7],['Consent inconsistency',2],['Form-version mismatch',1]];
+let qaQueue=[
+['AWE-01-014','Awutu Senya East','AWE-01','A-E5','Flock balance variance','High','Query enumerator','Hajara','Today'],
+['HO-01-009','Ho Municipal','HO-01','A-E1','Interview duration < threshold','Medium','Correction required','Hajara','Today'],
+['UWA-02-021','Upper West Akim','UWA-02','A-E4','Repeated contact number','High','Review required','Data Team','Tomorrow'],
+['NJS-01-006','New Juaben South','NJS-01','A-E2','GPS outside catchment','High','Pending callback','Emelia','Tomorrow'],
+['SAG-02-011','Sagnarigu','SAG-02','B-E3','Economic outlier','Medium','Supervisor review','Peter','2 days'],
+['NJS-02-017','New Juaben South','NJS-02','A-E8','Missing vaccination source','Low','Query enumerator','Data Team','Tomorrow']
+];
+// One list of detected data issues; the live adapter replaces it with issues computed from Kobo data.
+let issues=qaQueue.map(q=>({source:'Survey',ref:q[0],district:q[1],sentinel:q[2],enumerator:q[3],label:q[4],sev:q[5],status:q[6],owner:q[7],open:true,when:''}));
+function fromNow(iso){const t=Date.parse(iso);if(!Number.isFinite(t))return '—';const s=Math.max(0,(Date.now()-t)/1000);return s<60?'just now':s<3600?`${Math.round(s/60)} min ago`:s<86400?`${Math.round(s/3600)} h ago`:new Date(t).toLocaleDateString('en-GB',{day:'2-digit',month:'short'})}
+function buildEnumeratorStats(){const m={};records.forEach(x=>{m[x.enumerator]??={name:x.enumerator,team:x.team,submitted:0,accepted:0,durations:[],flags:0,back:0};const e=m[x.enumerator];e.submitted++;e.accepted++;e.durations.push(x.duration);e.flags+=(!x.gpsOk?1:0)+(!x.balanceOk?1:0);e.back+=r(x.studyId,'back')<.035?1:0});return Object.values(m)}
+let enumerators=buildEnumeratorStats();
+const definitions=[
+['Attendance rate','Attended participants divided by the approved mobilisation target for the selected scope.'],
+['Recruitment yield','Accepted Valid interviews divided by attended participants. It indicates how efficiently meeting turnout converted into usable research records.'],
+['Accepted Valid','A submitted interview that passed eligibility, consent, completeness, consistency and supervisor QA requirements. Only these records enter baseline analysis.'],
+['QA pass rate','Accepted Valid divided by all submitted interviews.'],
+['Eligibility rate','Eligible participants divided by screened participants.'],
+['Consent rate','Participants providing research consent divided by those selected for enrolment.'],
+['Any vaccination','Share of Accepted Valid respondents reporting that their poultry enterprise used at least one poultry vaccine during the approved recall period.'],
+['Households reporting deaths','Share of Accepted Valid respondents reporting at least one bird death during the recall period. This is not the same as a mortality rate.'],
+['Mortality rate','Locked until the analysis plan approves the denominator and flock-stock/flow treatment.'],
+['Stock-out experience','Share of respondents reporting that a desired vaccine or preventive product was unavailable during the recall period.'],
+['Prevention spend','Reported vaccine expenditure plus applicable preventive service charges; excludes modelled value.'],
+['Back-check coverage','Completed independent verification callbacks divided by Accepted Valid interviews.'],
+['Follow-up readiness','Recontact consent plus complete, usable contact information attached to the anonymous study ID.']
+];
+const $=id=>document.getElementById(id);const pct=(n,d)=>d?`${(100*n/d).toFixed(1)}%`:'—';const fmt=n=>Number.isFinite(n)?Math.round(n).toLocaleString():'—';const money=n=>Number.isFinite(n)?`GH₵${Math.round(n).toLocaleString()}`:'—';
+function median(a){const x=a.filter(Number.isFinite).sort((p,q)=>p-q);if(!x.length)return null;const i=Math.floor(x.length/2);return x.length%2?x[i]:(x[i-1]+x[i])/2}
+function group(data,key){return data.reduce((m,x)=>{const k=typeof key==='function'?key(x):x[key];(m[k]??=[]).push(x);return m},{})}
+function setText(id,v){const e=$(id);if(e)e.textContent=v}
+function statusBadge(label,type='good'){return `<span class="status s-${type}"><span class="dot"></span>${label}</span>`}
+function bars(items,max=null,format=v=>fmt(v)){const mx=max??Math.max(...items.map(x=>x.value),1);return items.map(x=>`<div class="barrow" data-tip="${x.label}|${format(x.value)}${x.n!=null?` · n=${x.n}`:''}"><span>${x.label}</span><div class="bar"><span style="width:${Math.max(2,Math.min(100,x.value/mx*100))}%;${x.color?`background:${x.color}`:''}"></span></div><span class="pct">${format(x.value)}${x.n!=null?`<small>n=${x.n}</small>`:''}</span></div>`).join('')}
+function scopedSentinels(){return sentinelStats.filter(s=>(teamFilter.value==='All'||s.team===teamFilter.value)&&(districtFilter.value==='All'||s.district===districtFilter.value)&&(sentinelFilter.value==='All'||s.id===sentinelFilter.value))}
+function scopedRecords(){return records.filter(x=>(teamFilter.value==='All'||x.team===teamFilter.value)&&(districtFilter.value==='All'||x.district===districtFilter.value)&&(sentinelFilter.value==='All'||x.id===sentinelFilter.value)&&(sexFilter.value==='All'||x.sex===sexFilter.value)&&(productionFilter.value==='All'||x.production===productionFilter.value))}
+function scopedFeedback(){return feedback.filter(x=>(teamFilter.value==='All'||x.team===teamFilter.value)&&(districtFilter.value==='All'||x.district===districtFilter.value)&&(sentinelFilter.value==='All'||x.sentinel===sentinelFilter.value))}
+const teamFilter=$('teamFilter'),districtFilter=$('districtFilter'),sentinelFilter=$('sentinelFilter'),sexFilter=$('sexFilter'),productionFilter=$('productionFilter');
+const LIVE={on:false,attendees:[],backchecks:[],complaints:[],safeguarding:0};
+function fillSelect(sel,items){const keep=sel.value;sel.length=0;sel.add(new Option('All','All'));items.forEach(([v,l])=>sel.add(new Option(l,v)));sel.value=[...sel.options].some(o=>o.value===keep)?keep:'All'}
+function populateFilters(){fillSelect(teamFilter,[...new Set(sentinelStats.map(s=>s.team))].sort().map(t=>[t,t]));fillSelect(districtFilter,[...new Set(sentinelStats.map(s=>s.district))].sort().map(d=>[d,d]));fillSelect(sentinelFilter,sentinelStats.map(s=>[s.id,`${s.id} · ${s.district}`]))}
+populateFilters();
+function totals(ss){return ss.reduce((a,s)=>{['quota','mobilised','attended','screened','ineligible','eligible','selected','refused','consented','submitted','pending','rejected','accepted','femaleAtt','transport','materials'].forEach(k=>a[k]=(a[k]||0)+(s[k]||0));return a},{})}
+function renderOverview(ss,data,fb){const t=totals(ss),complete=ss.filter(s=>s.quota&&s.accepted>=s.quota).length,openActions=actions.filter(a=>a.status!=='Resolved').length+fb.filter(x=>x.status!=='Resolved'&&x.priority==='Urgent').length;
+ setText('ovAccepted',fmt(t.accepted));setText('ovAcceptedSub',`${pct(t.accepted,t.quota)} of ${fmt(t.quota)} filtered target`);setText('ovAttendance',fmt(t.attended));setText('ovAttendanceSub',`${pct(t.attended,t.mobilised)} of mobilised`);setText('ovYield',pct(t.accepted,t.attended));setText('ovPending',fmt(t.pending));setText('ovSentinels',`${complete}/${ss.length}`);setText('ovOpenActions',fmt(openActions));setText('overviewN',`Accepted-valid n=${data.length}`);setText('snapshotN',`n=${data.length}`);
+ const prog=t.quota?Math.min(1,t.accepted/t.quota):0;$('heroRing').style.strokeDashoffset=(326.73*(1-prog)).toFixed(2);setText('heroPct',`${Math.round(prog*100)}%`);setText('sidePct',`${Math.round(prog*100)}%`);$('sideProg').style.width=`${(prog*100).toFixed(1)}%`;setText('sideNote',`${fmt(t.accepted)} of ${fmt(t.quota)} Accepted Valid`);setText('heroAccepted',fmt(t.accepted));setText('heroTarget',fmt(t.quota));setText('heroSentinels',`${complete}/${ss.length}`);setText('heroActive',fmt(ss.filter(s=>s.status==='Active').length));setText('heroYield',pct(t.accepted,t.attended));
+ const nextUp=ss.filter(s=>s.status==='Upcoming'&&s.date).map(s=>s.date).sort()[0];setText('heroNext',nextUp?new Date(nextUp+'T00:00:00').toLocaleDateString('en-GB',{day:'2-digit',month:'short'}):'—');setText('heroNote',`${new Set(ss.map(s=>s.district)).size} districts · ${ss.length} sentinels in scope · ${fmt(t.pending)} pending QA · preliminary, QA-approved records only`);
+ const dm={};ss.forEach(s=>{dm[s.district]??={q:0,a:0};dm[s.district].q+=s.quota;dm[s.district].a+=s.accepted});$('overviewDistrictBars').innerHTML=bars(Object.entries(dm).map(([label,v])=>({label,value:v.q?100*v.a/v.q:0,n:v.a})),100,v=>`${v.toFixed(0)}%`);setText('districtProgressPill',`${Object.keys(dm).length} districts`);
+ $('overviewActions').innerHTML=actions.map(a=>`<div class="action"><span class="sev ${a.severity}">${a.severity.toUpperCase()}</span><div><b>${a.title}</b><p>${a.detail}</p></div><div class="owner"><strong>${a.owner}</strong>${a.due}</div></div>`).join('');setText('actionCountPill',`${openActions} open`);
+ $('readinessGrid').innerHTML=readiness.map(([a,b,c])=>`<div class="readyitem"><b>${a}</b>${statusBadge(b,c==='bad'?'bad':c==='warn'?'warn':'good')}</div>`).join('');
+ const eventGroups=Object.values(group(ss,s=>`${s.date}|${s.district}`)).map(xs=>{const z=totals(xs);const status=xs.some(x=>x.status==='Active')?'Active':xs.every(x=>x.status==='Complete')?'Complete':'Upcoming';return {date:xs[0].date,district:xs[0].district,town:xs[0].town,status,accepted:z.accepted,quota:z.quota,sites:xs.length}}).sort((a,b)=>(a.date||'9999').localeCompare(b.date||'9999'));$('eventTimeline').innerHTML=eventGroups.map(e=>`<div class="event ${e.status==='Upcoming'?'upcoming':e.status==='Active'?'risk':''}"><div class="date">${e.date?new Date(e.date+'T00:00:00').toLocaleDateString('en-GB',{day:'2-digit',month:'short'}):'TBC'}</div><div><b>${e.district} · ${e.town}</b><p>${e.sites} sentinel${e.sites===1?'':'s'} · ${e.accepted}/${e.quota} Accepted Valid</p></div>${statusBadge(e.status,e.status==='Complete'?'good':e.status==='Active'?'warn':'blue')}</div>`).join('');
+ const vacc=data.filter(x=>x.vaccinated).length,death=data.filter(x=>x.deathsOccurred).length,stock=data.filter(x=>x.stockout).length;$('snapshotMetrics').innerHTML=[['Median current flock',fmt(median(data.map(x=>x.closing)))],['Any vaccination',pct(vacc,data.length)],['Households reporting deaths',pct(death,data.length)],['Stock-out experience',pct(stock,data.length)],LIVE.on?['Median transport cost to vaccines',money(median(data.map(x=>x.transportCost)))]:['Median service distance',`${(median(data.map(x=>x.distance))||0).toFixed(1)} km`],['Median prevention spend',money(median(data.map(x=>x.vaxSpend+x.serviceCharge)))]].map(([a,b])=>`<div class="metricrow"><div><b>${a}</b><span>Preliminary · Accepted Valid only</span></div><div class="mv">${b}</div></div>`).join('');
+}
+function renderAttendance(ss,data){const t=totals(ss);setText('attendanceN',`Filtered attendance n=${t.attended}`);setText('attMobilised',fmt(t.mobilised));setText('attAttended',fmt(t.attended));setText('attRateSub',`${pct(t.attended,t.mobilised)} attendance rate`);setText('attNoShows',fmt(t.mobilised-t.attended));setText('attFemale',pct(t.femaleAtt,t.attended));setText('attEvents',fmt(ss.filter(s=>s.attended>0).length));setText('attFlags',fmt(ss.filter(s=>s.reconcileFlag).length));
+ const dm={};ss.forEach(s=>{dm[s.district]??={m:0,a:0};dm[s.district].m+=s.mobilised;dm[s.district].a+=s.attended});$('attendanceDistrictBars').innerHTML=bars(Object.entries(dm).map(([label,v])=>({label,value:v.m?100*v.a/v.m:0,n:v.a})),100,v=>`${v.toFixed(0)}%`);$('noShowBars').innerHTML=bars(Object.entries(dm).map(([label,v])=>({label,value:v.m-v.a,n:v.m-v.a,color:'#d59a2d'})));
+ const events=Object.values(group(ss,s=>`${s.date}|${s.district}`)).map(xs=>{const x=totals(xs);return {date:xs[0].date,district:xs[0].district,town:xs[0].town,team:xs[0].team,...x,flag:xs.some(s=>s.reconcileFlag)}}).sort((a,b)=>a.date.localeCompare(b.date));$('attendanceEventBody').innerHTML=events.map(e=>`<tr><td>${e.date}</td><td><b>${e.district}</b><br><span class="muted">${e.town}</span></td><td>${e.team}</td><td class="num">${e.mobilised}</td><td class="num"><b>${e.attended}</b></td><td class="num">${pct(e.attended,e.mobilised)}</td><td class="num">${e.submitted}</td><td>${e.attended===0?statusBadge('Upcoming','blue'):e.flag?statusBadge('Review','warn'):statusBadge('Reconciled','good')}</td></tr>`).join('');
+ $('attendanceLocationBody').innerHTML=ss.map(s=>`<tr><td><b>${s.id}</b></td><td>${s.district}</td><td>${s.community}</td><td>${s.team}</td><td class="num">${s.mobilised}</td><td class="num">${s.attended}</td><td class="num">${s.mobilised-s.attended}</td><td class="num">${pct(s.attended,s.mobilised)}</td><td>${s.attended===0?statusBadge('Upcoming','blue'):s.attended/s.mobilised>=.85?statusBadge('Strong','good'):statusBadge('Watch','warn')}</td></tr>`).join('');
+ $('attendeeSexBars').innerHTML=bars([{label:'Female',value:t.femaleAtt,n:t.femaleAtt},{label:'Male / other',value:t.attended-t.femaleAtt,n:t.attended-t.femaleAtt}],t.attended,v=>pct(v,t.attended));const sourceMap={};if(LIVE.on){const ids=new Set(ss.map(s=>s.id));LIVE.attendees.filter(a=>ids.has(a.sentinel)).forEach(a=>{sourceMap[a.source]=(sourceMap[a.source]||0)+1})}else ss.forEach(s=>{sourceMap[s.attendanceSource]=(sourceMap[s.attendanceSource]||0)+s.attended});$('attendeeSourceBars').innerHTML=bars(Object.entries(sourceMap).map(([label,value])=>({label,value,n:value})),t.attended,v=>pct(v,t.attended));
+ $('attendanceReconcileBody').innerHTML=events.filter(e=>e.attended>0).map(e=>{const diff=Math.max(Math.abs(e.attended-e.transport),Math.abs(e.attended-e.materials),Math.abs(e.consented-e.submitted));return `<tr><td><b>${e.district}</b><br><span class="muted">${e.date}</span></td><td class="num">${e.attended}</td><td class="num">${e.transport}</td><td class="num">${e.materials}</td><td class="num">${e.submitted}</td><td class="num">${diff}</td><td>${diff?'Rawda / Field':'—'}</td><td>${diff?statusBadge('Open review','warn'):statusBadge('Reconciled','good')}</td></tr>`}).join('');
+}
+function renderRecruitment(ss){const t=totals(ss);setText('recruitmentN',`Accepted-valid n=${t.accepted}`);const steps=[['Mobilised',t.mobilised,''],['Attended',t.attended,''],['Screened',t.screened,''],['Eligible',t.eligible,''],['Selected',t.selected,''],['Consented',t.consented,''],['Submitted',t.submitted,''],['Accepted Valid',t.accepted,'good'],['Rejected',t.rejected,'bad']];$('recruitmentFunnel').innerHTML=steps.map(x=>`<div class="funnelstep ${x[2]}"><b>${x[1]}</b><span>${x[0]}</span></div>`).join('');setText('eligibilityRate',pct(t.eligible,t.screened));setText('consentRate',pct(t.consented,t.selected));setText('acceptanceRate',pct(t.accepted,t.submitted));setText('recruitYield',pct(t.accepted,t.attended));setText('recPending',fmt(t.pending));setText('recRejected',fmt(t.rejected));
+ const losses=[['Mobilised → attended',t.mobilised-t.attended],['Attended → screened',t.attended-t.screened],['Screened → eligible',t.screened-t.eligible],['Eligible → selected',t.eligible-t.selected],['Selected → consented',t.selected-t.consented],['Consented → submitted',t.consented-t.submitted],['Submitted → rejected',t.rejected]];$('funnelLossBars').innerHTML=bars(losses.map(([label,value],i)=>({label,value,color:i>4?'#c85d53':'#d59a2d'})));
+ const dm=group(ss,'district');$('yieldDistrictBars').innerHTML=bars(Object.entries(dm).map(([label,xs])=>{const z=totals(xs);return {label,value:z.attended?100*z.accepted/z.attended:0,n:z.accepted}}),100,v=>`${v.toFixed(0)}%`);
+ if(LIVE.on){const nc='<p class="desc" style="margin:0">Not captured by the current forms. Add screening reasons to the survey or attendance form to populate this chart.</p>';$('ineligibleReasonBars').innerHTML=nc;$('refusalReasonBars').innerHTML=nc}else{const totalInelig=t.ineligible||1;$('ineligibleReasonBars').innerHTML=bars(ineligReasons.map((label,i)=>({label,value:Math.max(0,Math.round(totalInelig*(.14+r(label,'x')*.25))),n:null})));const totalRef=t.refused||1;$('refusalReasonBars').innerHTML=bars(refusalReasons.map(label=>({label,value:Math.max(0,Math.round(totalRef*(.1+r(label,'r')*.28)))})))}
+ $('eligibilityDistrictBody').innerHTML=Object.entries(dm).map(([d,xs])=>{const z=totals(xs);return `<tr><td><b>${d}</b></td><td class="num">${z.screened}</td><td class="num">${z.eligible}</td><td class="num">${pct(z.eligible,z.screened)}</td><td class="num">${z.selected}</td><td class="num">${z.consented}</td><td class="num">${pct(z.consented,z.selected)}</td><td>${z.screened===0?statusBadge('Upcoming','blue'):z.eligible/z.screened>.9?statusBadge('On track','good'):statusBadge('Review','warn')}</td></tr>`}).join('');
+ const src={};if(LIVE.on){const ids=new Set(ss.map(s=>s.id));LIVE.attendees.filter(a=>ids.has(a.sentinel)&&a.screened).forEach(a=>{src[a.source]=(src[a.source]||0)+1})}else ss.forEach(s=>src[s.recruitSource]=(src[s.recruitSource]||0)+s.screened);const srcN=Object.values(src).reduce((a,b)=>a+b,0);$('recruitmentSourceBars').innerHTML=bars(Object.entries(src).map(([label,value])=>({label,value,n:value})),srcN,v=>pct(v,srcN));$('selectionDispositionBars').innerHTML=bars([{label:'Selected',value:t.selected},{label:'Eligible reserve / not selected',value:Math.max(t.eligible-t.selected,0)},{label:'Ineligible',value:t.ineligible},{label:'Refused after selection',value:t.refused}],Math.max(t.eligible,1),v=>fmt(v));
+}
+function renderResults(data){const n=data.length;setText('resultsN',`Accepted-valid n=${n}`);setText('maturityLabel',`Preliminary baseline · Accepted-valid n=${n}`);setText('pfFemale',pct(data.filter(x=>x.sex==='Female').length,n));setText('pfAge',fmt(median(data.map(x=>x.age))));setText('pfBackyard',pct(data.filter(x=>x.production==='Backyard').length,n));setText('pfSemi',pct(data.filter(x=>x.production==='Semi-commercial').length,n));setText('pfCommercial',pct(data.filter(x=>x.production==='Commercial').length,n));setText('pfFlock',fmt(median(data.map(x=>x.closing))));
+ $('respondentSexBars').innerHTML=bars(['Female','Male'].map(label=>({label,value:data.filter(x=>x.sex===label).length,n:data.filter(x=>x.sex===label).length})),n,v=>pct(v,n));const ages=(LIVE.on?LIVE.ageBands.map(b=>[b,x=>x.ageBand===b]):[['18–29',x=>x.age<30],['30–39',x=>x.age>=30&&x.age<40],['40–49',x=>x.age>=40&&x.age<50],['50–59',x=>x.age>=50&&x.age<60],['60+',x=>x.age>=60]]).map(([label,f])=>({label,value:data.filter(f).length,n:data.filter(f).length}));$('ageGroupBars').innerHTML=bars(ages,n,v=>pct(v,n));$('productionTypeBars').innerHTML=bars(['Backyard','Semi-commercial','Commercial'].map(label=>({label,value:data.filter(x=>x.production===label).length,n:data.filter(x=>x.production===label).length})),n,v=>pct(v,n));
+ const deathN=data.filter(x=>x.deathsOccurred).length;setText('flOpening',fmt(median(data.map(x=>x.opening))));setText('flClosing',fmt(median(data.map(x=>x.closing))));setText('flDeathHH',pct(deathN,n));setText('flDeaths',fmt(data.reduce((a,x)=>a+x.deaths,0)));setText('flBalancePass',pct(data.filter(x=>x.balanceOk).length,n));const dm=group(data,'district');$('deathDistrictBars').innerHTML=bars(Object.entries(dm).map(([label,xs])=>({label,value:100*xs.filter(x=>x.deathsOccurred).length/xs.length,n:xs.length})).sort((a,b)=>b.value-a.value),100,v=>`${v.toFixed(0)}%`);const dd=data.filter(x=>x.deathsOccurred),cm=group(dd,'cause');$('causeBars').innerHTML=bars(Object.entries(cm).map(([label,xs])=>({label,value:xs.length,n:xs.length})).sort((a,b)=>b.value-a.value),null,v=>pct(v,dd.length));
+ const any=data.filter(x=>x.vaccinated).length;setText('vAny',pct(any,n));setText('vND',pct(data.filter(x=>x.nd).length,n));setText('vGumboro',pct(data.filter(x=>x.gumboro).length,n));setText('vFowlPox',pct(data.filter(x=>x.fowlpox).length,n));setText('vStockout',pct(data.filter(x=>x.stockout).length,n));setText('vSpend',money(median(data.map(x=>x.vaxSpend))));$('vaccineDiseaseBars').innerHTML=bars([['Any poultry vaccine',x=>x.vaccinated],['Newcastle',x=>x.nd],['Gumboro',x=>x.gumboro],['Fowl Pox',x=>x.fowlpox]].map(([label,f])=>({label,value:data.filter(f).length,n:data.filter(f).length})),n,v=>pct(v,n));const sm=group(data.filter(x=>x.vaccinated),'source');$('vaccineSourceBars').innerHTML=bars(Object.entries(sm).map(([label,xs])=>({label,value:xs.length,n:xs.length})),Math.max(any,1),v=>pct(v,any));
+ if(LIVE.on){setText('aDistance',money(median(data.map(x=>x.transportCowtribe))));setText('aTravel',money(median(data.map(x=>x.transportOther))))}else{setText('aDistance',`${(median(data.map(x=>x.distance))||0).toFixed(1)} km`);setText('aTravel',`${fmt(median(data.map(x=>x.travel)))} min`)}setText('aStockout',pct(data.filter(x=>x.stockout).length,n));setText('aService',LIVE.on?'—':money(median(data.map(x=>x.serviceCharge))));setText('aAgrovet',pct(data.filter(x=>/agrovet/i.test(x.source)).length,n));setText('aProvider',pct(data.filter(x=>/veterinary|health worker|livestock volunteer/i.test(x.source)).length,n));$('serviceChannelBars').innerHTML=bars(Object.entries(group(data,'source')).map(([label,xs])=>({label,value:xs.length,n:xs.length})),n,v=>pct(v,n));$('barrierBars').innerHTML=bars(Object.entries(group(data,'barrier')).map(([label,xs])=>({label,value:xs.length,n:xs.length})).sort((a,b)=>b.value-a.value),n,v=>pct(v,n));
+ setText('eSales',money(median(data.map(x=>x.cashSales))));setText('eFeed',money(median(data.map(x=>x.feed))));setText('eOther',money(median(data.map(x=>x.other))));setText('ePrevention',money(median(data.map(x=>x.vaxSpend+x.serviceCharge))));setText('eRetained',money(median(data.map(x=>x.retained))));$('economicTypeBody').innerHTML=['Backyard','Semi-commercial','Commercial'].map(p=>{const xs=data.filter(x=>x.production===p);return `<tr><td><b>${p}</b></td><td class="num">${xs.length}</td><td class="num">${money(median(xs.map(x=>x.cashSales)))}</td><td class="num">${money(median(xs.map(x=>x.feed)))}</td><td class="num">${money(median(xs.map(x=>x.other)))}</td><td class="num">${money(median(xs.map(x=>x.vaxSpend+x.serviceCharge)))}</td><td class="num">${money(median(xs.map(x=>x.retained)))}</td></tr>`}).join('');$('economicWatch').innerHTML=[['Missing cash-sales values',data.filter(x=>!Number.isFinite(x.cashSales)).length],['Extreme cost flags',data.filter(x=>x.feed>10000||x.other>3000).length],['Zero prevention spend among vaccinated',data.filter(x=>x.vaccinated&&x.vaxSpend===0&&x.serviceCharge===0).length],['Flock value requiring review',data.filter(x=>x.retained>50000).length]].map(([a,b])=>`<div class="metricrow"><div><b>${a}</b><span>Review before final reporting</span></div><div class="mv">${b}</div></div>`).join('');
+ $('geographyBody').innerHTML=Object.entries(dm).sort((a,b)=>a[0].localeCompare(b[0])).map(([d,xs])=>`<tr><td><b>${d}</b></td><td class="num">${xs.length}</td><td class="num">${fmt(median(xs.map(x=>x.closing)))}</td><td class="num">${pct(xs.filter(x=>x.vaccinated).length,xs.length)}</td><td class="num">${pct(xs.filter(x=>x.deathsOccurred).length,xs.length)}</td><td class="num">${pct(xs.filter(x=>x.stockout).length,xs.length)}</td><td class="num">${LIVE.on?money(median(xs.map(x=>x.transportCost))):`${(median(xs.map(x=>x.distance))||0).toFixed(1)} km`}</td><td class="num">${money(median(xs.map(x=>x.vaxSpend+x.serviceCharge)))}</td></tr>`).join('');
+ const fuc=data.filter(x=>x.followConsent).length,cc=data.filter(x=>x.contactComplete).length;setText('cBaseline',n);setText('cConsent',pct(fuc,n));setText('cContact',pct(cc,n));setText('cDue',n);setText('cRisk',n-cc);$('cohortDistrictBars').innerHTML=bars(Object.entries(dm).map(([label,xs])=>({label,value:100*xs.filter(x=>x.contactComplete).length/xs.length,n:xs.length})),100,v=>`${v.toFixed(0)}%`);
+}
+function renderQuality(ss,data){const t=totals(ss),submitted=t.submitted,accepted=t.accepted,pending=t.pending,rejected=t.rejected,critical=qaQueue.filter(x=>x[5]==='High').length,bcRows=LIVE.backchecks.filter(b=>data.some(x=>x.studyId===b.studyId)),bc=LIVE.on?new Set(bcRows.filter(b=>b.reached).map(b=>b.studyId)).size:Math.max(0,Math.round(data.length*.07));setText('qualityN',`${pending+qaQueue.length} records pending or flagged`);setText('qaAccepted',accepted);setText('qaPending',pending);setText('qaRejected',rejected);setText('qaPass',pct(accepted,submitted));setText('qaBackcheck',pct(bc,data.length));setText('qaCritical',critical);$('qaFlagBars').innerHTML=bars(qaFlags.map(([label,value])=>({label,value,n:value})));const dm=group(ss,'district');$('qaDistrictBars').innerHTML=bars(Object.entries(dm).map(([label,xs])=>{const z=totals(xs);return {label,value:z.submitted?100*(z.pending+z.rejected)/z.submitted:0,n:z.pending+z.rejected}}),20,v=>`${v.toFixed(1)}%`);
+ $('qaQueueBody').innerHTML=qaQueue.filter(x=>(districtFilter.value==='All'||x[1]===districtFilter.value)&&(sentinelFilter.value==='All'||x[2]===sentinelFilter.value)).map(x=>`<tr><td><b>${x[0]}</b></td><td>${x[1]}</td><td>${x[2]}</td><td>${x[3]}</td><td>${x[4]}</td><td>${statusBadge(x[5],x[5]==='High'?'bad':x[5]==='Medium'?'warn':'blue')}</td><td>${x[6]}</td><td>${x[7]}</td><td>${x[8]}</td></tr>`).join('');
+ $('enumeratorBody').innerHTML=enumerators.filter(e=>teamFilter.value==='All'||e.team===teamFilter.value).map(e=>{const md=median(e.durations);const st=e.flags/e.accepted>.15?'Review':e.flags?'Watch':'Good';return `<tr><td><b>${e.name}</b></td><td>${e.team}</td><td class="num">${e.submitted}</td><td class="num">${e.accepted}</td><td class="num">${pct(e.accepted,e.submitted)}</td><td class="num">${fmt(md)} min</td><td class="num">${e.flags}</td><td class="num">${e.back}</td><td>${statusBadge(st,st==='Review'?'bad':st==='Watch'?'warn':'good')}</td></tr>`}).join('');
+ const byD=group(data,'district');if(LIVE.on){$('backcheckDistrictBars').innerHTML=bars(Object.entries(byD).map(([label,xs])=>{const ids=new Set(xs.map(x=>x.studyId)),done=new Set(bcRows.filter(b=>b.reached&&ids.has(b.studyId)).map(b=>b.studyId)).size;return {label,value:100*done/xs.length,n:done}}),Math.max(12,...Object.values(byD).map(()=>0)),v=>`${v.toFixed(1)}%`);$('backcheckOutcomeBars').innerHTML=bars(Object.entries(group(bcRows,'outcome')).map(([label,xs])=>({label,value:xs.length,n:xs.length})).sort((a,b)=>b.value-a.value))}else{$('backcheckDistrictBars').innerHTML=bars(Object.entries(byD).map(([label,xs])=>({label,value:Math.min(12,5+r(label,'bc')*6),n:Math.round(xs.length*(.05+r(label,'bc')*.06))})),12,v=>`${v.toFixed(1)}%`);$('backcheckOutcomeBars').innerHTML=bars([{label:'Confirmed',value:Math.round(bc*.86)},{label:'Minor discrepancy',value:Math.round(bc*.1)},{label:'Material discrepancy',value:Math.max(0,bc-Math.round(bc*.96))}])}
+ $('consentMetrics').innerHTML=[['Selected participants',t.selected],['Research consent recorded',t.consented],['Consent refusals',t.refused],['Accepted records with consent',accepted],['Recontact consent',data.filter(x=>x.followConsent).length]].map(([a,b])=>`<div class="metricrow"><div><b>${a}</b><span>Filtered scope</span></div><div class="mv">${b}</div></div>`).join('');$('safeguardMetrics').innerHTML=(LIVE.on?[['Participant complaints',LIVE.complaints.length],['Open complaints',LIVE.complaints.filter(c=>c.status!=='Resolved').length],['Safeguarding referrals',LIVE.safeguarding],['Records without GPS',data.filter(x=>!x.gpsOk).length],['Records with phone for follow-up',data.filter(x=>x.contactComplete).length]]:[['Privacy concerns logged',2],['Participant complaints',3],['Safeguarding incidents',0],['Open restricted cases',1],['Resolved restricted cases',2]]).map(([a,b])=>`<div class="metricrow"><div><b>${a}</b><span>Restricted case detail</span></div><div class="mv">${b}</div></div>`).join('');
+}
+function renderFeedback(fb){setText('feedbackN',`${fb.length} feedback items`);const open=fb.filter(x=>x.status!=='Resolved').length,urgent=fb.filter(x=>x.priority==='Urgent').length,resolved=fb.filter(x=>x.status==='Resolved').length,tm=group(fb,'theme'),top=Object.entries(tm).sort((a,b)=>b[1].length-a[1].length)[0]?.[0]||'—',assigned=fb.filter(x=>x.owner).length;setText('fbTotal',fb.length);setText('fbOpen',open);setText('fbUrgent',urgent);setText('fbResolved',resolved);setText('fbTopTheme',top);setText('fbActionRate',pct(assigned,fb.length));$('feedbackThemeBars').innerHTML=bars(Object.entries(tm).map(([label,xs])=>({label,value:xs.length,n:xs.length})).sort((a,b)=>b.value-a.value));$('feedbackSourceBars').innerHTML=bars(Object.entries(group(fb,'source')).map(([label,xs])=>({label,value:xs.length,n:xs.length})).sort((a,b)=>b.value-a.value));
+ $('recentFeedback').innerHTML=fb.slice(-6).reverse().map(x=>`<div class="feedback-card"><div class="meta"><span>${x.date}</span><span>• ${x.district}</span><span>• ${x.source}</span><span>• ${x.stage}</span></div><b>${x.theme}</b><p>${x.message}</p>${statusBadge(x.status,x.status==='Resolved'?'good':x.priority==='Urgent'?'bad':'warn')}</div>`).join('');
+ $('farmerFeedbackBody').innerHTML=fb.filter(x=>x.source==='Farmer').map(x=>`<tr><td>${x.date}</td><td>${x.district}</td><td><b>${x.theme}</b></td><td>${x.message}</td><td>${x.stage}</td><td>${statusBadge(x.priority,x.priority==='Urgent'?'bad':x.priority==='High'?'warn':'blue')}</td><td>${statusBadge(x.status,x.status==='Resolved'?'good':'warn')}</td></tr>`).join('');
+ $('stakeholderFeedbackBody').innerHTML=fb.filter(x=>['Agrovet','District stakeholder'].includes(x.source)).map(x=>`<tr><td>${x.date}</td><td>${x.source}</td><td>${x.district}</td><td><b>${x.theme}</b></td><td>${x.message}</td><td>${x.owner}</td><td>${statusBadge(x.status,x.status==='Resolved'?'good':'warn')}</td></tr>`).join('');
+ $('fieldFeedbackBody').innerHTML=fb.filter(x=>x.source==='Field Team').map(x=>`<tr><td>${x.date}</td><td>${x.team}</td><td>${x.district}</td><td><b>${x.theme}</b></td><td>${x.message}</td><td>${x.owner} to review</td><td>${statusBadge(x.status,x.status==='Resolved'?'good':'warn')}</td></tr>`).join('');
+ const cs=LIVE.complaints;$('incidentMetrics').innerHTML=(LIVE.on?[['Complaints about the study or staff',cs.length],['Urgent complaints',cs.filter(c=>c.priority==='Urgent').length],['Safeguarding referrals (no detail recorded)',LIVE.safeguarding],['Open complaints',cs.filter(c=>c.status!=='Resolved').length],['Resolved complaints',cs.filter(c=>c.status==='Resolved').length]]:[['Routine complaints',3],['Privacy concerns',2],['Safeguarding incidents',0],['Serious adverse events',0],['Cases needing restricted follow-up',1]]).map(([a,b])=>`<div class="metricrow"><div><b>${a}</b><span>Case detail restricted</span></div><div class="mv">${b}</div></div>`).join('');$('incidentStatusBars').innerHTML=LIVE.on?bars(['Open','In progress','Resolved'].map(label=>({label,value:cs.filter(c=>c.status===label).length}))):bars([{label:'Open',value:1},{label:'In progress',value:2},{label:'Resolved',value:2}]);
+ $('feedbackActionBody').innerHTML=fb.filter(x=>x.status!=='Resolved').slice(0,15).map(x=>`<tr><td><b>${x.theme}</b><br><span class="muted">${x.message.slice(0,70)}…</span></td><td>${x.source}</td><td>${x.district}</td><td>${x.owner}</td><td>${x.due}</td><td>${statusBadge(x.priority,x.priority==='Urgent'?'bad':x.priority==='High'?'warn':'blue')}</td><td>${statusBadge(x.status,'warn')}</td><td>${x.closure}</td></tr>`).join('');
+}
+function scopedIssues(ss){const ids=new Set(ss.map(s=>s.id)),dists=new Set(ss.map(s=>s.district));return issues.filter(i=>ids.has(i.sentinel)||(sentinelFilter.value==='All'&&dists.has(i.district)))}
+function renderIssues(ss){
+ const open=scopedIssues(ss).filter(i=>i.open),sevCls={High:'critical',Medium:'warning',Low:'review'},cnt=s=>open.filter(i=>i.sev===s).length;
+ $('issueChips').innerHTML=[['High','bad'],['Medium','warn'],['Low','blue']].map(([s,c])=>`<span class="mini-pill ${c}">${cnt(s)} ${s.toLowerCase()}</span>`).join('');
+ const list=[...open].sort((a,b)=>(Date.parse(b.when)||0)-(Date.parse(a.when)||0)||({High:0,Medium:1,Low:2}[a.sev]-{High:0,Medium:1,Low:2}[b.sev])).slice(0,12);
+ $('issueList').innerHTML=list.length?list.map(i=>`<div class="issue ${Date.now()-Date.parse(i.when)<6e5?'fresh':''}"><span class="sev ${sevCls[i.sev]||'review'}">${i.sev.toUpperCase()}</span><div><b>${i.label}</b><p>${i.ref} · ${i.district}${i.enumerator?` · ${i.enumerator}`:''} · ${i.source}</p></div><span class="when">${fromNow(i.when)}</span></div>`).join(''):'<div class="issues-empty">✓ No open data issues in this scope</div>';
+ const all=issues.filter(i=>i.open).length;$('qaBadge').textContent=all?(all>99?'99+':all):'';$('qaBadge').title=`${all} open data issue${all===1?'':'s'}`;
+}
+function renderAll(){const ss=scopedSentinels(),data=scopedRecords(),fb=scopedFeedback();renderOverview(ss,data,fb);renderIssues(ss);renderAttendance(ss,data);renderRecruitment(ss);renderResults(data);renderQuality(ss,data);renderFeedback(fb);setText('lastRefresh',`Last refreshed: ${new Date().toLocaleString()}`)}
+function showPage(name){document.querySelectorAll('.page').forEach(x=>x.classList.toggle('active',x.id===`page-${name}`));document.querySelectorAll('.navbtn').forEach(x=>x.classList.toggle('active',x.dataset.page===name));try{history.replaceState(null,'',`#${name}`)}catch(e){/* not allowed inside some embeds (e.g. Streamlit) */}const nb=document.querySelector(`.navbtn[data-page="${name}"]`);setText('crumb',nb.querySelector('.navtitle').textContent);document.body.classList.remove('nav-open');window.scrollTo({top:0,behavior:'smooth'})}
+document.querySelectorAll('.navbtn').forEach(b=>b.addEventListener('click',()=>showPage(b.dataset.page)));document.querySelectorAll('.subbtn').forEach(b=>b.addEventListener('click',()=>{const group=b.closest('.subnav');group.querySelectorAll('.subbtn').forEach(x=>x.classList.remove('active'));b.classList.add('active');const page=group.parentElement;page.querySelectorAll(':scope > .subpage').forEach(x=>x.classList.toggle('active',x.id===b.dataset.sub))}));
+[teamFilter,districtFilter,sentinelFilter,sexFilter,productionFilter].forEach(x=>x.addEventListener('change',renderAll));$('resetFilters').addEventListener('click',()=>{[teamFilter,districtFilter,sentinelFilter,sexFilter,productionFilter].forEach(x=>x.value='All');renderAll()});
+document.querySelectorAll('[data-modal]').forEach(b=>b.addEventListener('click',()=>$(b.dataset.modal).classList.add('open')));document.querySelectorAll('[data-close]').forEach(b=>b.addEventListener('click',()=>b.closest('.modalback').classList.remove('open')));document.querySelectorAll('.modalback').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('open')}));
+$('definitionsBody').innerHTML=definitions.map(([a,b])=>`<div class="definition"><b>${a}</b><p>${b}</p></div>`).join('');
+function csvEscape(v){const s=String(v??'');return /[",\n]/.test(s)?`"${s.replaceAll('"','""')}"`:s}function downloadCSV(name,rows){const csv=rows.map(r=>r.map(csvEscape).join(',')).join('\n');const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));a.download=name;a.click();URL.revokeObjectURL(a.href);showToast(`${name} prepared`)}
+function showToast(msg,ms=1800){$('toast').textContent=msg;$('toast').classList.add('show');clearTimeout(showToast.t);showToast.t=setTimeout(()=>$('toast').classList.remove('show'),ms)}
+$('openQueue').addEventListener('click',()=>{showPage('quality');document.querySelector('.subbtn[data-sub="qa-queue"]').click()});
+document.querySelectorAll('[data-export]').forEach(b=>b.addEventListener('click',()=>{const type=b.dataset.export,ss=scopedSentinels(),data=scopedRecords(),fb=scopedFeedback();if(type==='attendance')downloadCSV('attendance_summary.csv',[['Sentinel','District','Team','Mobilised','Attended','Transport paid','Materials issued'],...ss.map(s=>[s.id,s.district,s.team,s.mobilised,s.attended,s.transport,s.materials])]);if(type==='recruitment')downloadCSV('recruitment_funnel.csv',[['Sentinel','Attended','Screened','Eligible','Selected','Consented','Submitted','Accepted Valid','Pending','Rejected'],...ss.map(s=>[s.id,s.attended,s.screened,s.eligible,s.selected,s.consented,s.submitted,s.accepted,s.pending,s.rejected])]);if(type==='results')downloadCSV('baseline_indicator_summary.csv',[['District','Accepted n','Median flock','Any vaccination','Households with deaths','Stock-out'],...Object.entries(group(data,'district')).map(([d,xs])=>[d,xs.length,median(xs.map(x=>x.closing)),pct(xs.filter(x=>x.vaccinated).length,xs.length),pct(xs.filter(x=>x.deathsOccurred).length,xs.length),pct(xs.filter(x=>x.stockout).length,xs.length)])]);if(type==='quality')downloadCSV('qa_exception_list.csv',[['Study ID','District','Sentinel','Enumerator','Flag','Severity','Status','Owner','Due'],...qaQueue]);if(type==='feedback')downloadCSV('feedback_actions.csv',[['ID','Date','Source','District','Theme','Message','Priority','Status','Owner','Due'],...fb.map(x=>[x.id,x.date,x.source,x.district,x.theme,x.message,x.priority,x.status,x.owner,x.due])]);if(type==='cohort')downloadCSV('followup_readiness.csv',[['Study ID','District','Sentinel','Recontact consent','Contact complete','Baseline date'],...data.map(x=>[x.studyId,x.district,x.id,x.followConsent,x.contactComplete,x.baselineDate])]);b.closest('.modalback').classList.remove('open')}));
+$('menuBtn').addEventListener('click',()=>document.body.classList.add('nav-open'));$('scrim').addEventListener('click',()=>document.body.classList.remove('nav-open'));document.addEventListener('keydown',e=>{if(e.key==='Escape')document.body.classList.remove('nav-open')});
+setText('headDate',new Date().toLocaleDateString('en-GB',{weekday:'short',day:'2-digit',month:'short',year:'numeric'}));
+const root=document.documentElement;$('themeToggle').addEventListener('click',()=>{const cur=root.dataset.theme||'light';const next=cur==='dark'?'light':'dark';root.dataset.theme=next;try{localStorage.setItem('gt2-theme',next)}catch(e){}});
+const tip=$('tip');document.addEventListener('mouseover',e=>{const el=e.target.closest('[data-tip]');if(!el){tip.classList.remove('show');return}const [h,v]=el.dataset.tip.split('|');tip.innerHTML='';const b=document.createElement('b');b.textContent=h;tip.append(b,document.createTextNode(v||''));tip.classList.add('show')});document.addEventListener('mousemove',e=>{if(!tip.classList.contains('show'))return;const w=tip.offsetWidth,hh=tip.offsetHeight;let x=e.clientX+14,y=e.clientY-hh-12;if(x+w>innerWidth-8)x=e.clientX-w-14;if(y<8)y=e.clientY+16;tip.style.left=x+'px';tip.style.top=y+'px'});
+const initial=(location.hash||'#overview').replace('#','');showPage(['overview','attendance','recruitment','results','quality','feedback'].includes(initial)?initial:'overview');renderAll();
+</script>
+<script>
+/* =====================================================================
+   Live data: KoboToolbox → Google Sheet → this page.
+   Active only when the page is served by Google Apps Script (google.script.run).
+   Opened as a local file, the dashboard keeps its built-in demo data.
+   ===================================================================== */
+(function(){
+if(!(window.google&&google.script&&google.script.run))return;
+
+const POLL_MS=30000;
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const num=v=>{const n=parseFloat(v);return Number.isFinite(n)?n:0};
+const sum=(row,keys)=>keys.reduce((a,k)=>a+num(row[k]),0);
+const lab=(map,v)=>map[v]??esc(String(v||'').replace(/_/g,' ')||'Not recorded');
+const day=v=>String(v||'').slice(0,10);
+
+const DISTRICTS={awutu_senya_east:'Awutu Senya East',awutu_senya_east__kasoa:'Awutu Senya East',ho_municipal:'Ho Municipal',upper_west_akim:'Upper West Akim',new_juaben_south:'New Juaben South',atiwa_west:'Atiwa West',sagnarigu:'Sagnarigu',techiman_south:'Techiman South',asutifi_north:'Asutifi North',mampong_municipal:'Mampong Municipal',bibiani_anhwiaso_bekwai:'Bibiani Anhwiaso Bekwai',kwahu_west:'Kwahu West',kwaku_west_district:'Kwahu West'};
+const L={
+  team:{team_a:'Team A',team_b:'Team B'},
+  source:{farmer:'Farmer',agrovet:'Agrovet',district_stakeholder:'District stakeholder',field_team:'Field Team'},
+  stage:{post_survey:'Post-survey discussion',operational:'Operational observation',other:'Other'},
+  theme:{vaccine_availability:'Vaccine availability',price_affordability:'Price and affordability',prevention_knowledge:'Disease prevention knowledge',travel_access:'Travel and access',service_timing:'Service timing',product_packaging:'Product packaging',cold_chain:'Cold-chain confidence',followup_request:'Follow-up request',questionnaire_issue:'Questionnaire issue',logistics:'Logistics',other:'Other'},
+  priority:{normal:'Normal',high:'High',urgent:'Urgent'},
+  owner:{supply_chain:'Supply Chain',commercial:'Commercial',merl_technical:'MERL / Technical',field_operations:'Field Operations',not_sure:'Unassigned'},
+  heard:{agrovet_invitation:'Agrovet invitation',community_announcement:'Community announcement',farmer_group:'Farmer group',district_outreach:'District outreach',peer_invitation:'Peer invitation',other:'Other'},
+  bc:{confirmed:'Confirmed',minor_discrepancy:'Minor discrepancy',material_discrepancy:'Material discrepancy',could_not_verify:'Could not verify'},
+  contact:{not_reached:'Not reached',wrong_number:'Wrong number',refused:'Refused back-check'},
+  // Current survey stores "≤20" as "male" and "21-30" as "female" (form bug); both spellings are accepted.
+  age:{male:'≤20',female:'21–30','18_20':'≤20','21_30':'21–30','31_40':'31–40','41_50':'41–50','51_60':'51–60','__60':'60+','60_plus':'60+'},
+};
+const AGE_MID={'≤20':19,'21–30':25.5,'31–40':35.5,'41–50':45.5,'51–60':55.5,'60+':63};
+LIVE.ageBands=['≤20','21–30','31–40','41–50','51–60','60+'];
+
+/* Question names in the current Tier 2 baseline form (Questions.xlsx). */
+const P=(pre,parts,suf)=>parts.map(p=>pre+p+suf),STD=['chicks_1','matured_chicken_1','keets_1','matured_gf_1'];
+const F={
+  opening:P('FLOC001_flock_characteristics_',['floc001a_chicks_1','floc001b_matured_chicken_1','floc001c_keet_1','floc001d_matured_gf_1'],'_chicks'),
+  bought:['floc002_chicks_1','floc002_matured_chicken','floc002_young_guinea_fowl','floc002_matured_guinea_fowl'],
+  hatched:['FLOC003_birds_hatched_floc00_13_chicks_1_column','FLOC003_birds_hatched_floc003keets_1_column'],
+  giftIn:P('FlOC004_birds_received_as_gift_',['floc004_chicks_1','floc004_matured_birds_1_1','floc004_keets_1','floc004_matured_1_gf_1'],'_column_1'),
+  disease:P('MORT001_mortality_health_mort001_',STD,'_column'),
+  predation:P('MORT002_birds_lost_predation_mort002_',STD,'_column'),
+  accident:P('MORT003_birds_lost_accident_mort003_',STD,'_column'),
+  weather:P('MORT004_birds_lost_extreme_wea_mort004_',['chicks_1','matured_chicken_1','keet_1','matured_gf_1'],'_column'),
+  theft:P('MORT005_birds_lost_theft_mort005_',STD,'_column'),
+  otherDeath:P('MORT006_birds_died_other_cause_mort006_',STD,'_column'),
+  nd:P('VACP001_vaccination_practices_vacp001_',['chicks_1','matured_chicken_1','keet_1_1','matured_gf_1'],'_column'),
+  gum:P('VACP002_birds_vaccinated_gumbo_vacp002_',STD,'_column'),
+  pox:P('VACP003_birds_vaccinated_fowlp_vacp003_',['chicks_1','matured_chicken_1_1','keets_1_1','matured_gf_1'],'_column'),
+  otherVax:P('VACP004_birds_vaccinated_other_vacp004_',['chicks_1','matured_chicken_1','keets_1_1','matured_gf_1'],'_column'),
+  sold:['inc001_chicks','inc001_matured_chicken','inc001_young_guinea_fowl','inc001_matured_guinea_fowl'],
+  price:['Price_per_chicks_sold_in_Ghana_cedis','Price_per_matured_ch_sold_in_Ghana_cedis','Price_per_young_guin_sold_in_Ghana_cedis','Price_per_matured_gu_sold_in_Ghana_cedis'],
+  consumed:P('INC002_birds_consumed_inc002_',STD,'_column'),
+  giftOut:P('INC003_birds_gifted_inc003_',['chicks_1','matured_chicken_1_1','keets_1','matured_gf_1'],'_column'),
+  closing:P('INC004_current_bird_count_inc004_',['chicks_1','matured_chicken','keets_1','matured_gf_1'],'_column'),
+  vaxCost:P('PROD001_production_cost_prod001_',['fowlpox_1','gumboro_1','newcastle_1'],'_column'),
+  feed:['PROD001_production_cost_prod001_feed_1_column'],
+  otherCost:P('PROD001_production_cost_prod001_',['hired_labor_1','treatments_1','equipment_1','others_1','vet_med_1'],'_column'),
+  sources:[['a','Cowtribe agrovet'],['b','District veterinary officer'],['c','Animal health worker'],['d','Private supplier'],['e','Other agrovet']].map(([k,l])=>['VACP005_vaccine_access_availab_vacp005'+k+'_1_column',l]),
+};
+const yes=v=>String(v||'').toLowerCase()==='yes';
+const minutes=(a,b)=>{const t=(Date.parse(b)-Date.parse(a))/60000;return Number.isFinite(t)&&t>=0?Math.round(t):NaN};
+
+function mapSurvey(row,S,ctx){
+  const consent=String(row.CONS001_consent||row.consent||'').toLowerCase();
+  const district=esc(DISTRICTS[row.Choose_district_name||row.district]||String(row.Choose_district_name||row.district||'').replace(/_/g,' ')||'District not recorded');
+  const key=ctx.keyFor(row.sentinel,district);
+  const opening=sum(row,F.opening),closing=sum(row,F.closing);
+  const additions=sum(row,F.bought)+sum(row,F.hatched)+sum(row,F.giftIn);
+  const causes={'Disease':sum(row,F.disease),'Predation':sum(row,F.predation),'Accident':sum(row,F.accident),'Extreme weather':sum(row,F.weather),'Other causes':sum(row,F.otherDeath)};
+  const deaths=Object.values(causes).reduce((a,b)=>a+b,0),theft=sum(row,F.theft);
+  const sold=sum(row,F.sold),consumed=sum(row,F.consumed),giftOut=sum(row,F.giftOut);
+  const expected=opening+additions-deaths-theft-sold-consumed-giftOut,tol=Math.max(3,Math.round(.05*(opening+additions)));
+  const nd=sum(row,F.nd),gum=sum(row,F.gum),pox=sum(row,F.pox),ov=sum(row,F.otherVax);
+  const src=F.sources.find(([k])=>yes(row[k]));
+  const stockout=yes(row.VACA001_poultry_vaccine_unavai)||yes(row.VACA003_poultry_vaccine_unavai)||yes(row.VACA009_vaccine_unavaiability);
+  const transportIssue=yes(row.VACA005_transportation_challen);
+  const flock=Math.max(opening,closing);
+  const ageBand=L.age[row.DEM005_age]||'Not recorded';
+  const qa=String(row._qa_status||'pending');
+  const tc=num(row.VACA006_cowtribe_transport),to=num(row.VACA007_noncowtribe_transport);
+  return {
+    uuid:row._uuid,consent,qa,round:String(row.Survey_round||'1'),
+    id:key,district,team:ctx.teamOf(key,district),community:esc(row.DEM002_community||''),
+    studyId:esc(row.study_id||('KOBO-'+(row._id||String(row._uuid).slice(0,8)))),
+    enumerator:esc(String(row.Enumerator_ID||'Not recorded').toUpperCase()),
+    sex:row.DEM004_gender==='female'?'Female':row.DEM004_gender==='male'?'Male':'Not recorded',
+    ageBand,age:AGE_MID[ageBand]??NaN,
+    production:flock<=S.yardMax?'Backyard':flock<=S.semiMax?'Semi-commercial':'Commercial',
+    opening,closing,additions,deaths,deathsOccurred:deaths>0,
+    cause:deaths?Object.entries(causes).sort((a,b)=>b[1]-a[1])[0][0]:'None',
+    balanceOk:Math.abs(expected-closing)<=tol,balanceGap:expected-closing,
+    vaccinated:nd+gum+pox+ov>0,nd:nd>0,gumboro:gum>0,fowlpox:pox>0,vaccinatedBirds:nd+gum+pox+ov,ndBirds:nd,
+    source:src?src[1]:'No source reported',stockout,
+    barrier:stockout&&transportIssue?'Stock-out and transport':stockout?'Stock-out':transportIssue?'Transport challenge':'No major barrier',
+    distance:NaN,travel:NaN,transportCowtribe:tc,transportOther:to,transportCost:Math.max(tc,to),
+    vaxSpend:sum(row,F.vaxCost),serviceCharge:0,feed:sum(row,F.feed),other:sum(row,F.otherCost),retained:NaN,
+    cashSales:F.sold.reduce((a,k,i)=>a+num(row[k])*num(row[F.price[i]]),0),
+    followConsent:row.recontact_consent?yes(row.recontact_consent):undefined,contactComplete:row._has_phone==='yes',
+    phoneHash:row._phone_hash||'',gpsOk:row._has_gps==='yes',
+    duration:minutes(row.start,row.end),baselineDate:day(row.today||row._submission_time),submitted:row._submission_time||'',
+    // inputs for the data-issue checks
+    available:opening+additions,lossesExceed:deaths+theft+sold+consumed+giftOut>opening+additions,
+    maxVaxBirds:Math.max(nd,gum,pox,ov),soldNoPrice:F.sold.some((k,i)=>num(row[k])>0&&num(row[F.price[i]])<=0),
+    syncDelayH:(Date.parse(row._submission_time)-Date.parse(row.end))/3.6e6,
+    enumMissing:!row.Enumerator_ID,emptyFlock:opening+closing+additions===0,
+  };
+}
+
+function apply(p){
+  const cfg=p.config||{},st=cfg.settings||{},forms=p.forms||{};
+  const S={yardMax:num(st.backyard_max_birds)||49,semiMax:num(st.semi_commercial_max_birds)||500,minMin:num(st.min_interview_minutes)||10,inclPending:yes(st.include_pending_in_results)};
+
+  /* sentinel register (config_sentinels tab) */
+  const reg={};
+  (cfg.sentinels||[]).filter(s=>s.sentinel_id).forEach(s=>{reg[s.sentinel_id]={id:esc(s.sentinel_id),district:esc(s.district),town:esc(s.community),community:esc(s.community),team:esc(s.team||'Unassigned'),date:day(s.event_date),quota:num(s.quota),cfgStatus:String(s.status||''),mobilised:0,attended:0,screened:0,femaleAtt:0,transport:0,materials:0,submitted:0,refused:0,accepted:0,pending:0,rejected:0,reconcileFlag:false,dates:[]}});
+  const teamByDistrict={};Object.values(reg).forEach(s=>{if(!teamByDistrict[s.district]||teamByDistrict[s.district]==='To be confirmed')teamByDistrict[s.district]=s.team});
+  const ctx={
+    keyFor:(sen,district)=>{if(sen&&reg[sen])return sen;const k=sen?esc(sen):`${district} · unassigned`;reg[k]??={id:k,district,town:'sentinel not recorded',community:'Sentinel not recorded',team:teamByDistrict[district]||'Unassigned',date:'',quota:0,cfgStatus:'',mobilised:0,attended:0,screened:0,femaleAtt:0,transport:0,materials:0,submitted:0,refused:0,accepted:0,pending:0,rejected:0,reconcileFlag:false,dates:[]};return k},
+    teamOf:(k,district)=>reg[k]?.team||teamByDistrict[district]||'Unassigned',
+  };
+
+  /* survey */
+  const all=(forms.survey||[]).map(r=>mapSurvey(r,S,ctx));
+  all.forEach(x=>{const s=reg[x.id];if(x.submitted)s.dates.push(day(x.submitted));if(x.consent==='no'){s.refused++;return}s.submitted++;if(x.qa==='approved')s.accepted++;else if(x.qa==='not_approved')s.rejected++;else s.pending++});
+  const consented=all.filter(x=>x.consent!=='no');
+  records=consented.filter(x=>(x.qa==='approved'||(S.inclPending&&x.qa!=='not_approved'))&&/^(1|baseline)$/i.test(x.round));
+
+  /* attendance + attendees */
+  const attBy={};
+  (forms.attendance||[]).forEach(a=>{const district=esc(DISTRICTS[a.district]||a.district||'District not recorded');const k=ctx.keyFor(a.sentinel,district);attBy[a._uuid]=k;const s=reg[k];
+    s.mobilised+=num(a.mobilised);s.attended+=num(a.attended_total);s.femaleAtt+=num(a.female_total);s.transport+=num(a.transport_total);s.materials+=num(a.materials_total);s.screened+=num(a.screened_total);if(a.register_matches==='no')s.reconcileFlag=true;if(a.event_date)s.dates.push(day(a.event_date))});
+  LIVE.attendees=(forms.attendance_attendee||[]).filter(a=>attBy[a._parent_uuid]).map(a=>({sentinel:attBy[a._parent_uuid],source:lab(L.heard,a.heard_from),screened:yes(a.screened),sex:a.att_sex}));
+
+  /* sentinel stats used by every page */
+  sentinelStats=Object.values(reg).map(s=>{
+    const consentedN=s.submitted,selected=consentedN+s.refused,screened=Math.max(s.screened,selected);
+    const date=s.date||s.dates.sort()[0]||'';
+    const status=['Complete','Active','Upcoming'].includes(s.cfgStatus)?s.cfgStatus:(s.quota&&s.accepted>=s.quota)?'Complete':(selected||s.attended)?'Active':'Upcoming';
+    return {...s,date,status,screened,eligible:selected,ineligible:0,selected,consented:consentedN,refused:s.refused,attendanceSource:'—',recruitSource:'—'};
+  }).sort((a,b)=>a.id.localeCompare(b.id));
+  sentinels=sentinelStats;
+
+  /* feedback */
+  const fbRows=forms.feedback||[];
+  LIVE.safeguarding=fbRows.filter(f=>yes(f.safeguarding)).length;
+  feedback=fbRows.filter(f=>!yes(f.safeguarding)).map((f,i)=>{const district=esc(DISTRICTS[f.district]||f.district||'');const k=ctx.keyFor(f.sentinel,district);return {
+    id:'FB-'+String(i+1).padStart(3,'0'),date:day(f.fb_date||f._submission_time),team:ctx.teamOf(k,district),district,sentinel:k,
+    source:lab(L.source,f.source),theme:f.theme==='other'&&f.theme_other?esc(f.theme_other):lab(L.theme,f.theme),
+    priority:lab(L.priority,f.priority),status:esc(f.status||'Open'),stage:lab(L.stage,f.stage),message:esc(f.message||''),
+    owner:esc(f.owner||L.owner[f.suggested_owner]||'Unassigned'),due:esc(f.due||'—'),closure:esc(f.closure||'Pending'),complaint:yes(f.is_complaint)}});
+  LIVE.complaints=feedback.filter(f=>f.complaint);
+
+  /* back-checks */
+  LIVE.backchecks=(forms.backcheck||[]).map(b=>{const reached=b.contact_outcome==='reached'&&yes(b.bc_consent);return {studyId:esc(b.study_id),reached,outcome:reached?lab(L.bc,b.bc_assessment):lab(L.contact,b.contact_outcome),enumerator:esc(String(b.original_enumerator||'').toUpperCase())}});
+
+  /* ---------- data issues: every source, computed on each refresh ---------- */
+  const phoneCount={};consented.forEach(x=>{if(x.phoneHash)phoneCount[x.phoneHash]=(phoneCount[x.phoneHash]||0)+1});
+  const checks=[
+    ['Phone number used by another farmer',x=>x.phoneHash&&phoneCount[x.phoneHash]>1,'High'],
+    ['More birds vaccinated than owned',x=>x.maxVaxBirds>x.available,'High'],
+    ['Birds lost or sold exceed birds owned',x=>x.lossesExceed,'High'],
+    ['District not recorded',x=>/not recorded/i.test(x.district),'High'],
+    ['Consent answer missing',x=>!x.consent,'High'],
+    ['Enumerator ID missing',x=>x.enumMissing,'High'],
+    ['Interview shorter than '+S.minMin+' min',x=>x.duration<S.minMin,'Medium'],
+    ['Interview longer than 2 hours',x=>x.duration>120,'Low'],
+    ['Flock numbers do not balance',x=>!x.balanceOk&&!x.lossesExceed,'Medium'],
+    ['Birds sold but no price recorded',x=>x.soldNoPrice,'Medium'],
+    ['No birds recorded at all',x=>x.emptyFlock,'Medium'],
+    ['Age band ≤20: confirm respondent is 18+',x=>x.ageBand==='≤20','Medium'],
+    ['Economic outlier',x=>x.feed>50000||x.cashSales>200000,'Medium'],
+    ['Sent more than 24 h after the interview',x=>x.syncDelayH>24,'Low'],
+    ['GPS not captured',x=>!x.gpsOk,'Low'],
+    ['No phone number for follow-up',x=>!x.contactComplete,'Low'],
+  ];
+  const qaStatus={approved:'Approved by supervisor',not_approved:'Rejected'};
+  const list=[];
+  all.forEach(x=>{
+    const base={source:'Survey',ref:x.studyId,district:x.district,sentinel:x.id,enumerator:x.enumerator,owner:'Supervisor',when:x.submitted,
+                open:x.qa!=='approved'&&x.qa!=='not_approved',status:qaStatus[x.qa]||'Awaiting supervisor'};
+    if(x.consent==='no'){if(x.available+x.closing>0)list.push({...base,label:'Interview data recorded after consent was refused',sev:'High'});return}
+    checks.forEach(([label,f,sev])=>{if(f(x))list.push({...base,label,sev})});
+  });
+  (forms.attendance||[]).forEach(a=>{
+    const k=attBy[a._uuid],s=reg[k],att=num(a.attended_total),base={source:'Attendance',ref:`${k} · ${day(a.event_date)}`,district:s.district,sentinel:k,enumerator:esc(String(a.staff_code||'').toUpperCase()),owner:'Field coordinator',when:a._submission_time||a.event_date,open:true,status:'Needs review'};
+    if(att>num(a.mobilised))list.push({...base,label:'More attendees than farmers mobilised',sev:'Medium'});
+    if(a.register_matches==='no')list.push({...base,label:'Register does not match finance count',sev:'Medium'});
+    if(num(a.transport_total)!==att)list.push({...base,label:'Transport payments differ from attendance',sev:'Low'});
+  });
+  fbRows.forEach((f,i)=>{
+    const district=esc(DISTRICTS[f.district]||f.district||''),k=ctx.keyFor(f.sentinel,district),resolved=/^resolved$/i.test(f.status||'');
+    const base={source:'Feedback',ref:'FB-'+String(i+1).padStart(3,'0'),district,sentinel:k,enumerator:esc(String(f.staff_code||'').toUpperCase()),owner:esc(f.owner||'Feedback owner'),when:f._submission_time||f.fb_date,open:!resolved,status:esc(f.status||'Open')};
+    if(yes(f.safeguarding))list.push({...base,ref:'Restricted',label:'Safeguarding referral logged: follow the escalation pathway',sev:'High'});
+    else if(f.priority==='urgent')list.push({...base,label:'Urgent feedback awaiting action',sev:'High'});
+  });
+  (forms.backcheck||[]).forEach(b=>{
+    if(b.bc_assessment!=='material_discrepancy')return;
+    const rec=all.find(x=>x.studyId===esc(b.study_id));
+    list.push({source:'Back-check',ref:esc(b.study_id),district:rec?rec.district:esc(DISTRICTS[b.district]||b.district||''),sentinel:rec?rec.id:'',enumerator:esc(String(b.original_enumerator||'').toUpperCase()),
+      label:'Back-check found a material discrepancy',sev:'High',owner:'Supervisor',when:b._submission_time||b.bc_date,open:!rec||rec.qa==='pending',status:rec&&rec.qa!=='pending'?(qaStatus[rec.qa]||'Reviewed'):'Needs review'});
+  });
+  issues=list;
+  const byLabel={};list.forEach(i=>{byLabel[i.label]=(byLabel[i.label]||0)+1});
+  qaFlags=Object.entries(byLabel).sort((a,b)=>b[1]-a[1]);
+  const rank={High:0,Medium:1,Low:2};
+  qaQueue=list.filter(i=>i.open).sort((a,b)=>rank[a.sev]-rank[b.sev]||(Date.parse(b.when)||0)-(Date.parse(a.when)||0)).slice(0,500)
+    .map(i=>[i.ref,i.district,i.sentinel,i.enumerator,i.label,i.sev,i.status,i.owner,fromNow(i.when)]);
+  // Pop-up when new issues arrive after the first load.
+  // Remembered across page reloads (Streamlit reloads the page when new data arrives).
+  const keys=new Set(list.filter(i=>i.open).map(i=>i.source+'|'+i.ref+'|'+i.label));
+  let prev=LIVE.issueKeys;
+  if(!prev){try{const s=localStorage.getItem('gt2-issue-keys');if(s)prev=new Set(JSON.parse(s))}catch(e){}}
+  if(prev){const fresh=[...keys].filter(k=>!prev.has(k)).length;if(fresh)showToast(`⚠ ${fresh} new data issue${fresh===1?'':'s'} detected`,6000)}
+  LIVE.issueKeys=keys;
+  try{localStorage.setItem('gt2-issue-keys',JSON.stringify([...keys]))}catch(e){}
+  const enumMap={};consented.forEach(x=>{const e=enumMap[x.enumerator]??={name:x.enumerator,team:x.team,submitted:0,accepted:0,durations:[],flags:0,back:0};e.submitted++;if(x.qa==='approved')e.accepted++;if(Number.isFinite(x.duration))e.durations.push(x.duration);e.flags+=x.consent==='no'?0:checks.filter(([,f])=>f(x)).length});
+  LIVE.backchecks.forEach(b=>{if(b.outcome==='Material discrepancy'&&enumMap[b.enumerator])enumMap[b.enumerator].back++});
+  enumerators=Object.values(enumMap).map(e=>({...e,accepted:e.accepted||0})).sort((a,b)=>a.name.localeCompare(b.name));
+
+  /* team-maintained tabs */
+  actions=(cfg.actions||[]).filter(a=>a.title).map(a=>({id:esc(a.id),title:esc(a.title),detail:esc(a.detail),severity:['critical','warning','review'].includes(a.severity)?a.severity:'review',owner:esc(a.owner),due:esc(a.due),status:esc(a.status||'Open')})).filter(a=>a.status!=='Resolved');
+  readiness=(cfg.readiness||[]).filter(r=>r.item).map(r=>[esc(r.item),esc(r.status),['good','warn','bad'].includes(r.level)?r.level:'warn']);
+
+  LIVE.on=true;
+  relabel();
+  populateFilters();
+  renderAll();
+}
+
+function relabel(){
+  const kpi=(id,eyebrow,sub)=>{const k=$(id)?.closest('.kpi');if(!k)return;k.querySelector('.eyebrow').textContent=eyebrow;k.querySelector('.sub').textContent=sub};
+  kpi('aDistance','Transport · Cowtribe agrovet','Median cost per trip');
+  kpi('aTravel','Transport · other providers','Median cost per trip');
+  kpi('aService','Service charge','Not captured in current form');
+  kpi('pfAge','Median age','Years, from age band');
+  kpi('cConsent','Recontact consent','Add a recontact question to the survey');
+  kpi('eRetained','Retained flock value','Not captured in current form');
+  $('demoChip').style.display='none';
+  const f=document.querySelector('.footer span');if(f)f.textContent='Ghana Tier 2 Baseline · Live data';
+}
+
+/* polling + status */
+let lastSig='',lastOk=0,failing=false;
+function setStatus(text,ok){$('syncText').textContent=text;$('syncChip').className='chip '+(ok?'live':'demo')}
+function ago(ms){const s=Math.round(ms/1000);return s<60?`${s}s ago`:s<3600?`${Math.round(s/60)} min ago`:`${Math.round(s/3600)} h ago`}
+// Streamlit host: data is embedded in the page (window.__PAYLOAD) and Streamlit checks the Sheet every minute.
+const EMBEDDED=!!window.__PAYLOAD;
+function tick(){if(lastOk&&!failing)setStatus(EMBEDDED?'Live · auto-refresh on':`Live · updated ${ago(Date.now()-lastOk)}`,true);if(LIVE.on&&Date.now()-(tick.last||0)>60000){tick.last=Date.now();renderIssues(scopedSentinels())}}
+function load(){
+  if(document.hidden&&lastOk)return;
+  google.script.run
+    .withSuccessHandler(p=>{failing=false;lastOk=Date.now();const sig=JSON.stringify([p.forms,p.config]);if(sig!==lastSig){lastSig=sig;apply(p);setText('lastRefresh',EMBEDDED?`New data last received: ${new Date(p.generatedAt).toLocaleString()}`:`Latest sync from Kobo: ${p.lastWebhook||p.lastScheduled?new Date(p.lastWebhook>p.lastScheduled?p.lastWebhook:p.lastScheduled).toLocaleString():'none yet'}`)}tick()})
+    .withFailureHandler(err=>{failing=true;const msg=String(err&&err.message||err);setStatus('Sync error · retrying',false);$('syncChip').title=msg;if(!LIVE.on)showToast('Data could not load: '+msg,12000);console.warn('Dashboard data load failed:',err)})
+    .getDashboardData();
+}
+setStatus('Connecting…',true);
+load();
+setInterval(load,POLL_MS);
+setInterval(tick,5000);
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)load()});
+})();
+</script>
+</body>
+</html>
