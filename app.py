@@ -10,6 +10,7 @@ Secrets (Streamlit Cloud → App settings → Secrets):
 import hashlib
 import json
 import os
+import re
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -41,10 +42,17 @@ def _service_account_info() -> dict:
     return dict(st.secrets["gcp_service_account"])
 
 
+def _sheet_id() -> str:
+    """Accepts the bare ID or the whole Sheet address (…/spreadsheets/d/<ID>/edit…)."""
+    value = str(st.secrets["SHEET_ID"]).strip().strip('"\'')
+    match = re.search(r"/d/([A-Za-z0-9_-]+)", value)
+    return match.group(1) if match else value
+
+
 @st.cache_resource(show_spinner=False)
 def _spreadsheet():
     client = gspread.service_account_from_dict(_service_account_info())
-    return client.open_by_key(st.secrets["SHEET_ID"].strip())
+    return client.open_by_key(_sheet_id())
 
 
 def _records(values: list) -> list:
@@ -115,7 +123,10 @@ def friendly_error(err: Exception) -> str:
     text = str(err)
     if isinstance(err, gspread.exceptions.SpreadsheetNotFound) or "404" in text:
         email = _service_account_info().get("client_email", "the service account")
-        return f"The Google Sheet was not found. Check SHEET_ID, and share the Sheet with **{email}** (Viewer)."
+        sid = _sheet_id()
+        return (f"The Google Sheet was not found. The app is looking for Sheet ID **{sid[:6]}…{sid[-4:]}** "
+                f"({len(sid)} characters). Check it matches the Sheet's address, and share the Sheet with "
+                f"**{email}** (Viewer).")
     if "403" in text or "PERMISSION_DENIED" in text:
         return "Google refused access. Enable the **Google Sheets API** in your Google Cloud project, and share the Sheet with the service account."
     if isinstance(err, KeyError):
