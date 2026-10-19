@@ -495,6 +495,28 @@ th{background:var(--page)}
 }
 :root[data-theme="dark"]{--c-plan:#d4af37;--c-target:#d4af37;--gold-ink:#e3c766}
 body{color:var(--ink)}
+
+/* Faded green "liquid glass" backdrop: soft gradient + blurred drifting light. Cards stay solid so they stand out. */
+:root{--page:#eef4ef;--inset:#f5f8f5;
+  --orb1:rgba(22,101,52,.26);--orb2:rgba(212,175,55,.16);--orb3:rgba(20,83,45,.15);--orb4:rgba(134,190,150,.32);
+  --card-shadow:0 1px 2px rgba(16,40,30,.05),0 12px 28px -16px rgba(20,83,45,.30)}
+:root[data-theme="dark"]{--page:#0a1610;--inset:#0f1e17;
+  --orb1:rgba(34,140,80,.16);--orb2:rgba(212,175,55,.07);--orb3:rgba(22,101,52,.14);--orb4:rgba(90,160,120,.08)}
+body{background:linear-gradient(160deg,#e0ece3 0%,#eff6f0 42%,#e2eee6 100%) fixed!important}
+:root[data-theme="dark"] .resetbtn,:root[data-theme="dark"] .linkbtn{color:var(--good)}
+:root[data-theme="dark"] .resetbtn:hover{background:var(--brand-2);color:#fff}
+:root[data-theme="dark"] body{background:linear-gradient(160deg,#07120d 0%,#0b1912 45%,#06100b 100%) fixed!important}
+.ambient{display:block}
+.orb{filter:blur(90px)}
+.grain{opacity:.03}
+.issue,.action,.readyitem,.event,.feedback-card,.funnelstep,.qabox,.exportbtn,.hero-stats div,.insight{background:var(--inset)!important}
+th{background:var(--inset)}
+.sidebar .navbtn:hover,.sidebar .navicon,.sidebar .toolbtn,.sidebar .sidecard{background:var(--inset)}
+.sidebar .navbtn.active .navicon{background:var(--brand)}
+:root[data-theme="dark"] .sidebar .navbtn.active .navicon{background:var(--brand-2)}
+.mainhead::before{display:none}
+.mainhead{background:color-mix(in srgb,var(--card) 92%,transparent);-webkit-backdrop-filter:blur(14px) saturate(140%);backdrop-filter:blur(14px) saturate(140%)}
+
 /* gold, used sparingly: the headline KPI, targets and the active-navigation marker */
 .kpi{--accent:var(--c-axis)}
 .kpi.good{--accent:var(--c-acc)}.kpi.warn{--accent:var(--c-pend)}.kpi.bad{--accent:var(--c-rej)}
