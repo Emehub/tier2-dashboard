@@ -477,6 +477,20 @@ th{background:var(--page)}
 :root[data-theme="dark"] .sidebar .navbtn.active .navicon{background:var(--brand-2);color:#fff}
 :root[data-theme="dark"] .sidebar .toolbtn svg{color:var(--good)}
 :root[data-theme="dark"] .sidebar .sideprog span{background:var(--good)}
+
+/* Filter drop-downs: brand-coloured option list in browsers that support customisable <select>
+   (Chrome/Edge). Other browsers keep the operating system's list. */
+.filtergroup select{accent-color:var(--brand)}
+@supports (appearance: base-select){
+  .filtergroup select,.filtergroup select::picker(select){appearance:base-select}
+  .filtergroup select::picker-icon{display:none}
+  .filtergroup select::picker(select){margin-top:6px;padding:5px;border:1px solid var(--card-line);border-radius:12px;background:var(--card);
+    box-shadow:0 12px 28px -12px rgba(16,40,30,.35);max-height:320px}
+  .filtergroup select option{padding:8px 10px;border-radius:8px;font-size:13px;color:var(--ink2);gap:8px}
+  .filtergroup select option:hover,.filtergroup select option:focus-visible{background:color-mix(in srgb,var(--brand) 9%,var(--card));color:var(--brand);outline:none}
+  .filtergroup select option:checked{background:var(--brand);color:#fff;font-weight:600}
+  .filtergroup select option::checkmark{display:none}
+}
 </style>
 </head>
 <body>
