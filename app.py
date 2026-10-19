@@ -56,16 +56,24 @@ def _spreadsheet():
 
 
 def _records(values: list) -> list:
-    """Sheet rows → list of {column: text}, skipping empty rows."""
+    """Sheet rows → list of {column: text}. Skips empty rows and keeps one row per Kobo
+    submission ID (_uuid), the last one written, so a duplicated row is never counted twice."""
     if len(values) < 2:
         return []
-    header = [str(h) for h in values[0]]
-    rows = []
+    header = [str(h).strip() for h in values[0]]
+    rows, seen = [], {}
     for row in values[1:]:
         if not any(str(v).strip() for v in row):
             continue
         row = list(row) + [""] * (len(header) - len(row))
-        rows.append({h: str(v) for h, v in zip(header, row) if h})
+        rec = {h: str(v).strip() for h, v in zip(header, row) if h}
+        key = rec.get("_uuid")
+        if key and key in seen:
+            rows[seen[key]] = rec
+            continue
+        if key:
+            seen[key] = len(rows)
+        rows.append(rec)
     return rows
 
 
@@ -137,7 +145,11 @@ def friendly_error(err: Exception) -> str:
 @st.fragment(run_every=REFRESH_SECONDS)
 def live_dashboard():
     try:
-        payload = load_payload()
+        if "html" in st.session_state:
+            payload = load_payload()
+        else:
+            with st.spinner("Loading the latest data from the Google Sheet…"):
+                payload = load_payload()
     except Exception as err:   # show a clear message instead of a stack trace
         st.error(friendly_error(err))
         return
