@@ -518,8 +518,14 @@ th{background:var(--inset)}
 .mainhead{background:color-mix(in srgb,var(--card) 92%,transparent);-webkit-backdrop-filter:blur(14px) saturate(140%);backdrop-filter:blur(14px) saturate(140%)}
 
 /* gold, used sparingly: the headline KPI, targets and the active-navigation marker */
-.kpi{--accent:var(--c-axis)}
-.kpi.good{--accent:var(--c-acc)}.kpi.warn{--accent:var(--c-pend)}.kpi.bad{--accent:var(--c-rej)}
+/* scorecards: only green, gold or red, on the top line, the status dot and a tinted border (no grey) */
+.kpi{--accent:var(--brand-2);border-color:color-mix(in srgb,var(--accent) 40%,var(--card))}
+.kpi.good{--accent:var(--brand-2)}.kpi.warn{--accent:var(--gold)}.kpi.bad{--accent:var(--c-rej)}.kpi.locked{--accent:var(--gold)}
+.kpi:hover{border-color:color-mix(in srgb,var(--accent) 70%,var(--card))}
+.kpi::after{height:3px;opacity:1}
+:root[data-theme="dark"] .kpi{--accent:#2c9564}
+:root[data-theme="dark"] .kpi.warn,:root[data-theme="dark"] .kpi.locked,:root[data-theme="dark"] .kpi.featured{--accent:var(--gold)}
+:root[data-theme="dark"] .kpi.bad{--accent:var(--c-rej)}
 .kpi.featured{--accent:var(--gold);background:linear-gradient(180deg,color-mix(in srgb,var(--gold-soft) 45%,var(--card)) 0,var(--card) 70%);border-color:color-mix(in srgb,var(--gold) 35%,var(--card-line))}
 :root[data-theme="dark"] .kpi.featured{background:linear-gradient(180deg,color-mix(in srgb,var(--gold) 10%,var(--card)) 0,var(--card) 70%)}
 .kpi.featured::after{height:3px}
