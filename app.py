@@ -30,7 +30,7 @@ st.markdown("""
   header[data-testid="stHeader"], footer, #MainMenu {display: none !important;}
   .block-container, [data-testid="stMainBlockContainer"] {padding: 0 !important; max-width: 100% !important;}
   [data-testid="stAppViewContainer"] {background: #f7f9f8;}
-  iframe {height: calc(100vh - 6px) !important; border: 0;}
+  iframe {height: calc(100vh - 6px) !important; height: calc(100dvh - 6px) !important; border: 0;}
 </style>
 """, unsafe_allow_html=True)
 
