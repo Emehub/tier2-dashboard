@@ -419,6 +419,60 @@ tr:last-child td{border-bottom:0}.num{text-align:right;font-variant-numeric:tabu
   .feedback-grid,.exportgrid{grid-template-columns:1fr}.notice{align-items:flex-start;flex-direction:column}.sectiontitle{flex-direction:column;align-items:flex-start}.sectiontitle h2{font-size:23px}
   .barrow{grid-template-columns:110px 1fr 58px;gap:8px}.hero{padding:18px}.ring-wrap{width:124px;height:124px}.action{grid-template-columns:1fr}.owner{text-align:left}
 }
+
+/* =====================================================================
+   Professional BI surface: flat page, solid cards, branded sidebar.
+   Overrides the earlier glass styling (kept above for reference).
+   ===================================================================== */
+:root{--page:#f2f5f3;--side:#003d29;--side-ink:#e6efe9;--side-muted:rgba(230,239,233,.6);--side-line:rgba(255,255,255,.09);
+  --card-shadow:0 1px 2px rgba(16,40,30,.04),0 8px 20px -14px rgba(16,40,30,.20)}
+:root[data-theme="dark"]{--page:#0a1510;--side:#07130e;--side-line:rgba(255,255,255,.07);
+  --card-shadow:0 1px 2px rgba(0,0,0,.3),0 10px 24px -16px rgba(0,0,0,.6)}
+body{background:var(--page)!important}
+.ambient{display:none}
+
+/* cards */
+.panel,.filterbar,.hero,.modal{background:var(--card);-webkit-backdrop-filter:none;backdrop-filter:none;
+  border:1px solid var(--card-line);border-radius:14px;box-shadow:var(--card-shadow)}
+.panel::before,.filterbar::before,.hero::before,.modal::before,.panel::after,.hero::after,.modal::after{display:none}
+.hero .glow{display:none}
+.panel h3{font-size:15px}
+.modalhead{background:var(--card)}
+.filtergroup select{background-color:var(--card)}
+.subnav{background:var(--card);border-color:var(--card-line);-webkit-backdrop-filter:none;backdrop-filter:none;box-shadow:0 1px 2px rgba(16,40,30,.04)}
+.issue,.action,.readyitem,.event,.feedback-card,.funnelstep,.qabox,.exportbtn,.hero-stats div{background:var(--page)!important;border-color:var(--card-line)!important}
+.issue:hover,.action:hover,.feedback-card:hover{background:var(--card)!important}
+.tablewrap{background:var(--card);border-color:var(--card-line)}
+th{background:var(--page)}
+.mainhead .chip{background:var(--card);border-color:var(--card-line)}
+@media(max-width:1000px){.mainhead{background:var(--card);border:1px solid var(--card-line);-webkit-backdrop-filter:none;backdrop-filter:none}}
+
+/* branded sidebar */
+.sidebar{background:var(--side);color:var(--side-ink);border:0;-webkit-backdrop-filter:none;backdrop-filter:none;box-shadow:0 12px 30px -18px rgba(0,40,25,.7)}
+.sidebar::before{display:none}
+.sidebar .brand{border-bottom-color:var(--side-line)}
+.sidebar .brand h1{color:#fff}.sidebar .brand p{color:var(--side-muted)}
+.sidebar .logo{box-shadow:0 0 0 1px rgba(255,255,255,.12)}
+.sidebar .sidelabel{color:rgba(230,239,233,.42)}
+.sidebar .navbtn{color:var(--side-ink)}
+.sidebar .navbtn .navsub{color:var(--side-muted)}
+.sidebar .navbtn:hover{background:rgba(255,255,255,.06);color:#fff}
+.sidebar .navicon{background:rgba(255,255,255,.07);color:#cfe3d8;box-shadow:none}
+.sidebar .navbtn.active{background:rgba(255,255,255,.11);color:#fff;box-shadow:none}
+.sidebar .navbtn.active .navicon{background:var(--gold);color:#241805}
+.sidebar .navbtn.active .navsub{color:rgba(255,255,255,.72)}
+.sidebar .toolbtn{background:rgba(255,255,255,.05);border-color:var(--side-line);color:var(--side-ink)}
+.sidebar .toolbtn:hover{background:rgba(255,255,255,.1);color:#fff}
+.sidebar .toolbtn svg{color:var(--gold)}
+.sidebar .sidecard{background:rgba(255,255,255,.05);border-color:var(--side-line)}
+.sidebar .sidecard .row{color:var(--side-muted)}.sidebar .sidecard .row b{color:#fff}
+.sidebar .sidecard small{color:var(--side-muted)}
+.sidebar .sideprog{background:rgba(255,255,255,.12)}.sidebar .sideprog span{background:var(--gold)}
+.sidebar .chip.live{background:rgba(47,199,122,.14);border-color:rgba(47,199,122,.35);color:#a6e6c4}
+.sidebar .chip.demo{background:rgba(192,144,80,.16);border-color:rgba(192,144,80,.42);color:#ecc993}
+.sidebar .navbadge{box-shadow:0 0 0 3px var(--side)}
+.side-scroll{scrollbar-color:rgba(255,255,255,.15) transparent}
+.sidebar .flagline{height:3px;background:var(--gold)}
 </style>
 </head>
 <body>
