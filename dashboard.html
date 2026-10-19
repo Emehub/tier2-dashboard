@@ -21,15 +21,20 @@
   --shadow:0 0 0 1px rgba(17,40,30,.05),0 1px 2px rgba(17,40,30,.04),0 8px 24px -10px rgba(17,40,30,.12),0 24px 48px -28px rgba(17,40,30,.14);
   --shadow-sm:0 0 0 1px rgba(17,40,30,.05),0 1px 2px rgba(17,40,30,.04),0 6px 16px -8px rgba(17,40,30,.12);
   --blur:blur(24px) saturate(175%);
-  --green:#0b5b3b;--green2:#14794f;--green3:#2fa36b;--green4:#86d8ab;
+  --green:#004830;--green2:#0b6b48;--green3:#2fa36b;--green4:#86d8ab;
+  /* TribeCo brand (from the logo) */
+  --brand:#004830;--brand-2:#0b6b48;--gold:#c09050;--gold-ink:#8a6420;--sage:#98b8a8;
+  /* chart roles (validated for colour-blind separation; amber always carries a label/legend) */
+  --c-acc:#1e7b4f;--c-pend:#e0a21e;--c-rej:#c8463b;--c-plan:#8b958f;--c-series:#1e7b4f;
+  --c-grid:#e6ebe8;--c-axis:#c3cbc6;--c-ink:#5b6b63;--c-surface:#ffffff;
   --good:#11744a;--good-bg:rgba(47,163,107,.14);--good-line:rgba(47,163,107,.30);
   --warn:#965800;--warn-bg:rgba(232,162,38,.17);--warn-line:rgba(232,162,38,.36);
   --bad:#b0261b;--bad-bg:rgba(222,72,56,.12);--bad-line:rgba(222,72,56,.30);
   --info:#1d5799;--info-bg:rgba(62,124,214,.12);--info-line:rgba(62,124,214,.28);
   --purple:#6440bd;--purple-bg:rgba(120,82,222,.12);
-  --track:rgba(17,40,30,.07);--bar1:#3cb97b;--bar2:#0e6a43;
+  --track:rgba(17,40,30,.07);--bar1:#2a8a5c;--bar2:#1e7b4f;
   --th:rgba(250,251,250,.97);
-  --orb1:rgba(46,180,112,.16);--orb2:rgba(248,192,58,.14);--orb3:rgba(232,92,74,.08);--orb4:rgba(64,158,204,.10);
+  --orb1:rgba(0,72,48,.10);--orb2:rgba(192,144,80,.12);--orb3:rgba(152,184,168,.12);--orb4:rgba(0,72,48,.06);
   --top:rgba(255,255,255,.80);--top-ink:var(--ink);--top-muted:var(--muted);
   --r-xl:26px;--r-lg:20px;--r-md:15px;--r-sm:11px;
 }
@@ -47,7 +52,9 @@
   --bad:#ff8f80;--bad-bg:rgba(255,120,100,.12);--bad-line:rgba(255,120,100,.28);
   --info:#8ab9f4;--info-bg:rgba(120,170,240,.12);--info-line:rgba(120,170,240,.26);
   --purple:#bba5ff;--purple-bg:rgba(170,140,255,.12);
-  --track:rgba(255,255,255,.08);--bar1:#46c486;--bar2:#1a8556;
+  --track:rgba(255,255,255,.08);--bar1:#36a572;--bar2:#2c9564;
+  --c-acc:#2c9564;--c-pend:#b08f10;--c-rej:#cf4d63;--c-plan:#9aa6a0;--c-series:#2c9564;
+  --c-grid:#22362d;--c-axis:#3a4f45;--c-ink:#a9bab1;--c-surface:#13241c;--gold-ink:#d8b072;
   --th:rgba(18,36,28,.96);
   --orb1:rgba(28,150,92,.38);--orb2:rgba(214,156,36,.20);--orb3:rgba(200,68,56,.16);--orb4:rgba(36,118,170,.22);
   --top:rgba(9,30,22,.64);
@@ -85,11 +92,10 @@ button,select,input{font:inherit;color:inherit}.app{min-height:100vh;position:re
 .app{display:grid;grid-template-columns:280px minmax(0,1fr)}
 .sidebar{position:sticky;top:14px;height:calc(100vh - 28px);margin:14px 0 14px 14px;border-radius:var(--r-xl);display:flex;flex-direction:column;overflow:hidden;z-index:60;background:var(--top);color:var(--top-ink)}
 .side-scroll{flex:1;overflow-y:auto;padding:18px 14px 16px;scrollbar-width:thin;scrollbar-color:var(--hair) transparent}
-.flagline{height:4px;flex:none;background:linear-gradient(90deg,#ce1126 0 33.3%,#fcd116 33.3% 66.6%,#006b3f 66.6%)}
+.flagline{height:4px;flex:none;background:linear-gradient(90deg,var(--brand) 0 55%,var(--gold) 55%)}
 .brand{display:flex;gap:12px;align-items:center;padding:2px 6px 18px;border-bottom:1px solid var(--hair2);margin-bottom:16px}
-.logo{width:42px;height:42px;border-radius:14px;flex:none;display:grid;place-items:center;font-size:19px;font-weight:800;color:#06351f;
-  background:radial-gradient(120% 120% at 25% 15%,#ffffff 0,#c8f2d9 30%,#46bf82 75%,#1d8a58 100%);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.9),inset 0 -6px 12px rgba(0,60,30,.25),0 6px 14px -4px rgba(10,60,35,.35)}
+.logo{width:44px;height:48px;border-radius:12px;flex:none;display:block;object-fit:cover;background:var(--brand);
+  box-shadow:0 0 0 1px rgba(0,72,48,.25),0 6px 14px -6px rgba(0,72,48,.55)}
 .brand h1{font-size:15px;margin:0;line-height:1.2;letter-spacing:-.01em;font-weight:750}
 .brand p{margin:3px 0 0;color:var(--top-muted);font-size:11.5px;line-height:1.35}
 .sidelabel{font-size:10.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);padding:0 10px;margin:0 0 8px}
@@ -99,7 +105,9 @@ button,select,input{font:inherit;color:inherit}.app{min-height:100vh;position:re
   transition:background .22s ease,color .22s ease,box-shadow .22s ease,transform .18s ease}
 .navbtn:hover{background:var(--glass-hover);color:var(--ink)}
 .navbtn:active{transform:scale(.985)}
-.navbtn.active{color:#fff;background:linear-gradient(180deg,var(--green2),var(--green));box-shadow:inset 0 1px 0 rgba(255,255,255,.25),0 8px 18px -8px rgba(11,91,59,.6)}
+.navbtn{position:relative}
+.navbtn.active{color:#fff;background:linear-gradient(180deg,var(--brand-2),var(--brand));box-shadow:inset 0 1px 0 rgba(255,255,255,.18),0 8px 18px -8px rgba(0,72,48,.6)}
+.navbtn.active::before{content:"";position:absolute;left:-1px;top:10px;bottom:10px;width:3px;border-radius:0 3px 3px 0;background:var(--gold)}
 .navicon{width:34px;height:34px;border-radius:11px;display:grid;place-items:center;background:#fff;color:var(--green2);flex:none;box-shadow:0 0 0 1px var(--hair),0 1px 2px rgba(17,40,30,.06);transition:background .22s,color .22s}
 .navicon svg,.toolbtn svg,.menubtn svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .navbtn.active .navicon{background:rgba(255,255,255,.18);color:#fff;box-shadow:inset 0 1px 0 rgba(255,255,255,.22)}
@@ -130,6 +138,49 @@ button,select,input{font:inherit;color:inherit}.app{min-height:100vh;position:re
 
 .navbadge{margin-left:auto;min-width:22px;height:22px;padding:0 7px;border-radius:999px;background:#d0453a;color:#fff;font-size:11px;font-weight:750;display:grid;place-items:center;flex:none;box-shadow:0 0 0 3px rgba(208,69,58,.16);font-variant-numeric:tabular-nums}
 .navbadge:empty{display:none}
+
+/* ---------- BI charts (inline SVG) ---------- */
+.chart{position:relative;min-height:120px}
+.chart svg{display:block;overflow:visible}
+.chart .tick{font-size:11px;fill:var(--c-ink);font-variant-numeric:tabular-nums}
+.chart .endlbl{font-size:11.5px;font-weight:650;fill:var(--ink2)}
+.chart .band .guide{opacity:0;transition:opacity .12s}
+.chart .band:hover .guide{opacity:1}
+.chart .hit{fill:transparent;cursor:default}
+.chart .hit:hover{fill:var(--track)}
+.legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:12px;color:var(--ink2);margin:-4px 0 10px}
+.legend span{display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+.legend i{width:10px;height:10px;border-radius:3px;display:inline-block}
+.legend i.line{width:16px;height:2px;border-radius:2px}
+.spark{margin-top:8px;height:26px}
+.spark svg{display:block;width:100%;height:26px;overflow:visible}
+.delta{margin-top:4px;font-size:11.5px;font-weight:650;color:var(--good)}
+.delta:empty{display:none}
+/* bullet bars: approved + pending against a quota / target marker */
+.bullets{display:flex;flex-direction:column;gap:4px}
+.bullet{display:grid;grid-template-columns:minmax(120px,180px) 1fr 96px;gap:12px;align-items:center;font-size:12.5px;color:var(--ink2);padding:6px 8px;margin:0 -8px;border-radius:10px;transition:background .15s}
+.bullet:hover{background:var(--glass-hover)}
+.bullet .lbl{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bullet .trk{position:relative;height:12px;background:var(--track);border-radius:0 4px 4px 0}
+.bullet .a,.bullet .p{position:absolute;top:0;bottom:0;transform-origin:left center;animation:grow .8s cubic-bezier(.2,.8,.2,1) both}
+.bullet .a{left:0;background:var(--c-acc);border-radius:0 4px 4px 0}
+.bullet .a.join{border-radius:0}
+.bullet .p{background:var(--c-pend);border-radius:0 4px 4px 0}
+.bullet .tgt{position:absolute;top:-5px;bottom:-5px;width:2px;margin-left:-1px;background:var(--ink);border-radius:2px;opacity:.75}
+.bullet .val{text-align:right;font-weight:700;color:var(--ink);font-variant-numeric:tabular-nums}
+.bullet .val small{display:block;font-size:10.5px;color:var(--muted);font-weight:500}
+/* funnel */
+.funnel2{display:flex;flex-direction:column;gap:2px}
+.fstep{display:grid;grid-template-columns:150px 1fr 70px;gap:12px;align-items:center;font-size:12.5px;padding:5px 8px;margin:0 -8px;border-radius:10px}
+.fstep:hover{background:var(--glass-hover)}
+.fstep .fb{height:22px;border-radius:0 4px 4px 0;background:var(--c-series);transform-origin:left center;animation:grow .8s cubic-bezier(.2,.8,.2,1) both}
+.fstep.good .fb{background:var(--brand)}
+.fstep.bad .fb{background:var(--c-rej)}
+.fstep .fv{text-align:right;font-weight:750;color:var(--ink);font-variant-numeric:tabular-nums}
+.fstep .fl{color:var(--ink2);font-weight:600}
+.fconv{margin-left:170px;font-size:11px;color:var(--muted);padding:0 0 2px}
+.fconv b{color:var(--ink2);font-weight:650}
+@media(max-width:720px){.bullet{grid-template-columns:100px 1fr 70px}.fstep{grid-template-columns:100px 1fr 54px}.fconv{margin-left:118px}}
 
 /* ---------- live data issues ---------- */
 .issues-panel{margin-bottom:16px}
@@ -260,10 +311,8 @@ tr:last-child td{border-bottom:0}.num{text-align:right;font-variant-numeric:tabu
 .barrow{display:grid;grid-template-columns:minmax(130px,190px) 1fr 70px;gap:12px;align-items:center;font-size:12.5px;color:var(--ink2);padding:5px 8px;margin:0 -8px;border-radius:10px;transition:background .15s;cursor:default}
 .barrow:hover{background:var(--glass-hover)}
 .barrow > span:first-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.barrow .bar{height:12px;background:var(--track);border-radius:999px;overflow:hidden;box-shadow:inset 0 1px 2px rgba(0,0,0,.06)}
-.barrow .bar span{position:relative;height:100%;display:block;border-radius:999px;background:linear-gradient(90deg,var(--bar2),var(--bar1));transform-origin:left center;animation:grow .9s cubic-bezier(.2,.8,.2,1) both;
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.35)}
-.barrow .bar span::after{content:"";position:absolute;left:4px;right:4px;top:2px;height:3px;border-radius:999px;background:rgba(255,255,255,.35)}
+.barrow .bar{height:12px;background:var(--track);border-radius:0 4px 4px 0;overflow:hidden}
+.barrow .bar span{position:relative;height:100%;display:block;border-radius:0 4px 4px 0;background:var(--c-series);transform-origin:left center;animation:grow .9s cubic-bezier(.2,.8,.2,1) both}
 @keyframes grow{from{transform:scaleX(0)}}
 .barrow .pct{text-align:right;font-weight:700;color:var(--ink);font-variant-numeric:tabular-nums}
 .barrow .pct small{display:block;font-size:10.5px;color:var(--muted);font-weight:500}
@@ -371,8 +420,8 @@ tr:last-child td{border-bottom:0}.num{text-align:right;font-variant-numeric:tabu
   <span class="flagline" aria-hidden="true"></span>
   <div class="side-scroll">
     <div class="brand">
-      <div class="logo">C</div>
-      <div><h1>Ghana Tier 2 Baseline</h1><p>Field implementation, research quality &amp; learning</p></div>
+      <img class="logo" alt="TribeCo" src="data:image/png;base64,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"/>
+      <div><h1>Ghana Tier 2 Baseline</h1><p>TribeCo · field, quality &amp; learning</p></div>
     </div>
     <div class="sidelabel">Dashboard</div>
     <nav class="mainnav" aria-label="Main dashboard navigation">
@@ -420,7 +469,7 @@ tr:last-child td{border-bottom:0}.num{text-align:right;font-variant-numeric:tabu
     <div class="hero">
       <span class="glow" aria-hidden="true"></span>
       <div class="ring-wrap">
-        <svg class="ring" viewBox="0 0 120 120" role="img" aria-labelledby="heroPct"><defs><linearGradient id="ringGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7fe0aa"/><stop offset="1" stop-color="#0e6a43"/></linearGradient></defs><circle class="ring-track" cx="60" cy="60" r="52"/><circle class="ring-fill" id="heroRing" cx="60" cy="60" r="52"/></svg>
+        <svg class="ring" viewBox="0 0 120 120" role="img" aria-labelledby="heroPct"><defs><linearGradient id="ringGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2a8a5c"/><stop offset="1" stop-color="#004830"/></linearGradient></defs><circle class="ring-track" cx="60" cy="60" r="52"/><circle class="ring-fill" id="heroRing" cx="60" cy="60" r="52"/></svg>
         <div class="ring-label"><b id="heroPct">0%</b><span>of target</span></div>
       </div>
       <div class="hero-copy">
@@ -436,8 +485,8 @@ tr:last-child td{border-bottom:0}.num{text-align:right;font-variant-numeric:tabu
       </div>
     </div>
     <div class="kpis">
-      <div class="kpi good"><div class="eyebrow">Accepted Valid</div><div class="value" id="ovAccepted">0</div><div class="sub" id="ovAcceptedSub">0% of target</div></div>
-      <div class="kpi"><div class="eyebrow">Attendance</div><div class="value" id="ovAttendance">0</div><div class="sub" id="ovAttendanceSub">0% of mobilised</div></div>
+      <div class="kpi good"><div class="eyebrow">Accepted Valid</div><div class="value" id="ovAccepted">0</div><div class="sub" id="ovAcceptedSub">0% of target</div><div class="delta" id="ovAcceptedDelta"></div><div class="spark" id="ovAcceptedSpark"></div></div>
+      <div class="kpi"><div class="eyebrow">Attendance</div><div class="value" id="ovAttendance">0</div><div class="sub" id="ovAttendanceSub">0% of mobilised</div><div class="spark" id="ovAttendanceSpark"></div></div>
       <div class="kpi"><div class="eyebrow">Recruitment Yield</div><div class="value" id="ovYield">0%</div><div class="sub">Accepted Valid ÷ attended</div></div>
       <div class="kpi warn"><div class="eyebrow">Pending QA</div><div class="value" id="ovPending">0</div><div class="sub">Requires review before analysis</div></div>
       <div class="kpi"><div class="eyebrow">Sentinels Complete</div><div class="value" id="ovSentinels">0/0</div><div class="sub">Quota achieved</div></div>
@@ -448,8 +497,12 @@ tr:last-child td{border-bottom:0}.num{text-align:right;font-variant-numeric:tabu
       <div class="issuelist" id="issueList"></div>
       <button class="linkbtn" id="openQueue">Open the full QA queue →</button>
     </div>
+    <div class="grid2eq">
+      <div class="panel"><div class="panelhead"><div><h3>Accepted Valid vs plan</h3><div class="desc">Cumulative interviews approved by supervisors, against the cumulative quota of scheduled sentinel events.</div></div></div><div id="legendProgress"></div><div class="chart" id="chartProgress"></div></div>
+      <div class="panel"><div class="panelhead"><div><h3>Daily submissions by QA status</h3><div class="desc">Interviews received each day, and where they stand in supervisor review.</div></div></div><div id="legendDaily"></div><div class="chart" id="chartDaily"></div></div>
+    </div>
     <div class="grid2">
-      <div class="panel"><div class="panelhead"><div><h3>Progress by district</h3><div class="desc">Accepted Valid interviews against the approved sentinel quota table.</div></div><span class="mini-pill" id="districtProgressPill">10 districts</span></div><div class="chartbar" id="overviewDistrictBars"></div></div>
+      <div class="panel"><div class="panelhead"><div><h3>Progress by district</h3><div class="desc">Approved and pending interviews per district, against the district quota.</div></div><span class="mini-pill" id="districtProgressPill">10 districts</span></div><div id="legendDistrict"></div><div class="bullets" id="overviewDistrictBars"></div></div>
       <div class="panel"><div class="panelhead"><div><h3>Actions & alerts</h3><div class="desc">Issues requiring owner, due date and documented resolution.</div></div><span class="mini-pill bad" id="actionCountPill">0 open</span></div><div class="actionlist" id="overviewActions"></div></div>
     </div>
     <div class="grid3">
@@ -471,7 +524,7 @@ tr:last-child td{border-bottom:0}.num{text-align:right;font-variant-numeric:tabu
         <div class="kpi"><div class="eyebrow">Meetings Opened</div><div class="value" id="attEvents">0</div><div class="sub">Events with recorded attendance</div></div>
         <div class="kpi bad"><div class="eyebrow">Reconciliation Flags</div><div class="value" id="attFlags">0</div><div class="sub">Register / payment / survey mismatch</div></div>
       </div>
-      <div class="grid2"><div class="panel"><h3>Attendance rate by district</h3><div class="desc">Attended as a share of mobilisation target.</div><div class="chartbar" id="attendanceDistrictBars"></div></div><div class="panel"><h3>Attendance loss</h3><div class="desc">Where mobilisation did not convert into physical turnout.</div><div class="chartbar" id="noShowBars"></div></div></div>
+      <div class="grid2"><div class="panel"><h3>Attendance rate by district</h3><div class="desc">Attended as a share of mobilisation target.</div><div id="legendAttendance"></div><div class="bullets" id="attendanceDistrictBars"></div></div><div class="panel"><h3>Attendance loss</h3><div class="desc">Where mobilisation did not convert into physical turnout.</div><div class="chartbar" id="noShowBars"></div></div></div>
       <div class="panel"><div class="panelhead"><div><h3>Event attendance summary</h3><div class="desc">Meeting-level mobilisation, turnout and reconciliation status.</div></div><span class="mini-pill">10 planned events</span></div><div class="tablewrap"><table><thead><tr><th>Date</th><th>District / town</th><th>Team</th><th class="num">Mobilised</th><th class="num">Attended</th><th class="num">Rate</th><th class="num">Surveys submitted</th><th>Reconciliation</th></tr></thead><tbody id="attendanceEventBody"></tbody></table></div></div>
     </div>
     <div class="subpage" id="att-location"><div class="panel"><div class="panelhead"><div><h3>Attendance by sentinel catchment</h3><div class="desc">Location detail used to identify weak mobilisation and catchment overlap.</div></div><span class="mini-pill blue">Sentinel detail</span></div><div class="tablewrap"><table><thead><tr><th>Sentinel</th><th>District</th><th>Community</th><th>Team</th><th class="num">Mobilised</th><th class="num">Attended</th><th class="num">No-show</th><th class="num">Rate</th><th>Status</th></tr></thead><tbody id="attendanceLocationBody"></tbody></table></div></div></div>
@@ -483,7 +536,7 @@ tr:last-child td{border-bottom:0}.num{text-align:right;font-variant-numeric:tabu
     <div class="sectiontitle"><div><h2>Recruitment</h2><p>Shows how meeting attendees moved through screening, eligibility, selection, consent, submission and QA acceptance.</p></div><span class="pill good" id="recruitmentN">Accepted-valid n=0</span></div>
     <div class="subnav" data-group="recruitment"><button class="subbtn active" data-sub="rec-funnel">Recruitment Funnel</button><button class="subbtn" data-sub="rec-eligibility">Eligibility & Refusals</button><button class="subbtn" data-sub="rec-source">Source & Selection</button></div>
     <div class="subpage active" id="rec-funnel">
-      <div class="panel"><div class="panelhead"><div><h3>End-to-end recruitment funnel</h3><div class="desc">Every stage must be separately recorded; counts are not interchangeable.</div></div><span class="mini-pill">Screening flow</span></div><div class="funnel" id="recruitmentFunnel"></div></div>
+      <div class="panel"><div class="panelhead"><div><h3>End-to-end recruitment funnel</h3><div class="desc">Every stage must be separately recorded; counts are not interchangeable.</div></div><span class="mini-pill">Screening flow</span></div><div class="funnel2" id="recruitmentFunnel"></div></div>
       <div class="kpis" style="margin-top:13px"><div class="kpi"><div class="eyebrow">Eligibility Rate</div><div class="value" id="eligibilityRate">0%</div><div class="sub">Eligible ÷ screened</div></div><div class="kpi"><div class="eyebrow">Consent Rate</div><div class="value" id="consentRate">0%</div><div class="sub">Consented ÷ selected</div></div><div class="kpi good"><div class="eyebrow">Acceptance Rate</div><div class="value" id="acceptanceRate">0%</div><div class="sub">Accepted Valid ÷ submitted</div></div><div class="kpi"><div class="eyebrow">Recruitment Yield</div><div class="value" id="recruitYield">0%</div><div class="sub">Accepted Valid ÷ attended</div></div><div class="kpi warn"><div class="eyebrow">Pending QA</div><div class="value" id="recPending">0</div><div class="sub">Submitted but not accepted</div></div><div class="kpi bad"><div class="eyebrow">QA Rejected</div><div class="value" id="recRejected">0</div><div class="sub">Not included in analysis</div></div></div>
       <div class="grid2"><div class="panel"><h3>Funnel loss by stage</h3><div class="desc">Absolute number lost between adjacent stages.</div><div class="chartbar" id="funnelLossBars"></div></div><div class="panel"><h3>Recruitment yield by district</h3><div class="desc">Accepted Valid interviews as a share of district attendance.</div><div class="chartbar" id="yieldDistrictBars"></div></div></div>
     </div>
@@ -549,7 +602,7 @@ tr:last-child td{border-bottom:0}.num{text-align:right;font-variant-numeric:tabu
     <div class="subpage" id="fb-actions"><div class="panel"><div class="panelhead"><div><h3>Feedback action tracker</h3><div class="desc">Every action must have an owner, due date, status and evidence of closure.</div></div><span class="mini-pill warn">Management follow-up</span></div><div class="tablewrap"><table><thead><tr><th>Action</th><th>Origin</th><th>District</th><th>Owner</th><th>Due</th><th>Priority</th><th>Status</th><th>Closure evidence</th></tr></thead><tbody id="feedbackActionBody"></tbody></table></div></div></div>
   </section>
 
-  <div class="footer"><span>Ghana Tier 2 Baseline · Prototype interface</span><span>Source logic: Kobo → Raw → QA → Accepted Valid → Analysis → Follow-up</span><span id="lastRefresh">Last refreshed: demo</span></div>
+  <div class="footer"><span>TribeCo · Ghana Tier 2 Baseline</span><span>Source logic: Kobo → Raw → QA → Accepted Valid → Analysis → Follow-up</span><span id="lastRefresh">Last refreshed: demo</span></div>
 </main>
 </div>
 
@@ -683,6 +736,8 @@ let qaQueue=[
 ];
 // One list of detected data issues; the live adapter replaces it with issues computed from Kobo data.
 let issues=qaQueue.map(q=>({source:'Survey',ref:q[0],district:q[1],sentinel:q[2],enumerator:q[3],label:q[4],sev:q[5],status:q[6],owner:q[7],open:true,when:''}));
+// Submissions with dates and QA status, for the trend charts (the live adapter replaces this).
+let submissions=sentinelStats.flatMap(s=>s.date?[['approved',s.accepted],['pending',s.pending],['not_approved',s.rejected]].flatMap(([qa,n])=>Array.from({length:n},()=>({date:s.date,qa,sentinel:s.id}))):[]);
 function fromNow(iso){const t=Date.parse(iso);if(!Number.isFinite(t))return '—';const s=Math.max(0,(Date.now()-t)/1000);return s<60?'just now':s<3600?`${Math.round(s/60)} min ago`:s<86400?`${Math.round(s/3600)} h ago`:new Date(t).toLocaleDateString('en-GB',{day:'2-digit',month:'short'})}
 function buildEnumeratorStats(){const m={};records.forEach(x=>{m[x.enumerator]??={name:x.enumerator,team:x.team,submitted:0,accepted:0,durations:[],flags:0,back:0};const e=m[x.enumerator];e.submitted++;e.accepted++;e.durations.push(x.duration);e.flags+=(!x.gpsOk?1:0)+(!x.balanceOk?1:0);e.back+=r(x.studyId,'back')<.035?1:0});return Object.values(m)}
 let enumerators=buildEnumeratorStats();
@@ -720,21 +775,24 @@ function renderOverview(ss,data,fb){const t=totals(ss),complete=ss.filter(s=>s.q
  setText('ovAccepted',fmt(t.accepted));setText('ovAcceptedSub',`${pct(t.accepted,t.quota)} of ${fmt(t.quota)} filtered target`);setText('ovAttendance',fmt(t.attended));setText('ovAttendanceSub',`${pct(t.attended,t.mobilised)} of mobilised`);setText('ovYield',pct(t.accepted,t.attended));setText('ovPending',fmt(t.pending));setText('ovSentinels',`${complete}/${ss.length}`);setText('ovOpenActions',fmt(openActions));setText('overviewN',`Accepted-valid n=${data.length}`);setText('snapshotN',`n=${data.length}`);
  const prog=t.quota?Math.min(1,t.accepted/t.quota):0;$('heroRing').style.strokeDashoffset=(326.73*(1-prog)).toFixed(2);setText('heroPct',`${Math.round(prog*100)}%`);setText('sidePct',`${Math.round(prog*100)}%`);$('sideProg').style.width=`${(prog*100).toFixed(1)}%`;setText('sideNote',`${fmt(t.accepted)} of ${fmt(t.quota)} Accepted Valid`);setText('heroAccepted',fmt(t.accepted));setText('heroTarget',fmt(t.quota));setText('heroSentinels',`${complete}/${ss.length}`);setText('heroActive',fmt(ss.filter(s=>s.status==='Active').length));setText('heroYield',pct(t.accepted,t.attended));
  const nextUp=ss.filter(s=>s.status==='Upcoming'&&s.date).map(s=>s.date).sort()[0];setText('heroNext',nextUp?new Date(nextUp+'T00:00:00').toLocaleDateString('en-GB',{day:'2-digit',month:'short'}):'—');setText('heroNote',`${new Set(ss.map(s=>s.district)).size} districts · ${ss.length} sentinels in scope · ${fmt(t.pending)} pending QA · preliminary, QA-approved records only`);
- const dm={};ss.forEach(s=>{dm[s.district]??={q:0,a:0};dm[s.district].q+=s.quota;dm[s.district].a+=s.accepted});$('overviewDistrictBars').innerHTML=bars(Object.entries(dm).map(([label,v])=>({label,value:v.q?100*v.a/v.q:0,n:v.a})),100,v=>`${v.toFixed(0)}%`);setText('districtProgressPill',`${Object.keys(dm).length} districts`);
+ const dm={};ss.forEach(s=>{dm[s.district]??={q:0,a:0,p:0};dm[s.district].q+=s.quota;dm[s.district].a+=s.accepted;dm[s.district].p+=s.pending});
+ $('legendDistrict').innerHTML=legend([{name:'Approved',color:cssVar('--c-acc')},{name:'Pending review',color:cssVar('--c-pend')},{name:'Grey track = district quota',color:cssVar('--c-axis')}]);
+ $('overviewDistrictBars').innerHTML=bulletRows(Object.entries(dm).sort((a,b)=>(b[1].q?b[1].a/b[1].q:0)-(a[1].q?a[1].a/a[1].q:0)).map(([label,v])=>({label,acc:v.a,pend:v.p,max:v.q||Math.max(1,v.a+v.p),value:v.q?`${Math.round(100*v.a/v.q)}%`:'—',sub:`${fmt(v.a)} of ${fmt(v.q)}`,tip:`Approved ${fmt(v.a)} · Pending ${fmt(v.p)} · Quota ${fmt(v.q)}`})));setText('districtProgressPill',`${Object.keys(dm).length} districts`);
  $('overviewActions').innerHTML=actions.map(a=>`<div class="action"><span class="sev ${a.severity}">${a.severity.toUpperCase()}</span><div><b>${a.title}</b><p>${a.detail}</p></div><div class="owner"><strong>${a.owner}</strong>${a.due}</div></div>`).join('');setText('actionCountPill',`${openActions} open`);
  $('readinessGrid').innerHTML=readiness.map(([a,b,c])=>`<div class="readyitem"><b>${a}</b>${statusBadge(b,c==='bad'?'bad':c==='warn'?'warn':'good')}</div>`).join('');
  const eventGroups=Object.values(group(ss,s=>`${s.date}|${s.district}`)).map(xs=>{const z=totals(xs);const status=xs.some(x=>x.status==='Active')?'Active':xs.every(x=>x.status==='Complete')?'Complete':'Upcoming';return {date:xs[0].date,district:xs[0].district,town:xs[0].town,status,accepted:z.accepted,quota:z.quota,sites:xs.length}}).sort((a,b)=>(a.date||'9999').localeCompare(b.date||'9999'));$('eventTimeline').innerHTML=eventGroups.map(e=>`<div class="event ${e.status==='Upcoming'?'upcoming':e.status==='Active'?'risk':''}"><div class="date">${e.date?new Date(e.date+'T00:00:00').toLocaleDateString('en-GB',{day:'2-digit',month:'short'}):'TBC'}</div><div><b>${e.district} · ${e.town}</b><p>${e.sites} sentinel${e.sites===1?'':'s'} · ${e.accepted}/${e.quota} Accepted Valid</p></div>${statusBadge(e.status,e.status==='Complete'?'good':e.status==='Active'?'warn':'blue')}</div>`).join('');
  const vacc=data.filter(x=>x.vaccinated).length,death=data.filter(x=>x.deathsOccurred).length,stock=data.filter(x=>x.stockout).length;$('snapshotMetrics').innerHTML=[['Median current flock',fmt(median(data.map(x=>x.closing)))],['Any vaccination',pct(vacc,data.length)],['Households reporting deaths',pct(death,data.length)],['Stock-out experience',pct(stock,data.length)],LIVE.on?['Median transport cost to vaccines',money(median(data.map(x=>x.transportCost)))]:['Median service distance',`${(median(data.map(x=>x.distance))||0).toFixed(1)} km`],['Median prevention spend',money(median(data.map(x=>x.vaxSpend+x.serviceCharge)))]].map(([a,b])=>`<div class="metricrow"><div><b>${a}</b><span>Preliminary · Accepted Valid only</span></div><div class="mv">${b}</div></div>`).join('');
 }
 function renderAttendance(ss,data){const t=totals(ss);setText('attendanceN',`Filtered attendance n=${t.attended}`);setText('attMobilised',fmt(t.mobilised));setText('attAttended',fmt(t.attended));setText('attRateSub',`${pct(t.attended,t.mobilised)} attendance rate`);setText('attNoShows',fmt(t.mobilised-t.attended));setText('attFemale',pct(t.femaleAtt,t.attended));setText('attEvents',fmt(ss.filter(s=>s.attended>0).length));setText('attFlags',fmt(ss.filter(s=>s.reconcileFlag).length));
- const dm={};ss.forEach(s=>{dm[s.district]??={m:0,a:0};dm[s.district].m+=s.mobilised;dm[s.district].a+=s.attended});$('attendanceDistrictBars').innerHTML=bars(Object.entries(dm).map(([label,v])=>({label,value:v.m?100*v.a/v.m:0,n:v.a})),100,v=>`${v.toFixed(0)}%`);$('noShowBars').innerHTML=bars(Object.entries(dm).map(([label,v])=>({label,value:v.m-v.a,n:v.m-v.a,color:'#d59a2d'})));
+ const dm={};ss.forEach(s=>{dm[s.district]??={m:0,a:0};dm[s.district].m+=s.mobilised;dm[s.district].a+=s.attended});$('legendAttendance').innerHTML=legend([{name:'Attendance rate',color:cssVar('--c-series')},{name:'85% target',color:cssVar('--ink'),line:1}]);
+ $('attendanceDistrictBars').innerHTML=bulletRows(Object.entries(dm).sort((a,b)=>(b[1].m?b[1].a/b[1].m:0)-(a[1].m?a[1].a/a[1].m:0)).map(([label,v])=>({label,acc:v.a,max:v.m||1,target:85,value:v.m?`${Math.round(100*v.a/v.m)}%`:'—',sub:`${fmt(v.a)} of ${fmt(v.m)}`,tip:`Attended ${fmt(v.a)} of ${fmt(v.m)} mobilised · target 85%`})));$('noShowBars').innerHTML=bars(Object.entries(dm).map(([label,v])=>({label,value:v.m-v.a,n:v.m-v.a,color:'var(--c-pend)'})));
  const events=Object.values(group(ss,s=>`${s.date}|${s.district}`)).map(xs=>{const x=totals(xs);return {date:xs[0].date,district:xs[0].district,town:xs[0].town,team:xs[0].team,...x,flag:xs.some(s=>s.reconcileFlag)}}).sort((a,b)=>a.date.localeCompare(b.date));$('attendanceEventBody').innerHTML=events.map(e=>`<tr><td>${e.date}</td><td><b>${e.district}</b><br><span class="muted">${e.town}</span></td><td>${e.team}</td><td class="num">${e.mobilised}</td><td class="num"><b>${e.attended}</b></td><td class="num">${pct(e.attended,e.mobilised)}</td><td class="num">${e.submitted}</td><td>${e.attended===0?statusBadge('Upcoming','blue'):e.flag?statusBadge('Review','warn'):statusBadge('Reconciled','good')}</td></tr>`).join('');
  $('attendanceLocationBody').innerHTML=ss.map(s=>`<tr><td><b>${s.id}</b></td><td>${s.district}</td><td>${s.community}</td><td>${s.team}</td><td class="num">${s.mobilised}</td><td class="num">${s.attended}</td><td class="num">${s.mobilised-s.attended}</td><td class="num">${pct(s.attended,s.mobilised)}</td><td>${s.attended===0?statusBadge('Upcoming','blue'):s.attended/s.mobilised>=.85?statusBadge('Strong','good'):statusBadge('Watch','warn')}</td></tr>`).join('');
  $('attendeeSexBars').innerHTML=bars([{label:'Female',value:t.femaleAtt,n:t.femaleAtt},{label:'Male / other',value:t.attended-t.femaleAtt,n:t.attended-t.femaleAtt}],t.attended,v=>pct(v,t.attended));const sourceMap={};if(LIVE.on){const ids=new Set(ss.map(s=>s.id));LIVE.attendees.filter(a=>ids.has(a.sentinel)).forEach(a=>{sourceMap[a.source]=(sourceMap[a.source]||0)+1})}else ss.forEach(s=>{sourceMap[s.attendanceSource]=(sourceMap[s.attendanceSource]||0)+s.attended});$('attendeeSourceBars').innerHTML=bars(Object.entries(sourceMap).map(([label,value])=>({label,value,n:value})),t.attended,v=>pct(v,t.attended));
  $('attendanceReconcileBody').innerHTML=events.filter(e=>e.attended>0).map(e=>{const diff=Math.max(Math.abs(e.attended-e.transport),Math.abs(e.attended-e.materials),Math.abs(e.consented-e.submitted));return `<tr><td><b>${e.district}</b><br><span class="muted">${e.date}</span></td><td class="num">${e.attended}</td><td class="num">${e.transport}</td><td class="num">${e.materials}</td><td class="num">${e.submitted}</td><td class="num">${diff}</td><td>${diff?'Rawda / Field':'—'}</td><td>${diff?statusBadge('Open review','warn'):statusBadge('Reconciled','good')}</td></tr>`}).join('');
 }
-function renderRecruitment(ss){const t=totals(ss);setText('recruitmentN',`Accepted-valid n=${t.accepted}`);const steps=[['Mobilised',t.mobilised,''],['Attended',t.attended,''],['Screened',t.screened,''],['Eligible',t.eligible,''],['Selected',t.selected,''],['Consented',t.consented,''],['Submitted',t.submitted,''],['Accepted Valid',t.accepted,'good'],['Rejected',t.rejected,'bad']];$('recruitmentFunnel').innerHTML=steps.map(x=>`<div class="funnelstep ${x[2]}"><b>${x[1]}</b><span>${x[0]}</span></div>`).join('');setText('eligibilityRate',pct(t.eligible,t.screened));setText('consentRate',pct(t.consented,t.selected));setText('acceptanceRate',pct(t.accepted,t.submitted));setText('recruitYield',pct(t.accepted,t.attended));setText('recPending',fmt(t.pending));setText('recRejected',fmt(t.rejected));
- const losses=[['Mobilised → attended',t.mobilised-t.attended],['Attended → screened',t.attended-t.screened],['Screened → eligible',t.screened-t.eligible],['Eligible → selected',t.eligible-t.selected],['Selected → consented',t.selected-t.consented],['Consented → submitted',t.consented-t.submitted],['Submitted → rejected',t.rejected]];$('funnelLossBars').innerHTML=bars(losses.map(([label,value],i)=>({label,value,color:i>4?'#c85d53':'#d59a2d'})));
+function renderRecruitment(ss){const t=totals(ss);setText('recruitmentN',`Accepted-valid n=${t.accepted}`);const steps=[['Mobilised',t.mobilised,''],['Attended',t.attended,''],['Screened',t.screened,''],['Eligible',t.eligible,''],['Selected',t.selected,''],['Consented',t.consented,''],['Submitted',t.submitted,''],['Accepted Valid',t.accepted,'good'],['Rejected',t.rejected,'bad']];$('recruitmentFunnel').innerHTML=funnelHtml(steps);setText('eligibilityRate',pct(t.eligible,t.screened));setText('consentRate',pct(t.consented,t.selected));setText('acceptanceRate',pct(t.accepted,t.submitted));setText('recruitYield',pct(t.accepted,t.attended));setText('recPending',fmt(t.pending));setText('recRejected',fmt(t.rejected));
+ const losses=[['Mobilised → attended',t.mobilised-t.attended],['Attended → screened',t.attended-t.screened],['Screened → eligible',t.screened-t.eligible],['Eligible → selected',t.eligible-t.selected],['Selected → consented',t.selected-t.consented],['Consented → submitted',t.consented-t.submitted],['Submitted → rejected',t.rejected]];$('funnelLossBars').innerHTML=bars(losses.map(([label,value],i)=>({label,value,color:i>4?'var(--c-rej)':'var(--c-pend)'})));
  const dm=group(ss,'district');$('yieldDistrictBars').innerHTML=bars(Object.entries(dm).map(([label,xs])=>{const z=totals(xs);return {label,value:z.attended?100*z.accepted/z.attended:0,n:z.accepted}}),100,v=>`${v.toFixed(0)}%`);
  if(LIVE.on){const nc='<p class="desc" style="margin:0">Not captured by the current forms. Add screening reasons to the survey or attendance form to populate this chart.</p>';$('ineligibleReasonBars').innerHTML=nc;$('refusalReasonBars').innerHTML=nc}else{const totalInelig=t.ineligible||1;$('ineligibleReasonBars').innerHTML=bars(ineligReasons.map((label,i)=>({label,value:Math.max(0,Math.round(totalInelig*(.14+r(label,'x')*.25))),n:null})));const totalRef=t.refused||1;$('refusalReasonBars').innerHTML=bars(refusalReasons.map(label=>({label,value:Math.max(0,Math.round(totalRef*(.1+r(label,'r')*.28)))})))}
  $('eligibilityDistrictBody').innerHTML=Object.entries(dm).map(([d,xs])=>{const z=totals(xs);return `<tr><td><b>${d}</b></td><td class="num">${z.screened}</td><td class="num">${z.eligible}</td><td class="num">${pct(z.eligible,z.screened)}</td><td class="num">${z.selected}</td><td class="num">${z.consented}</td><td class="num">${pct(z.consented,z.selected)}</td><td>${z.screened===0?statusBadge('Upcoming','blue'):z.eligible/z.screened>.9?statusBadge('On track','good'):statusBadge('Review','warn')}</td></tr>`}).join('');
@@ -763,6 +821,122 @@ function renderFeedback(fb){setText('feedbackN',`${fb.length} feedback items`);c
  const cs=LIVE.complaints;$('incidentMetrics').innerHTML=(LIVE.on?[['Complaints about the study or staff',cs.length],['Urgent complaints',cs.filter(c=>c.priority==='Urgent').length],['Safeguarding referrals (no detail recorded)',LIVE.safeguarding],['Open complaints',cs.filter(c=>c.status!=='Resolved').length],['Resolved complaints',cs.filter(c=>c.status==='Resolved').length]]:[['Routine complaints',3],['Privacy concerns',2],['Safeguarding incidents',0],['Serious adverse events',0],['Cases needing restricted follow-up',1]]).map(([a,b])=>`<div class="metricrow"><div><b>${a}</b><span>Case detail restricted</span></div><div class="mv">${b}</div></div>`).join('');$('incidentStatusBars').innerHTML=LIVE.on?bars(['Open','In progress','Resolved'].map(label=>({label,value:cs.filter(c=>c.status===label).length}))):bars([{label:'Open',value:1},{label:'In progress',value:2},{label:'Resolved',value:2}]);
  $('feedbackActionBody').innerHTML=fb.filter(x=>x.status!=='Resolved').slice(0,15).map(x=>`<tr><td><b>${x.theme}</b><br><span class="muted">${x.message.slice(0,70)}…</span></td><td>${x.source}</td><td>${x.district}</td><td>${x.owner}</td><td>${x.due}</td><td>${statusBadge(x.priority,x.priority==='Urgent'?'bad':x.priority==='High'?'warn':'blue')}</td><td>${statusBadge(x.status,'warn')}</td><td>${x.closure}</td></tr>`).join('');
 }
+/* ===================== BI charts: inline SVG, no libraries =====================
+   Marks: 2px lines, <=24px columns with 4px rounded data-ends, 2px surface gaps between
+   stacked segments, hairline grid, labels in text colours. Hover = data-tip tooltips. */
+const DAY=864e5;
+const fmtDay=d=>new Date(d+'T00:00:00Z').toLocaleDateString('en-GB',{day:'2-digit',month:'short',timeZone:'UTC'});
+function dayRange(a,b){const out=[];for(let t=Date.parse(a+'T00:00:00Z'),e=Date.parse(b+'T00:00:00Z');t<=e&&out.length<500;t+=DAY)out.push(new Date(t).toISOString().slice(0,10));return out}
+function niceMax(v){if(!(v>0))return 1;const e=Math.pow(10,Math.floor(Math.log10(v))),m=v/e;return (m<=1?1:m<=2?2:m<=2.5?2.5:m<=5?5:10)*e}
+const compact=v=>v>=1e4?Math.round(v/1e3)+'K':v>=1e3?(v/1e3).toFixed(1).replace(/\.0$/,'')+'K':String(Math.round(v));
+function frame(el,h,r){const w=Math.max(280,el.clientWidth||el.parentElement.clientWidth||600);const m={t:12,r,b:26,l:40};return {w,h,m,iw:w-m.l-m.r,ih:h-m.t-m.b}}
+function axes(f,max,xs,xOf){
+ let s='';for(let i=0;i<=4;i++){const y=f.m.t+f.ih*(1-i/4);s+=`<line x1="${f.m.l}" x2="${f.w-f.m.r}" y1="${y}" y2="${y}" stroke="var(--c-grid)"/><text x="${f.m.l-8}" y="${y+4}" text-anchor="end" class="tick">${compact(max*i/4)}</text>`}
+ s+=`<line x1="${f.m.l}" x2="${f.w-f.m.r}" y1="${f.m.t+f.ih}" y2="${f.m.t+f.ih}" stroke="var(--c-axis)"/>`;
+ // date ticks: ~6 evenly spaced, always the last one, never closer than 52px (no overlapping labels)
+ const n=xs.length,step=Math.max(1,Math.ceil(n/6)),gap=56,keep=[];
+ xs.forEach((d,i)=>{if(i%step===0&&(!keep.length||xOf(i)-xOf(keep.at(-1))>=gap))keep.push(i)});
+ while(keep.length&&xOf(n-1)-xOf(keep.at(-1))<gap&&keep.at(-1)!==n-1)keep.pop();
+ if(keep.at(-1)!==n-1)keep.push(n-1);
+ keep.forEach(i=>{s+=`<text x="${xOf(i)}" y="${f.h-6}" text-anchor="middle" class="tick">${fmtDay(xs[i])}</text>`});
+ return s}
+const legend=items=>`<div class="legend">${items.map(i=>`<span><i class="${i.line?'line':''}" style="background:${i.color}"></i>${i.name}</span>`).join('')}</div>`;
+const empty=(el,msg)=>{el.innerHTML=`<p class="desc" style="margin:24px 0;text-align:center">${msg}</p>`};
+
+/** Lines over days. series: [{name, color, values:[number|null], area}] */
+function lineChart(el,days,series,opts={}){
+ if(!days.length)return empty(el,opts.empty||'No dated records in this scope yet.');
+ const f=frame(el,opts.height||230,86),max=niceMax(Math.max(1,...series.flatMap(s=>s.values.filter(v=>v!=null))));
+ const xOf=i=>f.m.l+(days.length===1?f.iw/2:f.iw*i/(days.length-1)),yOf=v=>f.m.t+f.ih*(1-v/max);
+ let svg=axes(f,max,days,xOf);
+ const ends=[];
+ series.forEach(s=>{
+  const idx=s.values.map((v,i)=>v==null?-1:i).filter(i=>i>=0);if(!idx.length)return;
+  const pts=idx.map(i=>`${xOf(i).toFixed(1)},${yOf(s.values[i]).toFixed(1)}`).join(' ');
+  if(s.area)svg+=`<polygon points="${xOf(idx[0])},${yOf(0)} ${pts} ${xOf(idx.at(-1))},${yOf(0)}" fill="${s.color}" opacity=".10"/>`;
+  svg+=`<polyline points="${pts}" fill="none" stroke="${s.color}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>`;
+  const li=idx.at(-1);svg+=`<circle cx="${xOf(li)}" cy="${yOf(s.values[li])}" r="4" fill="${s.color}" stroke="var(--c-surface)" stroke-width="2"/>`;
+  ends.push({x:xOf(li),y:yOf(s.values[li]),t:`${s.name} ${compact(s.values[li])}`});
+ });
+ // direct end-labels only when they don't collide (the legend carries identity otherwise)
+ if(ends.length<2||Math.abs(ends[0].y-ends[1].y)>=14)ends.forEach(e=>{svg+=`<text x="${e.x+8}" y="${e.y+4}" class="endlbl">${e.t}</text>`});
+ const bw=days.length>1?f.iw/(days.length-1):f.iw;
+ svg+=days.map((d,i)=>`<g class="band" data-tip="${fmtDay(d)}|${series.map(s=>`${s.name}: ${s.values[i]==null?'—':fmt(s.values[i])}`).join(' · ')}"><rect x="${xOf(i)-bw/2}" y="${f.m.t}" width="${bw}" height="${f.ih}" fill="transparent"/><line class="guide" x1="${xOf(i)}" x2="${xOf(i)}" y1="${f.m.t}" y2="${f.m.t+f.ih}" stroke="var(--c-axis)"/></g>`).join('');
+ el.innerHTML=`<svg viewBox="0 0 ${f.w} ${f.h}" width="100%" height="${f.h}" role="img" aria-label="${opts.aria||''}">${svg}</svg>`;
+}
+
+/** Stacked columns per day. stacks: [{name, color, values:[number]}] bottom → top */
+function stackedColumns(el,days,stacks,opts={}){
+ if(!days.length)return empty(el,opts.empty||'No submissions in this scope yet.');
+ const f=frame(el,opts.height||230,12),totals=days.map((_,i)=>stacks.reduce((a,s)=>a+s.values[i],0)),max=niceMax(Math.max(1,...totals));
+ const slot=f.iw/days.length,bw=Math.max(3,Math.min(24,slot*.68)),xOf=i=>f.m.l+slot*i+slot/2,yOf=v=>f.m.t+f.ih*(1-v/max);
+ const roundTop=(x,y,w,h,r)=>`M${x},${y+h}V${y+r}Q${x},${y} ${x+r},${y}H${x+w-r}Q${x+w},${y} ${x+w},${y+r}V${y+h}Z`;
+ let svg=axes(f,max,days,xOf);
+ days.forEach((d,i)=>{
+  let acc=0;const segs=stacks.map(s=>({s,v:s.values[i]})).filter(o=>o.v>0);
+  segs.forEach((o,k)=>{const yb=yOf(acc),yt=yOf(acc+o.v);acc+=o.v;const h=Math.max(0,yb-yt-(k>0?2:0)),x=xOf(i)-bw/2;
+   svg+=k===segs.length-1?`<path d="${roundTop(x,yt,bw,h,Math.min(4,h,bw/2))}" fill="${o.s.color}"/>`:`<rect x="${x}" y="${yt}" width="${bw}" height="${h}" fill="${o.s.color}"/>`});
+  svg+=`<rect class="hit" x="${f.m.l+slot*i}" y="${f.m.t}" width="${slot}" height="${f.ih}" data-tip="${fmtDay(d)}|${stacks.map(s=>`${s.name}: ${fmt(s.values[i])}`).join(' · ')} · Total: ${fmt(totals[i])}"/>`;
+ });
+ el.innerHTML=`<svg viewBox="0 0 ${f.w} ${f.h}" width="100%" height="${f.h}" role="img" aria-label="${opts.aria||''}">${svg}</svg>`;
+}
+
+/** Tiny trend line for a KPI tile. */
+function sparkline(values,color){
+ if(values.length<2)return '';
+ const w=200,h=26,max=Math.max(1,...values),min=Math.min(...values),y=v=>h-3-(h-6)*((v-min)/((max-min)||1)),x=i=>w*i/(values.length-1);
+ const pts=values.map((v,i)=>`${x(i).toFixed(1)},${y(v).toFixed(1)}`).join(' ');
+ return `<svg viewBox="0 0 ${w} ${h}" preserveAspectRatio="none"><polygon points="0,${h} ${pts} ${w},${h}" fill="${color}" opacity=".10"/><polyline points="${pts}" fill="none" stroke="${color}" stroke-width="2" vector-effect="non-scaling-stroke" stroke-linejoin="round"/></svg>`;
+}
+
+/** Bullet rows: approved (+ pending) against a maximum, with an optional target marker (%). */
+function bulletRows(items){
+ if(!items.length)return '<p class="desc">No data in this scope.</p>';
+ return items.map(x=>{const a=Math.min(100,x.max?100*x.acc/x.max:0),p=Math.min(100-a,x.max&&x.pend?100*x.pend/x.max:0);
+  return `<div class="bullet" data-tip="${x.label}|${x.tip}"><span class="lbl">${x.label}</span><div class="trk">${a?`<span class="a ${p?'join':''}" style="width:${a}%"></span>`:''}${p?`<span class="p" style="left:calc(${a}% + ${a?2:0}px);width:${p}%"></span>`:''}${x.target!=null?`<span class="tgt" style="left:${x.target}%"></span>`:''}</div><span class="val">${x.value}<small>${x.sub||''}</small></span></div>`}).join('');
+}
+
+/** Recruitment funnel with stage-to-stage conversion. steps: [[label, value, cls]] */
+function funnelHtml(steps){
+ const first=Math.max(1,steps[0][1]);
+ return steps.map(([label,v,cls],i)=>{
+  const prev=i>0?steps[i-1][1]:null,conv=i>0&&cls!=='bad'&&prev?`<div class="fconv">↓ <b>${pct(v,prev)}</b> carried forward · ${fmt(Math.max(0,prev-v))} lost</div>`:'';
+  return conv+`<div class="fstep ${cls}" data-tip="${label}|${fmt(v)} (${pct(v,first)} of mobilised)"><span class="fl">${label}</span><div><div class="fb" style="width:${Math.max(1,100*v/first)}%"></div></div><span class="fv">${fmt(v)}</span></div>`}).join('');
+}
+
+/* Trend data: one row per survey submission {date, qa, sentinel}. Demo data is derived from the sentinel table. */
+function scopedSubmissions(ss){const ids=new Set(ss.map(s=>s.id));return submissions.filter(x=>ids.has(x.sentinel)&&x.date)}
+function renderTrends(ss){
+ const C=n=>cssVar(n),subs=scopedSubmissions(ss),appr=subs.filter(x=>x.qa==='approved');
+ const planPts=ss.filter(s=>s.date&&s.quota).map(s=>[s.date,s.quota]);
+ const dates=[...subs.map(x=>x.date),...planPts.map(p=>p[0])].sort();
+ // Accepted Valid vs plan
+ if(dates.length){
+  const days=dayRange(dates[0],dates.at(-1)),lastData=appr.map(x=>x.date).sort().at(-1);
+  let ca=0,cp=0;const byA={},byP={};appr.forEach(x=>byA[x.date]=(byA[x.date]||0)+1);planPts.forEach(([d,q])=>byP[d]=(byP[d]||0)+q);
+  const actual=days.map(d=>{ca+=byA[d]||0;return lastData&&d<=lastData?ca:null}),plan=days.map(d=>(cp+=byP[d]||0));
+  $('legendProgress').innerHTML=legend([{name:'Accepted Valid (cumulative)',color:C('--c-acc'),line:1},{name:'Plan: cumulative quota',color:C('--c-plan'),line:1}]);
+  lineChart($('chartProgress'),days,[{name:'Plan',color:C('--c-plan'),values:plan},{name:'Accepted',color:C('--c-acc'),values:actual,area:1}],{aria:'Cumulative Accepted Valid interviews against plan'});
+ }else{$('legendProgress').innerHTML='';empty($('chartProgress'),'No scheduled events or submissions in this scope yet.')}
+ // Daily submissions by QA status
+ const sd=subs.map(x=>x.date).sort();
+ if(sd.length){
+  const days=dayRange(sd[0],sd.at(-1)),cnt=q=>days.map(d=>subs.filter(x=>x.date===d&&(q==='pending'?x.qa!=='approved'&&x.qa!=='not_approved':x.qa===q)).length);
+  $('legendDaily').innerHTML=legend([{name:'Approved',color:C('--c-acc')},{name:'Pending review',color:C('--c-pend')},{name:'Rejected',color:C('--c-rej')}]);
+  stackedColumns($('chartDaily'),days,[{name:'Approved',color:C('--c-acc'),values:cnt('approved')},{name:'Pending',color:C('--c-pend'),values:cnt('pending')},{name:'Rejected',color:C('--c-rej'),values:cnt('not_approved')}],{aria:'Daily submissions by QA status'});
+ }else{$('legendDaily').innerHTML='';empty($('chartDaily'),'No submissions in this scope yet.')}
+ // KPI sparklines + latest-day delta
+ const ad=appr.map(x=>x.date).sort();
+ if(ad.length){const days=dayRange(ad[0],ad.at(-1)).slice(-14);let c=appr.filter(x=>x.date<days[0]).length;const cum=days.map(d=>(c+=appr.filter(x=>x.date===d).length));
+  $('ovAcceptedSpark').innerHTML=sparkline(cum,C('--c-acc'));const last=appr.filter(x=>x.date===ad.at(-1)).length;
+  setText('ovAcceptedDelta',`▲ +${fmt(last)} on ${fmtDay(ad.at(-1))}`)}
+ else{$('ovAcceptedSpark').innerHTML='';setText('ovAcceptedDelta','')}
+ const att=ss.filter(s=>s.date&&s.attended).sort((a,b)=>a.date.localeCompare(b.date));
+ if(att.length>1){let c=0;const byD={};att.forEach(s=>byD[s.date]=(byD[s.date]||0)+s.attended);$('ovAttendanceSpark').innerHTML=sparkline(Object.keys(byD).sort().map(d=>(c+=byD[d])),C('--c-series'))}
+ else $('ovAttendanceSpark').innerHTML='';
+}
+const cssVar=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+
 function scopedIssues(ss){const ids=new Set(ss.map(s=>s.id)),dists=new Set(ss.map(s=>s.district));return issues.filter(i=>ids.has(i.sentinel)||(sentinelFilter.value==='All'&&dists.has(i.district)))}
 function renderIssues(ss){
  const open=scopedIssues(ss).filter(i=>i.open),sevCls={High:'critical',Medium:'warning',Low:'review'},cnt=s=>open.filter(i=>i.sev===s).length;
@@ -771,7 +945,7 @@ function renderIssues(ss){
  $('issueList').innerHTML=list.length?list.map(i=>`<div class="issue ${Date.now()-Date.parse(i.when)<6e5?'fresh':''}"><span class="sev ${sevCls[i.sev]||'review'}">${i.sev.toUpperCase()}</span><div><b>${i.label}</b><p>${i.ref} · ${i.district}${i.enumerator?` · ${i.enumerator}`:''} · ${i.source}</p></div><span class="when">${fromNow(i.when)}</span></div>`).join(''):'<div class="issues-empty">✓ No open data issues in this scope</div>';
  const all=issues.filter(i=>i.open).length;$('qaBadge').textContent=all?(all>99?'99+':all):'';$('qaBadge').title=`${all} open data issue${all===1?'':'s'}`;
 }
-function renderAll(){const ss=scopedSentinels(),data=scopedRecords(),fb=scopedFeedback();renderOverview(ss,data,fb);renderIssues(ss);renderAttendance(ss,data);renderRecruitment(ss);renderResults(data);renderQuality(ss,data);renderFeedback(fb);setText('lastRefresh',`Last refreshed: ${new Date().toLocaleString()}`)}
+function renderAll(){const ss=scopedSentinels(),data=scopedRecords(),fb=scopedFeedback();renderOverview(ss,data,fb);renderTrends(ss);renderIssues(ss);renderAttendance(ss,data);renderRecruitment(ss);renderResults(data);renderQuality(ss,data);renderFeedback(fb);setText('lastRefresh',`Last refreshed: ${new Date().toLocaleString()}`)}
 function showPage(name){document.querySelectorAll('.page').forEach(x=>x.classList.toggle('active',x.id===`page-${name}`));document.querySelectorAll('.navbtn').forEach(x=>x.classList.toggle('active',x.dataset.page===name));try{history.replaceState(null,'',`#${name}`)}catch(e){/* not allowed inside some embeds (e.g. Streamlit) */}const nb=document.querySelector(`.navbtn[data-page="${name}"]`);setText('crumb',nb.querySelector('.navtitle').textContent);document.body.classList.remove('nav-open');window.scrollTo({top:0,behavior:'smooth'})}
 document.querySelectorAll('.navbtn').forEach(b=>b.addEventListener('click',()=>showPage(b.dataset.page)));document.querySelectorAll('.subbtn').forEach(b=>b.addEventListener('click',()=>{const group=b.closest('.subnav');group.querySelectorAll('.subbtn').forEach(x=>x.classList.remove('active'));b.classList.add('active');const page=group.parentElement;page.querySelectorAll(':scope > .subpage').forEach(x=>x.classList.toggle('active',x.id===b.dataset.sub))}));
 [teamFilter,districtFilter,sentinelFilter,sexFilter,productionFilter].forEach(x=>x.addEventListener('change',renderAll));$('resetFilters').addEventListener('click',()=>{[teamFilter,districtFilter,sentinelFilter,sexFilter,productionFilter].forEach(x=>x.value='All');renderAll()});
@@ -783,7 +957,8 @@ $('openQueue').addEventListener('click',()=>{showPage('quality');document.queryS
 document.querySelectorAll('[data-export]').forEach(b=>b.addEventListener('click',()=>{const type=b.dataset.export,ss=scopedSentinels(),data=scopedRecords(),fb=scopedFeedback();if(type==='attendance')downloadCSV('attendance_summary.csv',[['Sentinel','District','Team','Mobilised','Attended','Transport paid','Materials issued'],...ss.map(s=>[s.id,s.district,s.team,s.mobilised,s.attended,s.transport,s.materials])]);if(type==='recruitment')downloadCSV('recruitment_funnel.csv',[['Sentinel','Attended','Screened','Eligible','Selected','Consented','Submitted','Accepted Valid','Pending','Rejected'],...ss.map(s=>[s.id,s.attended,s.screened,s.eligible,s.selected,s.consented,s.submitted,s.accepted,s.pending,s.rejected])]);if(type==='results')downloadCSV('baseline_indicator_summary.csv',[['District','Accepted n','Median flock','Any vaccination','Households with deaths','Stock-out'],...Object.entries(group(data,'district')).map(([d,xs])=>[d,xs.length,median(xs.map(x=>x.closing)),pct(xs.filter(x=>x.vaccinated).length,xs.length),pct(xs.filter(x=>x.deathsOccurred).length,xs.length),pct(xs.filter(x=>x.stockout).length,xs.length)])]);if(type==='quality')downloadCSV('qa_exception_list.csv',[['Study ID','District','Sentinel','Enumerator','Flag','Severity','Status','Owner','Due'],...qaQueue]);if(type==='feedback')downloadCSV('feedback_actions.csv',[['ID','Date','Source','District','Theme','Message','Priority','Status','Owner','Due'],...fb.map(x=>[x.id,x.date,x.source,x.district,x.theme,x.message,x.priority,x.status,x.owner,x.due])]);if(type==='cohort')downloadCSV('followup_readiness.csv',[['Study ID','District','Sentinel','Recontact consent','Contact complete','Baseline date'],...data.map(x=>[x.studyId,x.district,x.id,x.followConsent,x.contactComplete,x.baselineDate])]);b.closest('.modalback').classList.remove('open')}));
 $('menuBtn').addEventListener('click',()=>document.body.classList.add('nav-open'));$('scrim').addEventListener('click',()=>document.body.classList.remove('nav-open'));document.addEventListener('keydown',e=>{if(e.key==='Escape')document.body.classList.remove('nav-open')});
 setText('headDate',new Date().toLocaleDateString('en-GB',{weekday:'short',day:'2-digit',month:'short',year:'numeric'}));
-const root=document.documentElement;$('themeToggle').addEventListener('click',()=>{const cur=root.dataset.theme||'light';const next=cur==='dark'?'light':'dark';root.dataset.theme=next;try{localStorage.setItem('gt2-theme',next)}catch(e){}});
+const root=document.documentElement;$('themeToggle').addEventListener('click',()=>{const cur=root.dataset.theme||'light';const next=cur==='dark'?'light':'dark';root.dataset.theme=next;try{localStorage.setItem('gt2-theme',next)}catch(e){}renderAll()});
+let resizeT;window.addEventListener('resize',()=>{clearTimeout(resizeT);resizeT=setTimeout(()=>renderTrends(scopedSentinels()),200)});
 const tip=$('tip');document.addEventListener('mouseover',e=>{const el=e.target.closest('[data-tip]');if(!el){tip.classList.remove('show');return}const [h,v]=el.dataset.tip.split('|');tip.innerHTML='';const b=document.createElement('b');b.textContent=h;tip.append(b,document.createTextNode(v||''));tip.classList.add('show')});document.addEventListener('mousemove',e=>{if(!tip.classList.contains('show'))return;const w=tip.offsetWidth,hh=tip.offsetHeight;let x=e.clientX+14,y=e.clientY-hh-12;if(x+w>innerWidth-8)x=e.clientX-w-14;if(y<8)y=e.clientY+16;tip.style.left=x+'px';tip.style.top=y+'px'});
 const initial=(location.hash||'#overview').replace('#','');showPage(['overview','attendance','recruitment','results','quality','feedback'].includes(initial)?initial:'overview');renderAll();
 </script>
@@ -913,6 +1088,7 @@ function apply(p){
   const all=(forms.survey||[]).map(r=>mapSurvey(r,S,ctx));
   all.forEach(x=>{const s=reg[x.id];if(x.submitted)s.dates.push(day(x.submitted));if(x.consent==='no'){s.refused++;return}s.submitted++;if(x.qa==='approved')s.accepted++;else if(x.qa==='not_approved')s.rejected++;else s.pending++});
   const consented=all.filter(x=>x.consent!=='no');
+  submissions=consented.map(x=>({date:x.baselineDate,qa:x.qa,sentinel:x.id}));
   records=consented.filter(x=>(x.qa==='approved'||(S.inclPending&&x.qa!=='not_approved'))&&/^(1|baseline)$/i.test(x.round));
 
   /* attendance + attendees */
