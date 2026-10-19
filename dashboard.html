@@ -447,32 +447,36 @@ th{background:var(--page)}
 .mainhead .chip{background:var(--card);border-color:var(--card-line)}
 @media(max-width:1000px){.mainhead{background:var(--card);border:1px solid var(--card-line);-webkit-backdrop-filter:none;backdrop-filter:none}}
 
-/* branded sidebar */
-.sidebar{background:var(--side);color:var(--side-ink);border:0;-webkit-backdrop-filter:none;backdrop-filter:none;box-shadow:0 12px 30px -18px rgba(0,40,25,.7)}
+/* sidebar: compact and light, so the green logo tile stands out */
+.app{grid-template-columns:232px minmax(0,1fr)}
+.sidebar{background:var(--card);color:var(--ink);border:1px solid var(--card-line);-webkit-backdrop-filter:none;backdrop-filter:none;box-shadow:var(--card-shadow)}
 .sidebar::before{display:none}
-.sidebar .brand{border-bottom-color:var(--side-line)}
-.sidebar .brand h1{color:#fff}.sidebar .brand p{color:var(--side-muted)}
-.sidebar .logo{box-shadow:0 0 0 1px rgba(255,255,255,.12)}
-.sidebar .sidelabel{color:rgba(230,239,233,.42)}
-.sidebar .navbtn{color:var(--side-ink)}
-.sidebar .navbtn .navsub{color:var(--side-muted)}
-.sidebar .navbtn:hover{background:rgba(255,255,255,.06);color:#fff}
-.sidebar .navicon{background:rgba(255,255,255,.07);color:#cfe3d8;box-shadow:none}
-.sidebar .navbtn.active{background:rgba(255,255,255,.11);color:#fff;box-shadow:none}
-.sidebar .navbtn.active .navicon{background:var(--gold);color:#241805}
-.sidebar .navbtn.active .navsub{color:rgba(255,255,255,.72)}
-.sidebar .toolbtn{background:rgba(255,255,255,.05);border-color:var(--side-line);color:var(--side-ink)}
-.sidebar .toolbtn:hover{background:rgba(255,255,255,.1);color:#fff}
-.sidebar .toolbtn svg{color:var(--gold)}
-.sidebar .sidecard{background:rgba(255,255,255,.05);border-color:var(--side-line)}
-.sidebar .sidecard .row{color:var(--side-muted)}.sidebar .sidecard .row b{color:#fff}
-.sidebar .sidecard small{color:var(--side-muted)}
-.sidebar .sideprog{background:rgba(255,255,255,.12)}.sidebar .sideprog span{background:var(--gold)}
-.sidebar .chip.live{background:rgba(47,199,122,.14);border-color:rgba(47,199,122,.35);color:#a6e6c4}
-.sidebar .chip.demo{background:rgba(192,144,80,.16);border-color:rgba(192,144,80,.42);color:#ecc993}
-.sidebar .navbadge{box-shadow:0 0 0 3px var(--side)}
-.side-scroll{scrollbar-color:rgba(255,255,255,.15) transparent}
 .sidebar .flagline{height:3px;background:var(--gold)}
+.side-scroll{padding:16px 12px 14px}
+.sidebar .brand{gap:10px;padding:0 4px 14px;margin-bottom:14px;border-bottom-color:var(--card-line)}
+.sidebar .logo{width:40px;height:44px;border-radius:10px;box-shadow:0 2px 6px -2px rgba(0,72,48,.45)}
+.sidebar .brand h1{font-size:14px;color:var(--ink)}.sidebar .brand p{font-size:11px;color:var(--muted)}
+.sidebar .sidelabel{padding:0 8px;color:var(--faint)}
+.sidebar .navbtn{gap:10px;padding:7px 8px;color:var(--ink2);border-radius:11px}
+.sidebar .navbtn:hover{background:var(--page);color:var(--ink)}
+.sidebar .navicon{width:30px;height:30px;border-radius:9px;background:var(--page);color:var(--brand);box-shadow:none}
+.sidebar .navicon svg{width:16px;height:16px}
+.sidebar .navtitle{font-size:13px}.sidebar .navsub{font-size:11px;color:var(--muted)}
+.sidebar .navbtn.active{background:color-mix(in srgb,var(--brand) 8%,var(--card));color:var(--brand);box-shadow:none}
+.sidebar .navbtn.active .navicon{background:var(--brand);color:#fff}
+.sidebar .navbtn.active .navsub{color:var(--muted)}
+.sidebar .tools{gap:6px}
+.sidebar .toolbtn{padding:8px;gap:6px;font-size:12px;background:var(--page);border-color:var(--card-line);color:var(--ink2)}
+.sidebar .toolbtn:hover{background:var(--card);color:var(--ink)}
+.sidebar .toolbtn svg{width:15px;height:15px;color:var(--brand)}
+.sidebar .sidecard{padding:12px;background:var(--page);border-color:var(--card-line)}
+.sidebar .sideprog span{background:var(--brand)}
+.sidebar .navbadge{box-shadow:0 0 0 3px var(--card)}
+:root[data-theme="dark"] .sidebar .navicon{background:rgba(255,255,255,.06);color:var(--good)}
+:root[data-theme="dark"] .sidebar .navbtn.active{background:rgba(255,255,255,.07);color:#fff}
+:root[data-theme="dark"] .sidebar .navbtn.active .navicon{background:var(--brand-2);color:#fff}
+:root[data-theme="dark"] .sidebar .toolbtn svg{color:var(--good)}
+:root[data-theme="dark"] .sidebar .sideprog span{background:var(--good)}
 </style>
 </head>
 <body>
