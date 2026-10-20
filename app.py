@@ -13,6 +13,7 @@ Secrets (Streamlit Cloud → App settings → Secrets):
     [KOBO_FORMS]                                  # project IDs from each project's web address
     attendance = "…"   screening = "…"   baseline = "…"
     contact    = "…"   qa        = "…"   backcheck = "…"
+    feedback   = "…"   # optional: the existing Feedback Log form, keeps the Feedback page
     SHEET_ID = "…"     GCP_SERVICE_ACCOUNT_JSON = '''{ … }'''   # optional in Kobo mode
 """
 import hashlib
@@ -87,13 +88,22 @@ def _records(values: list) -> list:
 
 
 # ------------------------------------------------------------ KoboToolbox
-KOBO_FORM_KEYS = ["attendance", "screening", "baseline", "contact", "qa", "backcheck"]
+KOBO_FORM_KEYS = ["attendance", "screening", "baseline", "contact", "qa", "backcheck",
+                  "feedback"]   # feedback = the existing GT2 Feedback Log form (optional)
 
 # Fields that identify a person. They are dropped before data leaves this server.
 PII_FIELDS = {
     "attendance": {"att_name", "att_phone"},
     "contact": {"con_name", "con_phone", "con_phone_confirm", "con_alt_name", "con_alt_phone",
                 "con_alt_relationship", "fu_new_phone", "fu_note"},
+    # free-text notes that could mention a farmer; the dashboard does not display them
+    "screening": {"cons_questions", "scr_hold_note", "scr_disposition_note", "scr_source_approval",
+                  "sup_query_log", "sup_notes", "scr_repl_reason"},
+    "baseline": {"qa_enum_comments", "qa_discomfort_note"},
+    "qa": {"inc_description", "qa_issue", "qa_query", "qa_enum_response", "k_corrections",
+           "cl_recovery", "cl_escalations"},
+    "backcheck": {"bc_key_result", "bc_occurred_note", "bc_consent_note", "bc_respondent_note",
+                  "bc_vaccination_note", "bc_benefit_note", "bc_concern_note"},
 }
 # Kobo/system fields the dashboard never needs (may hold usernames, files or locations).
 DROP_ALWAYS = {"_attachments", "_geolocation", "_submitted_by", "username", "deviceid", "audit",
