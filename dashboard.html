@@ -1050,7 +1050,7 @@ function renderResults(data){const n=data.length;setText('resultsN',`Accepted-va
  $('respondentSexBars').innerHTML=bars(['Female','Male'].map(label=>({label,value:data.filter(x=>x.sex===label).length,n:data.filter(x=>x.sex===label).length})),n,v=>pct(v,n));const ages=(LIVE.on?LIVE.ageBands.map(b=>[b,x=>x.ageBand===b]):[['18–29',x=>x.age<30],['30–39',x=>x.age>=30&&x.age<40],['40–49',x=>x.age>=40&&x.age<50],['50–59',x=>x.age>=50&&x.age<60],['60+',x=>x.age>=60]]).map(([label,f])=>({label,value:data.filter(f).length,n:data.filter(f).length}));$('ageGroupBars').innerHTML=bars(ages,n,v=>pct(v,n));$('productionTypeBars').innerHTML=bars(['Backyard','Semi-commercial','Commercial'].map(label=>({label,value:data.filter(x=>x.production===label).length,n:data.filter(x=>x.production===label).length})),n,v=>pct(v,n));
  const deathN=data.filter(x=>x.deathsOccurred).length;setText('flOpening',fmt(median(data.map(x=>x.opening))));setText('flClosing',fmt(median(data.map(x=>x.closing))));setText('flDeathHH',pct(deathN,n));setText('flDeaths',fmt(data.reduce((a,x)=>a+x.deaths,0)));setText('flBalancePass',pct(data.filter(x=>x.balanceOk).length,n));const dm=group(data,'district');$('deathDistrictBars').innerHTML=bars(Object.entries(dm).map(([label,xs])=>({label,value:100*xs.filter(x=>x.deathsOccurred).length/xs.length,n:xs.length})).sort((a,b)=>b.value-a.value),100,v=>`${v.toFixed(0)}%`);const dd=data.filter(x=>x.deathsOccurred),cm=group(dd,'cause');$('causeBars').innerHTML=bars(Object.entries(cm).map(([label,xs])=>({label,value:xs.length,n:xs.length})).sort((a,b)=>b.value-a.value),null,v=>pct(v,dd.length));
  const any=data.filter(x=>x.vaccinated).length;setText('vAny',pct(any,n));setText('vND',pct(data.filter(x=>x.nd).length,n));setText('vGumboro',pct(data.filter(x=>x.gumboro).length,n));setText('vFowlPox',pct(data.filter(x=>x.fowlpox).length,n));setText('vStockout',pct(data.filter(x=>x.stockout).length,n));setText('vSpend',money(median(data.map(x=>x.vaxSpend))));$('vaccineDiseaseBars').innerHTML=bars([['Any poultry vaccine',x=>x.vaccinated],['Newcastle',x=>x.nd],['Gumboro',x=>x.gumboro],['Fowl Pox',x=>x.fowlpox]].map(([label,f])=>({label,value:data.filter(f).length,n:data.filter(f).length})),n,v=>pct(v,n));const sm=group(data.filter(x=>x.vaccinated),'source');$('vaccineSourceBars').innerHTML=bars(Object.entries(sm).map(([label,xs])=>({label,value:xs.length,n:xs.length})),Math.max(any,1),v=>pct(v,any));
- if(LIVE.on){setText('aDistance',money(median(data.map(x=>x.transportCowtribe))));setText('aTravel',money(median(data.map(x=>x.transportOther))))}else{setText('aDistance',`${(median(data.map(x=>x.distance))||0).toFixed(1)} km`);setText('aTravel',`${fmt(median(data.map(x=>x.travel)))} min`)}setText('aStockout',pct(data.filter(x=>x.stockout).length,n));setText('aService',LIVE.on?'—':money(median(data.map(x=>x.serviceCharge))));setText('aAgrovet',pct(data.filter(x=>/agrovet/i.test(x.source)).length,n));setText('aProvider',pct(data.filter(x=>/veterinary|health worker|livestock volunteer/i.test(x.source)).length,n));$('serviceChannelBars').innerHTML=bars(Object.entries(group(data,'source')).map(([label,xs])=>({label,value:xs.length,n:xs.length})),n,v=>pct(v,n));$('barrierBars').innerHTML=bars(Object.entries(group(data,'barrier')).map(([label,xs])=>({label,value:xs.length,n:xs.length})).sort((a,b)=>b.value-a.value),n,v=>pct(v,n));
+ if(LIVE.on&&LIVE.v2){setText('aDistance',money(median(data.map(x=>x.transportCost))));const tv=data.map(x=>x.travel).filter(Number.isFinite);setText('aTravel',tv.length?`${fmt(median(tv))} min`:'—')}else if(LIVE.on){setText('aDistance',money(median(data.map(x=>x.transportCowtribe))));setText('aTravel',money(median(data.map(x=>x.transportOther))))}else{setText('aDistance',`${(median(data.map(x=>x.distance))||0).toFixed(1)} km`);setText('aTravel',`${fmt(median(data.map(x=>x.travel)))} min`)}setText('aStockout',pct(data.filter(x=>x.stockout).length,n));setText('aService',LIVE.on?'—':money(median(data.map(x=>x.serviceCharge))));setText('aAgrovet',pct(data.filter(x=>/agrovet/i.test(x.source)).length,n));setText('aProvider',pct(data.filter(x=>/veterinary|health worker|livestock volunteer/i.test(x.source)).length,n));$('serviceChannelBars').innerHTML=bars(Object.entries(group(data,'source')).map(([label,xs])=>({label,value:xs.length,n:xs.length})),n,v=>pct(v,n));$('barrierBars').innerHTML=bars(Object.entries(group(data,'barrier')).map(([label,xs])=>({label,value:xs.length,n:xs.length})).sort((a,b)=>b.value-a.value),n,v=>pct(v,n));
  setText('eSales',money(median(data.map(x=>x.cashSales))));setText('eFeed',money(median(data.map(x=>x.feed))));setText('eOther',money(median(data.map(x=>x.other))));setText('ePrevention',money(median(data.map(x=>x.vaxSpend+x.serviceCharge))));setText('eRetained',money(median(data.map(x=>x.retained))));$('economicTypeBody').innerHTML=['Backyard','Semi-commercial','Commercial'].map(p=>{const xs=data.filter(x=>x.production===p);return `<tr><td><b>${p}</b></td><td class="num">${xs.length}</td><td class="num">${money(median(xs.map(x=>x.cashSales)))}</td><td class="num">${money(median(xs.map(x=>x.feed)))}</td><td class="num">${money(median(xs.map(x=>x.other)))}</td><td class="num">${money(median(xs.map(x=>x.vaxSpend+x.serviceCharge)))}</td><td class="num">${money(median(xs.map(x=>x.retained)))}</td></tr>`}).join('');$('economicWatch').innerHTML=[['Missing cash-sales values',data.filter(x=>!Number.isFinite(x.cashSales)).length],['Extreme cost flags',data.filter(x=>x.feed>10000||x.other>3000).length],['Zero prevention spend among vaccinated',data.filter(x=>x.vaccinated&&x.vaxSpend===0&&x.serviceCharge===0).length],['Flock value requiring review',data.filter(x=>x.retained>50000).length]].map(([a,b])=>`<div class="metricrow"><div><b>${a}</b><span>Review before final reporting</span></div><div class="mv">${b}</div></div>`).join('');
  $('geographyBody').innerHTML=Object.entries(dm).sort((a,b)=>a[0].localeCompare(b[0])).map(([d,xs])=>`<tr><td><b>${d}</b></td><td class="num">${xs.length}</td><td class="num">${fmt(median(xs.map(x=>x.closing)))}</td>${heatTd(xs.filter(x=>x.vaccinated).length,xs.length,true)}${heatTd(xs.filter(x=>x.deathsOccurred).length,xs.length,false)}${heatTd(xs.filter(x=>x.stockout).length,xs.length,false)}<td class="num">${LIVE.on?money(median(xs.map(x=>x.transportCost))):`${(median(xs.map(x=>x.distance))||0).toFixed(1)} km`}</td><td class="num">${money(median(xs.map(x=>x.vaxSpend+x.serviceCharge)))}</td></tr>`).join('');
  const fuc=data.filter(x=>x.followConsent).length,cc=data.filter(x=>x.contactComplete).length;setText('cBaseline',n);setText('cConsent',pct(fuc,n));setText('cContact',pct(cc,n));setText('cDue',n);setText('cRisk',n-cc);$('cohortDistrictBars').innerHTML=bars(Object.entries(dm).map(([label,xs])=>({label,value:100*xs.filter(x=>x.contactComplete).length/xs.length,n:xs.length})),100,v=>`${v.toFixed(0)}%`);
@@ -1456,6 +1456,68 @@ function mapSurvey(row,S,ctx){
   };
 }
 
+/* ---------- New GH_T2 Kobo forms (v2): baseline questions split by bird type ---------- */
+const BK=['chicks','mature_chicken','keets','mature_guinea','others'],YK=['chicks','keets','others'];
+const pos=v=>{const n=num(v);return n>0?n:0};                       // -88 / -99 (don't know / refused) count as 0
+const bs=(row,base,keys=BK)=>keys.reduce((a,k)=>a+pos(row[base+'_'+k]),0);
+const rng=(row,base)=>BK.reduce((a,k)=>{const kind=row[`${base}_${k}_kind`];return a+(kind==='exact'?pos(row[`${base}_${k}`]):kind==='range'?pos(row[`${base}_${k}_low`]):0)},0); // ranges: lower bound
+const ageBandOf=a=>!(a>0)?'Not recorded':a<=20?'≤20':a<=30?'21–30':a<=40?'31–40':a<=50?'41–50':a<=60?'51–60':'60+';
+const BARRIER={availability:'Availability',price:'Price',distance:'Distance/transport',information:'Information',trust:'Trust',package_size:'Package size',timing:'Timing',none:'No major barrier',other:'Other'};
+Object.assign(L.heard,{pre_event_list:'Pre-event list',walk_in:'Walk-in',community_referral:'Community referral',recovery:'Recovery appointment'});
+// Study sentinel register (same codes as the Kobo forms). Used when no config_sentinels tab is available: 25 interviews each = 500.
+const SENTINEL_REGISTER=[['AWE-01','Awutu Senya East','Kasoa East','Team A'],['AWE-02','Awutu Senya East','Odupong','Team A'],['HO-01','Ho Municipal','Ho Central','Team A'],
+  ['UWA-01','Upper West Akim','Adeiso','Team A'],['UWA-02','Upper West Akim','Asamankese Road','Team A'],['NJS-01','New Juaben South','Koforidua Central','Team A'],
+  ['NJS-02','New Juaben South','Effiduase','Team A'],['ATW-01','Atiwa West','Kwabeng','Team A'],['SAG-01','Sagnarigu','Danjima North','Team B'],
+  ['SAG-02','Sagnarigu','Danjima South','Team B'],['TEC-01','Techiman South','Techiman Central','Team B'],['TEC-02','Techiman South','Tanoso','Team B'],
+  ['TEC-03','Techiman South','Kenten','Team B'],['ASU-01','Asutifi North','Kenyasi','Team B'],['MAM-01','Mampong Municipal','Mampong Central','Team B'],
+  ['MAM-02','Mampong Municipal','Kofiase','Team B'],['MAM-03','Mampong Municipal','Nintin','Team B'],['BIB-01','Bibiani Anhwiaso Bekwai','Bibiani Central','Team B'],
+  ['BIB-02','Bibiani Anhwiaso Bekwai','Sefwi Bekwai','Team B'],['BIB-03','Bibiani Anhwiaso Bekwai','Chirano','Team B'],['KWW-TBC','Kwahu West','To be confirmed','To be confirmed']];
+
+function mapBaseline(row,S,ctx){
+  const consent=String(row.meta_consented)==='1'?'yes':'no';
+  const district=esc(DISTRICTS[row.meta_district]||String(row.meta_district||'').replace(/_/g,' ')||'District not recorded');
+  const key=ctx.keyFor(row.meta_sentinel,district);
+  const opening=bs(row,'flk_c02'),closing=bs(row,'flk_c01');
+  const additions=bs(row,'flk_c03')+bs(row,'flk_c04',YK)+bs(row,'flk_c05');
+  const causes={'Disease':rng(row,'hlt_h04'),'Predation':bs(row,'hlt_h05'),'Accident':bs(row,'hlt_h06'),'Extreme weather':bs(row,'hlt_h07'),'Other causes':bs(row,'hlt_h09')};
+  const deaths=Object.values(causes).reduce((a,b)=>a+b,0),theft=bs(row,'hlt_h08');
+  const sold=bs(row,'flk_c06'),consumed=bs(row,'flk_c07'),giftOut=bs(row,'flk_c08');
+  const expected=opening+additions-deaths-theft-sold-consumed-giftOut,tol=Math.max(3,Math.round(.05*(opening+additions)));
+  const diseasesOf=b=>String(row['vax_v03_diseases_'+b]||'').split(' ');
+  const dis=d=>BK.some(b=>diseasesOf(b).includes(d));
+  const vaxBirds=bs(row,'vax_v07'),ndBirds=BK.reduce((a,b)=>a+(diseasesOf(b).includes('newcastle')?pos(row['vax_v07_'+b]):0),0);
+  const vaccinated=row.vax_v01_any==='yes';
+  const stockout=row.acc_a03_missed==='yes'||['rarely','never'].includes(row.acc_a02_available);
+  const flock=Math.max(opening,closing),age=num(row.prof_p02_age),ageBand=ageBandOf(age);
+  const g=k=>pos(row[k]);
+  const cashSales=row.econ_g02_basis&&row.econ_g02_basis!=='unable'?g('econ_g02_sales'):BK.reduce((a,k)=>a+pos(row['econ_g01_sold_'+k])*pos(row['econ_g01_price_'+k]),0);
+  return {
+    uuid:row._uuid,consent,qa:String(row._qa_status||'pending'),round:String(row.meta_wave||'baseline'),
+    id:key,district,team:ctx.teamOf(key,district),community:esc(row.meta_community||''),
+    studyId:esc(row.meta_study_id||('KOBO-'+(row._id||String(row._uuid).slice(0,8)))),
+    enumerator:esc(String(row.meta_enumerator||'Not recorded').toUpperCase()),
+    sex:row.prof_p01_gender==='female'?'Female':row.prof_p01_gender==='male'?'Male':'Not recorded',
+    ageBand,age:age>0?age:NaN,
+    production:flock<=S.yardMax?'Backyard':flock<=S.semiMax?'Semi-commercial':'Commercial',
+    opening,closing,additions,deaths,deathsOccurred:deaths>0,
+    cause:deaths?Object.entries(causes).sort((a,b)=>b[1]-a[1])[0][0]:'None',
+    balanceOk:Math.abs(expected-closing)<=tol,balanceGap:expected-closing,
+    vaccinated,nd:dis('newcastle'),gumboro:dis('gumboro'),fowlpox:dis('fowl_pox'),vaccinatedBirds:vaxBirds,ndBirds,
+    source:row.vax_v08_source?esc(String(row.vax_v08_source).trim()):'No source reported',stockout,
+    barrier:lab(BARRIER,row.acc_a06_barrier),
+    distance:NaN,travel:row.acc_a04_mode==='travel'&&num(row.acc_a04_minutes)>=0?num(row.acc_a04_minutes):NaN,
+    transportCowtribe:0,transportOther:0,transportCost:g('acc_a05_cost'),
+    vaxSpend:g('vax_v10_paid'),serviceCharge:0,feed:g('econ_g06_feed'),other:g('econ_g07_health')+g('econ_g08_labour')+g('econ_g12_other_cost'),retained:NaN,
+    cashSales,followConsent:row.qa_cl02_recontact?yes(row.qa_cl02_recontact):undefined,contactComplete:false,
+    phoneHash:'',gpsOk:true,
+    duration:minutes(row.start,row.end),baselineDate:day(row.meta_interview_date||row._submission_time),submitted:row._submission_time||'',
+    available:opening+additions,lossesExceed:deaths+theft+sold+consumed+giftOut>opening+additions,
+    maxVaxBirds:vaxBirds,soldNoPrice:BK.some(k=>pos(row['econ_g01_sold_'+k])>0&&pos(row['econ_g01_price_'+k])<=0),
+    syncDelayH:(Date.parse(row._submission_time)-Date.parse(row.end))/3.6e6,
+    enumMissing:!row.meta_enumerator,emptyFlock:opening+closing+additions===0,
+  };
+}
+
 function apply(p){
   const cfg=p.config||{},st=cfg.settings||{},forms=p.forms||{};
   const S={yardMax:num(st.backyard_max_birds)||49,semiMax:num(st.semi_commercial_max_birds)||500,attTarget:num(st.attendance_target),minMin:num(st.min_interview_minutes)||10,inclPending:yes(st.include_pending_in_results)};
@@ -1463,15 +1525,46 @@ function apply(p){
 
   /* sentinel register (config_sentinels tab) */
   const reg={};
-  (cfg.sentinels||[]).filter(s=>s.sentinel_id).forEach(s=>{reg[s.sentinel_id]={id:esc(s.sentinel_id),district:esc(s.district),town:esc(s.community),community:esc(s.community),team:esc(s.team||'Unassigned'),date:day(s.event_date),quota:num(s.quota),cfgStatus:String(s.status||''),mobilised:0,attended:0,screened:0,femaleAtt:0,transport:0,materials:0,submitted:0,refused:0,accepted:0,pending:0,rejected:0,reconcileFlag:false,dates:[]}});
+  const useRegister=!(cfg.sentinels||[]).some(s=>s.sentinel_id)&&(p.schema==='v2'||!!forms.baseline);
+  const sentRows=useRegister?SENTINEL_REGISTER.map(([id,district,community,team])=>({sentinel_id:id,district,community,team,quota:id==='KWW-TBC'?0:25})):(cfg.sentinels||[]);
+  sentRows.filter(s=>s.sentinel_id).forEach(s=>{reg[s.sentinel_id]={id:esc(s.sentinel_id),district:esc(s.district),town:esc(s.community),community:esc(s.community),team:esc(s.team||'Unassigned'),date:day(s.event_date),quota:num(s.quota),cfgStatus:String(s.status||''),mobilised:0,attended:0,screened:0,femaleAtt:0,transport:0,materials:0,submitted:0,refused:0,accepted:0,pending:0,rejected:0,reconcileFlag:false,dates:[]}});
   const teamByDistrict={};Object.values(reg).forEach(s=>{if(!teamByDistrict[s.district]||teamByDistrict[s.district]==='To be confirmed')teamByDistrict[s.district]=s.team});
   const ctx={
     keyFor:(sen,district)=>{if(sen&&reg[sen])return sen;const k=sen?esc(sen):`${district} · unassigned`;reg[k]??={id:k,district,town:'sentinel not recorded',community:'Sentinel not recorded',team:teamByDistrict[district]||'Unassigned',date:'',quota:0,cfgStatus:'',mobilised:0,attended:0,screened:0,femaleAtt:0,transport:0,materials:0,submitted:0,refused:0,accepted:0,pending:0,rejected:0,reconcileFlag:false,dates:[]};return k},
     teamOf:(k,district)=>reg[k]?.team||teamByDistrict[district]||'Unassigned',
   };
 
+  /* which forms: the six GH_T2 projects (v2) or the older four */
+  const V2=p.schema==='v2'||!!forms.baseline;LIVE.v2=V2;
+  let surveyRows=forms.survey||[],attRows=forms.attendance||[],attendeeRows=forms.attendance_attendee||[],bcRows=forms.backcheck||[];
+  if(V2){
+    surveyRows=forms.baseline||[];
+    // Attendance: one submission per attendee → one summary row per event (same shape as the old register)
+    const mob={};(forms.qa||[]).filter(q=>q.qa_record_type==='daily').forEach(q=>{mob[q.meta_event_id]=(mob[q.meta_event_id]||0)+num(q.fn01_actual)});
+    const scrByEvent={};(forms.screening||[]).forEach(r=>{scrByEvent[r.meta_event_id]=(scrByEvent[r.meta_event_id]||0)+1});
+    const ev={};attendeeRows=[];
+    (forms.attendance||[]).forEach(a=>{const id=a.meta_event_id||`${a.meta_sentinel}-${day(a.meta_event_date)}`;
+      const e=ev[id]??={_uuid:id,district:a.meta_district,sentinel:a.meta_sentinel,event_date:a.meta_event_date,staff_code:a.meta_recorder,mobilised:mob[id]||0,attended_total:0,female_total:0,transport_total:0,materials_total:0,screened_total:scrByEvent[id]||0,register_matches:'yes',_submission_time:a._submission_time};
+      e.attended_total++;if(a.att_gender==='female')e.female_total++;if(yes(a.att_transport))e.transport_total++;if(yes(a.att_materials))e.materials_total++;
+      attendeeRows.push({_parent_uuid:id,heard_from:a.att_source,screened:a.att_referred_screening,att_sex:a.att_gender})});
+    // Mobilised comes from the supervisor's daily review (form 05, funnel line 1). If it is missing, don't divide by it.
+    attRows=Object.values(ev).map(e=>e.mobilised>0?e:{...e,mobilised:e.attended_total,mobMissing:true});
+    // Screening funnel per sentinel
+    (forms.screening||[]).forEach(r=>{const district=esc(DISTRICTS[r.meta_district]||r.meta_district||'District not recorded');const k=ctx.keyFor(r.meta_sentinel,district);
+      const f=reg[k].scr??={screened:0,eligible:0,ineligible:0,selected:0,consented:0,refused:0};
+      f.screened++;if(r.scr007_eligibility==='eligible')f.eligible++;else if(r.scr007_eligibility==='ineligible')f.ineligible++;
+      if(r.scr009_selected==='yes')f.selected++;if(r.cons002_consent==='yes')f.consented++;else if(r.cons002_consent==='no')f.refused++});
+    // Back-checks → the shape the pages already use
+    const BCO={confirmed:'confirmed',minor:'minor_discrepancy',material:'material_discrepancy',not_verified:'could_not_verify'};
+    bcRows=(forms.backcheck||[]).map(b=>({study_id:b.meta_study_id,contact_outcome:b.bc_reached,bc_consent:'yes',bc_assessment:BCO[b.bc_outcome]||b.bc_outcome,original_enumerator:b.bc_original_enum,district:b.meta_district,bc_date:b.bc_date,_submission_time:b._submission_time}));
+  }
+
   /* survey */
-  const all=(forms.survey||[]).map(r=>mapSurvey(r,S,ctx));
+  const all=surveyRows.map(r=>V2?mapBaseline(r,S,ctx):mapSurvey(r,S,ctx));
+  if(V2){   // follow-up contact details recorded in form 04 (only a one-way phone code reaches the page)
+    const enrolled={};(forms.contact||[]).filter(c=>c.con_record_type==='enrol'&&c.con_recontact==='yes').forEach(c=>{enrolled[esc(c.meta_study_id)]=c._phone_hash||'-'});
+    all.forEach(x=>{const h=enrolled[x.studyId];if(h){x.contactComplete=true;if(h!=='-')x.phoneHash=h}});
+  }
   all.forEach(x=>{const s=reg[x.id];if(x.submitted)s.dates.push(day(x.submitted));if(x.consent==='no'){s.refused++;return}s.submitted++;if(x.qa==='approved')s.accepted++;else if(x.qa==='not_approved')s.rejected++;else s.pending++});
   const consented=all.filter(x=>x.consent!=='no');
   submissions=consented.map(x=>({date:x.baselineDate,qa:x.qa,sentinel:x.id}));
@@ -1479,16 +1572,17 @@ function apply(p){
 
   /* attendance + attendees */
   const attBy={};
-  (forms.attendance||[]).forEach(a=>{const district=esc(DISTRICTS[a.district]||a.district||'District not recorded');const k=ctx.keyFor(a.sentinel,district);attBy[a._uuid]=k;const s=reg[k];
+  attRows.forEach(a=>{const district=esc(DISTRICTS[a.district]||a.district||'District not recorded');const k=ctx.keyFor(a.sentinel,district);attBy[a._uuid]=k;const s=reg[k];
     s.mobilised+=num(a.mobilised);s.attended+=num(a.attended_total);s.femaleAtt+=num(a.female_total);s.transport+=num(a.transport_total);s.materials+=num(a.materials_total);s.screened+=num(a.screened_total);if(a.register_matches==='no')s.reconcileFlag=true;if(a.event_date)s.dates.push(day(a.event_date))});
-  LIVE.attendees=(forms.attendance_attendee||[]).filter(a=>attBy[a._parent_uuid]).map(a=>({sentinel:attBy[a._parent_uuid],source:lab(L.heard,a.heard_from),screened:yes(a.screened),sex:a.att_sex}));
+  LIVE.attendees=attendeeRows.filter(a=>attBy[a._parent_uuid]).map(a=>({sentinel:attBy[a._parent_uuid],source:lab(L.heard,a.heard_from),screened:yes(a.screened),sex:a.att_sex}));
 
   /* sentinel stats used by every page */
   sentinelStats=Object.values(reg).map(s=>{
-    const consentedN=s.submitted,selected=consentedN+s.refused,screened=Math.max(s.screened,selected);
+    const f=s.scr;   // v2: real screening funnel from form 02
+    const consentedN=f?f.consented:s.submitted,selected=f?f.selected:consentedN+s.refused,screened=f?f.screened:Math.max(s.screened,selected);
     const date=s.date||s.dates.sort()[0]||'';
     const status=['Complete','Active','Upcoming'].includes(s.cfgStatus)?s.cfgStatus:(s.quota&&s.accepted>=s.quota)?'Complete':(selected||s.attended)?'Active':'Upcoming';
-    return {...s,date,status,screened,eligible:selected,ineligible:0,selected,consented:consentedN,refused:s.refused,attendanceSource:'—',recruitSource:'—'};
+    return {...s,date,status,screened,eligible:f?f.eligible:selected,ineligible:f?f.ineligible:0,selected,consented:consentedN,refused:f?f.refused:s.refused,attendanceSource:'—',recruitSource:'—'};
   }).sort((a,b)=>a.id.localeCompare(b.id));
   sentinels=sentinelStats;
 
@@ -1503,7 +1597,7 @@ function apply(p){
   LIVE.complaints=feedback.filter(f=>f.complaint);
 
   /* back-checks */
-  LIVE.backchecks=(forms.backcheck||[]).map(b=>{const reached=b.contact_outcome==='reached'&&yes(b.bc_consent);return {studyId:esc(b.study_id),reached,outcome:reached?lab(L.bc,b.bc_assessment):lab(L.contact,b.contact_outcome),enumerator:esc(String(b.original_enumerator||'').toUpperCase())}});
+  LIVE.backchecks=bcRows.map(b=>{const reached=b.contact_outcome==='reached'&&yes(b.bc_consent);return {studyId:esc(b.study_id),reached,outcome:reached?lab(L.bc,b.bc_assessment):lab(L.contact,b.contact_outcome),enumerator:esc(String(b.original_enumerator||'').toUpperCase())}});
 
   /* ---------- data issues: every source, computed on each refresh ---------- */
   const phoneCount={};consented.forEach(x=>{if(x.phoneHash)phoneCount[x.phoneHash]=(phoneCount[x.phoneHash]||0)+1});
@@ -1524,7 +1618,7 @@ function apply(p){
     ['Sent more than 24 h after the interview',x=>x.syncDelayH>24,'Low'],
     ['GPS not captured',x=>!x.gpsOk,'Low'],
     ['No phone number for follow-up',x=>!x.contactComplete,'Low'],
-  ];
+  ].filter(([label])=>!(V2&&/GPS|Age band/.test(label)));   // v2: no GPS question; age is asked in years (18+ enforced)
   const qaStatus={approved:'Approved by supervisor',not_approved:'Rejected'};
   const list=[];
   all.forEach(x=>{
@@ -1533,9 +1627,10 @@ function apply(p){
     if(x.consent==='no'){if(x.available+x.closing>0)list.push({...base,label:'Interview data recorded after consent was refused',sev:'High'});return}
     checks.forEach(([label,f,sev])=>{if(f(x))list.push({...base,label,sev})});
   });
-  (forms.attendance||[]).forEach(a=>{
+  attRows.forEach(a=>{
     const k=attBy[a._uuid],s=reg[k],att=num(a.attended_total),base={source:'Attendance',ref:`${k} · ${day(a.event_date)}`,district:s.district,sentinel:k,enumerator:esc(String(a.staff_code||'').toUpperCase()),owner:'Field coordinator',when:a._submission_time||a.event_date,open:true,status:'Needs review'};
-    if(att>num(a.mobilised))list.push({...base,label:'More attendees than farmers mobilised',sev:'Medium'});
+    if(a.mobMissing)list.push({...base,label:'Mobilised count not recorded in the supervisor daily review',sev:'Low'});
+    if(num(a.mobilised)>0&&att>num(a.mobilised))list.push({...base,label:'More attendees than farmers mobilised',sev:'Medium'});
     if(a.register_matches==='no')list.push({...base,label:'Register does not match finance count',sev:'Medium'});
     if(num(a.transport_total)!==att)list.push({...base,label:'Transport payments differ from attendance',sev:'Low'});
   });
@@ -1545,11 +1640,17 @@ function apply(p){
     if(yes(f.safeguarding))list.push({...base,ref:'Restricted',label:'Safeguarding referral logged: follow the escalation pathway',sev:'High'});
     else if(f.priority==='urgent')list.push({...base,label:'Urgent feedback awaiting action',sev:'High'});
   });
-  (forms.backcheck||[]).forEach(b=>{
+  bcRows.forEach(b=>{
     if(b.bc_assessment!=='material_discrepancy')return;
     const rec=all.find(x=>x.studyId===esc(b.study_id));
     list.push({source:'Back-check',ref:esc(b.study_id),district:rec?rec.district:esc(DISTRICTS[b.district]||b.district||''),sentinel:rec?rec.id:'',enumerator:esc(String(b.original_enumerator||'').toUpperCase()),
       label:'Back-check found a material discrepancy',sev:'High',owner:'Supervisor',when:b._submission_time||b.bc_date,open:!rec||rec.qa==='pending',status:rec&&rec.qa!=='pending'?(qaStatus[rec.qa]||'Reviewed'):'Needs review'});
+  });
+  if(V2)(forms.qa||[]).filter(q=>q.qa_record_type==='case').forEach(q=>{   // open supervisor/MERL QA cases (form 05)
+    const stc=q.qa_status||q.qa_sup_recommendation,label={qo:'QA query open',cr:'Correction required',pb:'Pending back-check'}[stc];if(!label)return;
+    const district=esc(DISTRICTS[q.meta_district]||q.meta_district||''),rec=all.find(x=>x.studyId===esc(q.meta_study_id));
+    list.push({source:'QA case',ref:esc(q.meta_study_id),district:rec?rec.district:district,sentinel:rec?rec.id:esc(q.meta_sentinel||''),enumerator:esc(String(q.qa_enumerator||'').toUpperCase()),
+      label,sev:'Medium',owner:q.qa_status?'MERL':'Supervisor',when:q._submission_time,open:!rec||rec.qa!=='approved'&&rec.qa!=='not_approved',status:q.qa_status?'MERL decision recorded':'Supervisor recommendation'});
   });
   issues=list;
   const byLabel={};list.forEach(i=>{byLabel[i.label]=(byLabel[i.label]||0)+1});
@@ -1581,6 +1682,17 @@ function apply(p){
 
 function relabel(){
   const kpi=(id,eyebrow,sub)=>{const k=$(id)?.closest('.kpi');if(!k)return;k.querySelector('.eyebrow').textContent=eyebrow;k.querySelector('.sub').textContent=sub};
+  if(LIVE.v2){
+    kpi('aDistance','Transport / delivery cost','Median GHS, return trip (A05)');
+    kpi('aTravel','Travel time to provider','Median minutes one way (A04)');
+    kpi('aService','Service charge','Not asked in the v4 form');
+    kpi('pfAge','Median age','Years (P02)');
+    kpi('cConsent','Recontact consent','Farmers answering Yes to CL02');
+    kpi('eRetained','Retained flock value','Not asked in the v4 form');
+    $('demoChip').style.display='none';
+    const f=document.querySelector('.footer span');if(f)f.textContent='Ghana Tier 2 Baseline · Live data (Kobo)';
+    return;
+  }
   kpi('aDistance','Transport · Cowtribe agrovet','Median cost per trip');
   kpi('aTravel','Transport · other providers','Median cost per trip');
   kpi('aService','Service charge','Not captured in current form');
