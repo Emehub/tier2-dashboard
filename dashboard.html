@@ -1335,7 +1335,27 @@ document.addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&e.tar
 document.addEventListener('click',e=>{const b=e.target.closest('.bullet[data-district]');if(!b)return;const d=b.dataset.district;
  if([...districtFilter.options].some(o=>o.value===d)){districtFilter.value=d;sentinelFilter.value='All';renderAll();showToast(`Filtered to ${d}. Use “Reset filters” to clear.`,3500)}});
 
-function renderAll(){const ss=scopedSentinels(),data=scopedRecords(),fb=scopedFeedback();renderOverview(ss,data,fb);renderTrends(ss);renderIssues(ss);renderInsights(ss,data);renderStatus(ss);renderAttendance(ss,data);renderRecruitment(ss);renderResults(data);renderQuality(ss,data);renderFeedback(fb);if(window.renderV2Extras)window.renderV2Extras(ss,data);enhanceTables();setText('lastRefresh',`Dashboard refreshed: ${new Date().toLocaleString('en-GB',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'})}`)}
+// Visible error report: if a section fails on real data, show what failed instead of silently stopping.
+const DASH_ERRORS=new Map();
+function showDashError(err,where){
+  const msg=String(err&&err.message||err),line=String(err&&err.stack||'').split('\n').slice(0,3).join(' | ');
+  DASH_ERRORS.set(where,`${where}: ${msg}${line?' — '+line:''}`);
+  let box=document.getElementById('dashErrors');
+  if(!box){box=document.createElement('div');box.id='dashErrors';box.className='callout bad';box.style.cssText='margin:0 0 14px;white-space:pre-wrap;font-size:13px';
+    const first=document.querySelector('.page');if(first)first.parentNode.insertBefore(box,first);else document.body.prepend(box)}
+  box.textContent='⚠ The dashboard hit an error while showing your data. Please send a screenshot of this box.\n\n'+[...DASH_ERRORS.values()].join('\n');
+  console.error(where,err);
+}
+window.addEventListener('error',ev=>showDashError(ev.error||ev.message,'page script'));
+function renderAll(){
+  let ss=[],data=[],fb=[];
+  try{ss=scopedSentinels();data=scopedRecords();fb=scopedFeedback()}catch(e){showDashError(e,'applying the filters')}
+  const safe=(name,fn)=>{try{fn()}catch(e){showDashError(e,name)}};   // one failing section no longer stops the others
+  safe('Overview',()=>renderOverview(ss,data,fb));safe('Trends',()=>renderTrends(ss));safe('Data issues',()=>renderIssues(ss));safe('Insights',()=>renderInsights(ss,data));
+  safe('Status',()=>renderStatus(ss));safe('Attendance',()=>renderAttendance(ss,data));safe('Recruitment',()=>renderRecruitment(ss));safe('Survey Results',()=>renderResults(data));
+  safe('Data Quality',()=>renderQuality(ss,data));safe('Feedback',()=>renderFeedback(fb));safe('Detailed v2 tabs',()=>{if(window.renderV2Extras)window.renderV2Extras(ss,data)});
+  safe('Tables',()=>enhanceTables());
+  setText('lastRefresh',`Dashboard refreshed: ${new Date().toLocaleString('en-GB',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'})}`)}
 function showPage(name){document.querySelectorAll('.page').forEach(x=>x.classList.toggle('active',x.id===`page-${name}`));document.querySelectorAll('.navbtn').forEach(x=>x.classList.toggle('active',x.dataset.page===name));try{history.replaceState(null,'',`#${name}`)}catch(e){/* not allowed inside some embeds (e.g. Streamlit) */}const nb=document.querySelector(`.navbtn[data-page="${name}"]`);setText('crumb',nb.querySelector('.navtitle').textContent);document.body.classList.remove('nav-open');window.scrollTo({top:0,behavior:'smooth'})}
 document.querySelectorAll('.navbtn').forEach(b=>b.addEventListener('click',()=>showPage(b.dataset.page)));document.querySelectorAll('.subbtn').forEach(b=>b.addEventListener('click',()=>{const group=b.closest('.subnav');group.querySelectorAll('.subbtn').forEach(x=>x.classList.remove('active'));b.classList.add('active');const page=group.parentElement;page.querySelectorAll(':scope > .subpage').forEach(x=>x.classList.toggle('active',x.id===b.dataset.sub))}));
 [teamFilter,districtFilter,sentinelFilter,sexFilter,productionFilter,dateFrom,dateTo].forEach(x=>x.addEventListener('change',renderAll));$('resetFilters').addEventListener('click',()=>{[teamFilter,districtFilter,sentinelFilter,sexFilter,productionFilter].forEach(x=>x.value='All');dateFrom.value='';dateTo.value='';renderAll()});
@@ -1942,7 +1962,7 @@ function tick(){if(lastOk&&!failing)setStatus(EMBEDDED?'Live · auto-refresh on'
 function load(){
   if(document.hidden&&lastOk)return;
   google.script.run
-    .withSuccessHandler(p=>{failing=false;lastOk=Date.now();const sig=JSON.stringify([p.forms,p.config]);if(sig!==lastSig){lastSig=sig;apply(p);setText('lastRefresh',EMBEDDED?`New data last received: ${new Date(p.generatedAt).toLocaleString()}`:`Latest sync from Kobo: ${p.lastWebhook||p.lastScheduled?new Date(p.lastWebhook>p.lastScheduled?p.lastWebhook:p.lastScheduled).toLocaleString():'none yet'}`)}tick()})
+    .withSuccessHandler(p=>{failing=false;lastOk=Date.now();const sig=JSON.stringify([p.forms,p.config]);if(sig!==lastSig){lastSig=sig;try{apply(p)}catch(e){showDashError(e,'reading the Kobo data')}setText('lastRefresh',EMBEDDED?`New data last received: ${new Date(p.generatedAt).toLocaleString()}`:`Latest sync from Kobo: ${p.lastWebhook||p.lastScheduled?new Date(p.lastWebhook>p.lastScheduled?p.lastWebhook:p.lastScheduled).toLocaleString():'none yet'}`)}tick()})
     .withFailureHandler(err=>{failing=true;const msg=String(err&&err.message||err);setStatus('Sync error · retrying',false);$('syncChip').title=msg;if(!LIVE.on)showToast('Data could not load: '+msg,12000);console.warn('Dashboard data load failed:',err)})
     .getDashboardData();
 }
