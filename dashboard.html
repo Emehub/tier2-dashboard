@@ -797,6 +797,7 @@ td.heat{font-weight:650}
     <div class="subpage active" id="res-profile">
       <div class="kpis"><div class="kpi"><div class="eyebrow">Female Respondents</div><div class="value" id="pfFemale">0%</div><div class="sub">Sex of primary poultry decision-maker</div></div><div class="kpi"><div class="eyebrow">Median Age</div><div class="value" id="pfAge">0</div><div class="sub">Years</div></div><div class="kpi"><div class="eyebrow">Backyard</div><div class="value" id="pfBackyard">0%</div><div class="sub">Production type</div></div><div class="kpi"><div class="eyebrow">Semi-commercial</div><div class="value" id="pfSemi">0%</div><div class="sub">Production type</div></div><div class="kpi"><div class="eyebrow">Commercial</div><div class="value" id="pfCommercial">0%</div><div class="sub">Production type</div></div><div class="kpi good"><div class="eyebrow">Median Current Flock</div><div class="value" id="pfFlock">0</div><div class="sub">Birds per enterprise</div></div></div>
       <div class="grid3"><div class="panel"><h3>Respondent sex</h3><div class="desc">Accepted Valid respondents.</div><div class="chartbar" id="respondentSexBars"></div></div><div class="panel"><h3>Age groups</h3><div class="desc">Age of the primary poultry manager.</div><div class="chartbar" id="ageGroupBars"></div></div><div class="panel"><h3>Production type</h3><div class="desc">Operational segmentation for baseline analysis.</div><div class="chartbar" id="productionTypeBars"></div></div></div>
+      <div class="v2host" id="v2Profile"></div>
     </div>
     <div class="subpage" id="res-flock">
       <div class="kpis"><div class="kpi"><div class="eyebrow">Median Opening Flock</div><div class="value" id="flOpening">0</div><div class="sub">Beginning of recall window</div></div><div class="kpi good"><div class="eyebrow">Median Closing Flock</div><div class="value" id="flClosing">0</div><div class="sub">At baseline interview</div></div><div class="kpi warn"><div class="eyebrow">Households Reporting Deaths</div><div class="value" id="flDeathHH">0%</div><div class="sub">Any death in recall window</div></div><div class="kpi"><div class="eyebrow">Total Reported Deaths</div><div class="value" id="flDeaths">0</div><div class="sub">Farmer reported</div></div><div class="kpi locked"><div class="eyebrow">Mortality Rate</div><div class="value">LOCKED</div><div class="sub">Pending approved denominator</div></div><div class="kpi"><div class="eyebrow">Flock-balance Pass</div><div class="value" id="flBalancePass">0%</div><div class="sub">Within approved tolerance</div></div></div>
@@ -1488,6 +1489,12 @@ const BK=['chicks','mature_chicken','keets','mature_guinea','others'],YK=['chick
 const pos=v=>{const n=num(v);return n>0?n:0};                       // -88 / -99 (don't know / refused) count as 0
 const bs=(row,base,keys=BK)=>keys.reduce((a,k)=>a+pos(row[base+'_'+k]),0);
 const rng=(row,base)=>BK.reduce((a,k)=>{const kind=row[`${base}_${k}_kind`];return a+(kind==='exact'?pos(row[`${base}_${k}`]):kind==='range'?pos(row[`${base}_${k}_low`]):0)},0); // ranges: lower bound
+// V10 was split in the team's form into one cost per vaccine (Kobo kept the generated names)
+const V10=[['vax_v10_paid','Newcastle'],['vax_v10_paid_001','Gumboro'],['vax_v10_paid_001_001','Fowl pox'],['vax_v10_paid_001_001_001','IB'],['vax_v10_paid_001_001_001_001','Other vaccine']];
+// P07 species → bird types shown in the form (skip pattern)
+const KEPT={chicks:r=>/\bchicken\b/.test(r.prof_p07_species||''),mature_chicken:r=>/\bchicken\b/.test(r.prof_p07_species||''),
+  keets:r=>/\bguinea_fowl\b/.test(r.prof_p07_species||''),mature_guinea:r=>/\bguinea_fowl\b/.test(r.prof_p07_species||''),
+  others:r=>/\b(turkey|duck|other)\b/.test(r.prof_p07_species||'')};
 const ageBandOf=a=>!(a>0)?'Not recorded':a<=20?'≤20':a<=30?'21–30':a<=40?'31–40':a<=50?'41–50':a<=60?'51–60':'60+';
 const BARRIER={availability:'Availability',price:'Price',distance:'Distance/transport',information:'Information',trust:'Trust',package_size:'Package size',timing:'Timing',none:'No major barrier',other:'Other'};
 Object.assign(L.heard,{pre_event_list:'Pre-event list',walk_in:'Walk-in',community_referral:'Community referral',recovery:'Recovery appointment'});
@@ -1534,7 +1541,7 @@ function mapBaseline(row,S,ctx){
     barrier:lab(BARRIER,row.acc_a06_barrier),
     distance:NaN,travel:row.acc_a04_mode==='travel'&&num(row.acc_a04_minutes)>=0?num(row.acc_a04_minutes):NaN,
     transportCowtribe:0,transportOther:0,transportCost:g('acc_a05_cost'),
-    vaxSpend:g('vax_v10_paid'),serviceCharge:0,feed:g('econ_g06_feed'),other:g('econ_g07_health')+g('econ_g08_labour')+g('econ_g12_other_cost'),retained:NaN,
+    vaxSpend:V10.reduce((a,[k])=>a+g(k),0),   // V10a–V10e: cost per vaccine, added togetherserviceCharge:0,feed:g('econ_g06_feed'),other:g('econ_g07_health')+g('econ_g08_labour')+g('econ_g12_other_cost'),retained:NaN,
     cashSales,followConsent:row.qa_cl02_recontact?yes(row.qa_cl02_recontact):undefined,contactComplete:false,
     phoneHash:'',gpsOk:true,
     duration:minutes(row.start,row.end),baselineDate:day(row.meta_interview_date||row._submission_time),submitted:row._submission_time||'',
@@ -1758,6 +1765,10 @@ function relabel(){
    follow-up tracking and supervisor review. Results use Accepted Valid only.
    ===================================================================== */
 const LB={
+  purpose:{income:'Income',food:'Household food',both:'Both (income and food)',cultural:'Cultural/social',breeding:'Breeding',other:'Other'},
+  species:{chicken:'Chicken',guinea_fowl:'Guinea fowl',turkey:'Turkey',duck:'Duck',other:'Other'},
+  system:{free_range:'Free range',semi_intensive:'Semi-intensive',intensive:'Intensive',mixed:'Mixed',other:'Other'},
+  education:{none:'None',primary:'Primary',jhs:'JHS',shs_voc:'SHS/Vocational',tertiary:'Tertiary',other:'Other'},
   inelig:{under_18:'Under 18',not_owner_manager:'Not owner/manager',no_flock:'No current flock',outside_catchment:'Outside catchment',duplicate_unit:'Duplicate unit',other:'Other'},
   refusal:{no_time:'No time',privacy:'Privacy concern',not_interested:'Not interested',consultation:'Wants consultation',uncomfortable:'Uncomfortable',other_prefer_not:'Other / prefers not to say','':'Reason not given'},
   selm:{preselected:'Preselected list',systematic:'Systematic selection',random:'Random draw',quota:'Approved quota selection',replacement:'Supervisor-approved replacement'},
@@ -1765,7 +1776,7 @@ const LB={
   causeBasis:{vet_ahw:'Vet/AHW',laboratory:'Laboratory',own_judgement:'Symptoms/own judgement',community:'Community advice',dont_know:'Do not know'},
   noVax:{unavailable:'Unavailable',cost:'Cost',distance:'Distance',no_provider:'No provider',not_know_need:'Did not know need',timing:'Timing',concern:'Concern',other:'Other'},
   disease:{newcastle:'Newcastle',gumboro:'Gumboro',fowl_pox:'Fowl Pox',ib:'IB',other:'Other',dont_know:'Do not know'},
-  coverage:{all:'All',most:'Most',half:'About half',less_half:'Less than half',few:'Few',dont_know:'Do not know'},
+  coverage:{all:'All',exceeded:'Exceeded',most:'Most',half:'About half',less_half:'Less than half',few:'Few',dont_know:'Do not know'},
   vaccinator:{household:'Household',agrovet:'Agrovet',vet:'Veterinary officer/Vet',ahw:'AHW',other:'Other'},
   vaxEv:{recall:'Recall',record:'Record',receipt:'Receipt',container:'Container',phone_message:'Phone/message',provider_record:'Provider record',none:'None'},
   precision:{date:'Exact date',month:'Month only',anchor:'Event anchor'},
@@ -1820,15 +1831,17 @@ const v2=(()=>{
 
   function birds(raws){
     const n=raws.length;if(!n)return set('v2Birds',EMPTY);
-    const rows=BK.map(k=>{const keep=raws.filter(r=>pos(r['flk_c01_'+k])>0||pos(r['flk_c02_'+k])>0).length;
-      const losses=['hlt_h05','hlt_h06','hlt_h07','hlt_h08','hlt_h09'].reduce((a,b)=>a+sumOf(raws,`${b}_${k}`),0);
-      return [BIRD_LABEL[k],pctOf(keep,n),fmt(sumOf(raws,'flk_c02_'+k)),fmt(sumOf(raws,'flk_c01_'+k)),fmt(sumOf(raws,'flk_c03_'+k)),YK.includes(k)?fmt(sumOf(raws,'flk_c04_'+k)):'—',
-        fmt(sumOf(raws,'flk_c05_'+k)),fmt(sumOf(raws,'flk_c06_'+k)),fmt(sumOf(raws,'flk_c07_'+k)+sumOf(raws,'flk_c08_'+k)),fmt(raws.reduce((a,r)=>a+birdRng(r,'hlt_h04',k),0)),fmt(losses),
-        pctOf(raws.filter(r=>r['hlt_h01_sick_'+k]==='yes').length,n),pctOf(raws.filter(r=>r['vax_v01_'+k]==='yes').length,n),fmt(sumOf(raws,'vax_v07_'+k))]});
+    // The form only asks a bird type when the farmer ticked that species in P07, so percentages use those farmers.
+    const rows=BK.map(k=>{const kept=raws.filter(KEPT[k]),m=kept.length;
+      const losses=['hlt_h05','hlt_h06','hlt_h07','hlt_h08','hlt_h09'].reduce((a,b)=>a+sumOf(kept,`${b}_${k}`),0);
+      return [BIRD_LABEL[k],`${fmt(m)} (${pctOf(m,n)})`,fmt(sumOf(kept,'flk_c02_'+k)),fmt(sumOf(kept,'flk_c01_'+k)),fmt(sumOf(kept,'flk_c03_'+k)),YK.includes(k)?fmt(sumOf(kept,'flk_c04_'+k)):'—',
+        fmt(sumOf(kept,'flk_c05_'+k)),fmt(sumOf(kept,'flk_c06_'+k)),fmt(sumOf(kept,'flk_c07_'+k)+sumOf(kept,'flk_c08_'+k)),fmt(kept.reduce((a,r)=>a+birdRng(r,'hlt_h04',k),0)),fmt(losses),
+        pctOf(kept.filter(r=>r['hlt_h01_sick_'+k]==='yes').length,m),pctOf(kept.filter(r=>r['vax_v01_'+k]==='yes').length,m),fmt(sumOf(kept,'vax_v07_'+k))]});
     const barsOf=(f,label)=>bars(BK.map(k=>({label:BIRD_LABEL[k],value:f(k)})),null,v=>fmt(v));
     set('v2Birds',
-      panel('Flock, losses and vaccination by bird type',`Accepted Valid interviews, n=${n}. Totals across households; “households keeping” = birds at the start or now. Ranges counted at their lower bound; “don’t know / refused” not counted.`,
-        table(['Bird type','Households keeping','At start (C02)','Now (C01)','Bought (C03)','Hatched (C04)','Received (C05)','Sold (C06)','Eaten / given away (C07–08)','Disease deaths (H04)','Other losses (H05–09)','Households with sickness (H01)','Households vaccinating (V01)','Birds vaccinated (V07)'],rows))+
+      `<div class="kpis">${[['chicken','Keep chickens (P07)'],['guinea_fowl','Keep guinea fowl (P07)'],['turkey|duck|other','Keep other birds (P07)']].map(([sp,l])=>kpi(l,pctOf(raws.filter(r=>new RegExp('\\b('+sp+')\\b').test(r.prof_p07_species||'')).length,n),`of ${fmt(n)} farmers`)).join('')}</div>`+
+      panel('Flock, losses and vaccination by bird type',`Accepted Valid interviews, n=${n}. Each row covers only the farmers who keep that species (P07), because the form asks those bird types only. Ranges counted at their lower bound; “don’t know / refused” not counted.`,
+        table(['Bird type','Farmers asked (keep species)','At start (C02)','Now (C01)','Bought (C03)','Hatched (C04)','Received (C05)','Sold (C06)','Eaten / given away (C07–08)','Disease deaths (H04)','Other losses (H05–09)','Sickness (H01, % of those asked)','Vaccinating (V01, % of those asked)','Birds vaccinated (V07)'],rows))+
       `<div class="grid2">${panel('Birds now, by type','Total current birds (C01).',barsOf(k=>sumOf(raws,'flk_c01_'+k)))}${panel('Disease deaths, by type','Farmer-reported deaths after sickness (H04); not a mortality rate.',barsOf(k=>raws.reduce((a,r)=>a+birdRng(r,'hlt_h04',k),0)))}</div>`+
       `<div class="callout warn"><b>Mortality rate locked</b> Deaths are shown as counts only until MERL approves the birds-at-risk denominator.</div>`);
   }
@@ -1836,17 +1849,19 @@ const v2=(()=>{
   function health(raws){
     const n=raws.length;if(!n)return set('v2Health',EMPTY);
     const sick=raws.filter(r=>r.hlt_h01_sick==='yes'),vax=raws.filter(r=>r.vax_v01_any==='yes'),noVax=raws.filter(r=>r.vax_v01_any==='no');
-    const sickRows=BK.map(k=>{const s=raws.filter(r=>r['hlt_h01_sick_'+k]==='yes');return [BIRD_LABEL[k],pctOf(s.length,n),fmt(s.reduce((a,r)=>a+birdRng(r,'hlt_h02',k),0)),fmt(s.reduce((a,r)=>a+birdRng(r,'hlt_h03',k),0))]});
+    const sickRows=BK.map(k=>{const s=raws.filter(r=>r['hlt_h01_sick_'+k]==='yes');return [BIRD_LABEL[k],pctOf(s.length,raws.filter(KEPT[k]).length),fmt(s.reduce((a,r)=>a+birdRng(r,'hlt_h02',k),0)),fmt(s.reduce((a,r)=>a+birdRng(r,'hlt_h03',k),0))]});
     const disRows=BK.map(k=>{const v=raws.filter(r=>r['vax_v01_'+k]==='yes');const has=d=>v.filter(r=>words(r['vax_v03_diseases_'+k]).includes(d)).length;
       return [BIRD_LABEL[k],fmt(v.length),pctOf(has('newcastle'),v.length),pctOf(has('gumboro'),v.length),pctOf(has('fowl_pox'),v.length),pctOf(has('ib'),v.length),pctOf(has('other'),v.length)]});
     const covRows=BK.map(k=>{const v=raws.filter(r=>r['vax_v01_'+k]==='yes');const c=x=>pctOf(v.filter(r=>r['vax_v06_'+k]===x).length,v.length);
-      return [BIRD_LABEL[k],fmt(v.length),c('all'),c('most'),c('half'),c('less_half'),c('few'),c('dont_know')]});
+      return [BIRD_LABEL[k],fmt(v.length),c('exceeded'),c('all'),c('most'),c('half'),c('less_half'),c('few'),c('dont_know')]});
+    const v10Rows=V10.map(([k,l])=>{const paid=vax.filter(r=>num(r[k])>0);return [l,fmt(paid.length),medMoney(paid.map(r=>num(r[k]))),money(paid.reduce((a,r)=>a+num(r[k]),0))]});
     set('v2Health',
-      `<div class="kpis">${kpi('Any sickness (H01)',pctOf(sick.length,n),'Households, last 3 months','warn')}${kpi('Any vaccination (V01)',pctOf(vax.length,n),'Households, any bird type','good')}${kpi('No vaccination',pctOf(noVax.length,n),'Households, all bird types No')}${kpi('Vet / lab basis for cause',pctOf(sick.filter(r=>['vet_ahw','laboratory'].includes(r.hlt_h11_cause_basis)).length,sick.length),'Among households with sickness')}${kpi('Median vaccine + service paid',medMoney(vax.map(r=>num(r.vax_v10_paid))),'Most recent vaccination (V10)')}${kpi('Missed/delayed vaccination',pctOf(raws.filter(r=>r.acc_a03_missed==='yes').length,n),'Because of unavailability (A03)','bad')}</div>`+
+      `<div class="kpis">${kpi('Any sickness (H01)',pctOf(sick.length,n),'Households, last 3 months','warn')}${kpi('Any vaccination (V01)',pctOf(vax.length,n),'Households, any bird type','good')}${kpi('No vaccination',pctOf(noVax.length,n),'Households, all bird types No')}${kpi('Vet / lab basis for cause',pctOf(sick.filter(r=>['vet_ahw','laboratory'].includes(r.hlt_h11_cause_basis)).length,sick.length),'Among households with sickness')}${kpi('Median vaccine + service paid',medMoney(vax.map(r=>V10.reduce((a,[k])=>a+pos(r[k]),0))),'All vaccines, V10a–V10e')}${kpi('Missed/delayed vaccination',pctOf(raws.filter(r=>r.acc_a03_missed==='yes').length,n),'Because of unavailability (A03)','bad')}</div>`+
       panel('Sickness by bird type','H01 by type; birds sick (H02) and died (H03) in the most serious episode.',table(['Bird type','Households with sickness','Sick in worst episode','Died in worst episode'],sickRows))+
       `<div class="grid2">${panel('Suspected cause of the most serious sickness (H10)','Farmer’s own words, grouped. Not a confirmed diagnosis.',topText(sick,'hlt_h10_cause'))}${panel('Basis for the suspected cause (H11)','Among households with sickness.',dist(sick,'hlt_h11_cause_basis',LB.causeBasis))}</div>`+
       panel('Diseases vaccinated against, by bird type (V03)','Among households that vaccinated that bird type.',table(['Bird type','Households vaccinating','Newcastle','Gumboro','Fowl Pox','IB','Other'],disRows))+
-      panel('Were all intended birds vaccinated? (V06)','Coverage category at the most recent vaccination, by bird type.',table(['Bird type','Households vaccinating','All','Most','About half','Less than half','Few','Don’t know'],covRows))+
+      panel('Were all intended birds vaccinated? (V06)','Coverage category at the most recent vaccination, by bird type.',table(['Bird type','Households vaccinating','Exceeded','All','Most','About half','Less than half','Few','Don’t know'],covRows))+
+      panel('Amount paid per vaccine (V10a–V10e)','Vaccine and administration together, most recent vaccination. Farmers who paid more than 0.',table(['Vaccine','Farmers who paid','Median paid','Total paid'],v10Rows))+
       `<div class="grid2">${panel('Main reason for not vaccinating (V02)','Households that vaccinated no birds.',dist(noVax,'vax_v02_reason',LB.noVax))}${panel('Who administered the vaccine (V09)','Households that vaccinated.',dist(vax,'vax_v09_who',LB.vaccinator))}</div>`+
       `<div class="grid2">${panel('Evidence for vaccination information (V11)','Households that vaccinated.',dist(vax,'vax_v11_evidence',LB.vaxEv))}${panel('How precisely the last vaccination date is known (V04)','Households that vaccinated.',dist(vax,'vax_v04_precision',LB.precision))}</div>`+
       `<div class="grid2">${panel('Product available the first time (A02)','All households.',dist(raws,'acc_a02_available',LB.avail))}${panel('Usual provider (A01)','Farmer’s own words, grouped.',topText(raws,'acc_a01_provider'))}</div>`);
@@ -1882,18 +1897,32 @@ const v2=(()=>{
       `<div class="callout">Descriptive only. “Joint” and “Household” answers are kept separate and are never counted as sole control by the respondent.</div>`);
   }
 
-  function exposure(raws){
-    const n=raws.length;if(!n)return set('v2Exposure',EMPTY);
+  function profile(raws){
+    const n=raws.length;if(!n)return set('v2Profile','');
+    const yrs=raws.map(r=>num(r.prof_p05_years)+(num(r.prof_p05_months)>0?num(r.prof_p05_months)/12:0)).filter(v=>v>=0&&num(v)===v);
+    set('v2Profile',`<div class="grid2" style="margin-top:13px">${panel('Reasons for keeping poultry (P06)','Select all that apply; % of farmers choosing each reason.',dist(raws,'prof_p06_purpose',LB.purpose,true))}${panel('Species kept (P07)','Select all that apply. Decides which bird-type questions the form asks.',dist(raws,'prof_p07_species',LB.species,true))}</div>`+
+      `<div class="grid2">${panel('How most birds are kept (P08)','',dist(raws,'prof_p08_system',LB.system))}${panel('Highest education (P03)','',dist(raws,'prof_p03_education',LB.education))}</div>`+
+      `<div class="grid2">${panel('Main livelihood (P04)','Farmer’s own words, grouped.',topText(raws,'prof_p04_livelihood'))}${panel('Years keeping poultry (P05)',`Median ${yrs.length?median(yrs).toFixed(1):'—'} years (n=${yrs.length}).`,bars([['Under 2 years',v=>v<2],['2–5 years',v=>v>=2&&v<5],['5–10 years',v=>v>=5&&v<10],['10 years or more',v=>v>=10]].map(([label,f])=>({label,value:yrs.filter(f).length,n:yrs.filter(f).length})),yrs.length||1,v=>pctOf(v,yrs.length)))}</div>`);
+  }
+
+  function exposure(raws,fu){
+    // X01–X02 (records) are asked at every round; X03–X06 (provider exposure) only at follow-up rounds.
+    const n=raws.length;
+    const recs=n?`<div class="kpis">${kpi('Keep poultry records',pctOf(raws.filter(r=>r.exp_x01_records==='yes').length,n),'X01 · baseline','good')}${kpi('Records shown today',pctOf(raws.filter(r=>r.exp_x02_shown==='yes').length,n),'X02 · baseline')}</div>`+
+      `<div class="grid2">${panel('Keep poultry or financial records (X01)','Baseline interviews.',dist(raws,'exp_x01_records',LB.ynd))}${panel('Records voluntarily shown (X02)','Baseline interviews.',dist(raws,'exp_x02_shown',LB.ynd))}</div>`:EMPTY;
+    if(!fu.length)return set('v2Exposure',recs+`<div class="callout">Provider exposure questions (X03–X06) are asked only at the follow-up rounds (3, 6 and 12 months). They appear here once follow-up interviews are approved.</div>`);
+    raws=fu;const m=fu.length;
     const svc=r=>words(r.exp_x04_services).some(w=>w!=='none');
     const grp=r=>r.exp_x03_bought==='yes'||svc(r)?'Exposed':(r.exp_x03_bought==='no'&&words(r.exp_x04_services).includes('none'))?'Not exposed':'Unresolved';
     const g=group(raws,grp);
     const cmp=['Exposed','Not exposed'].map(k=>{const xs=g[k]||[];return [k,fmt(xs.length),pctOf(xs.filter(r=>r.vax_v01_any==='yes').length,xs.length),pctOf(xs.filter(r=>BK.some(b=>birdRng(r,'hlt_h04',b)>0)).length,xs.length),pctOf(xs.filter(r=>r.acc_a03_missed==='yes').length,xs.length)]});
-    set('v2Exposure',
-      `<div class="kpis">${kpi('Keep poultry records',pctOf(raws.filter(r=>r.exp_x01_records==='yes').length,n),'X01','good')}${kpi('Records shown today',pctOf(raws.filter(r=>r.exp_x02_shown==='yes').length,n),'X02')}${kpi('Bought from participating provider',pctOf(raws.filter(r=>r.exp_x03_bought==='yes').length,n),'X03, last 3 months')}${kpi('Received a provider service',pctOf(raws.filter(svc).length,n),'X04')}${kpi('Exposed (EX07)',pctOf((g.Exposed||[]).length,n),'Purchase or service')}${kpi('Used another provider',pctOf(raws.filter(r=>r.exp_x06_other_provider==='yes').length,n),'X06')}</div>`+
+    const provRows=Object.entries(group(fu,r=>r.exp_provider||'not recorded')).map(([p,xs])=>[esc(String(p).replace(/^prov_/,'').replace(/_/g,'-').toUpperCase()),fmt(xs.length),pctOf(xs.filter(r=>r.exp_x03_bought==='yes').length,xs.length),pctOf(xs.filter(svc).length,xs.length)]);
+    set('v2Exposure',recs+
+      `<h3 style="margin:18px 0 8px">Provider exposure – follow-up interviews (n=${m})</h3>`+
+      `<div class="kpis">${kpi('Bought from participating provider',pctOf(raws.filter(r=>r.exp_x03_bought==='yes').length,m),'X03, last 3 months')}${kpi('Received a provider service',pctOf(raws.filter(svc).length,m),'X04')}${kpi('Exposed (EX07)',pctOf((g.Exposed||[]).length,m),'Purchase or service','good')}${kpi('Used another provider',pctOf(raws.filter(r=>r.exp_x06_other_provider==='yes').length,m),'X06')}</div>`+
       `<div class="grid2">${panel('Services from the participating provider (X04)','Multiple answers allowed.',dist(raws,'exp_x04_services',LB.x04,true))}${panel('Number of interactions (X05)','Among farmers who bought or received a service.',dist(raws.filter(r=>r.exp_x05_interactions),'exp_x05_interactions',LB.x05))}</div>`+
-      `<div class="grid2">${panel('Bought from the participating provider (X03)','',dist(raws,'exp_x03_bought',LB.ynd))}${panel('Records voluntarily shown (X02)','',dist(raws,'exp_x02_shown',LB.ynd))}</div>`+
-      panel('Exposed vs not exposed – descriptive comparison','Association only. Differences must not be described as Cowtribe effects (claim boundary, EX07).',table(['Group','Households','Any vaccination','Any disease deaths','Missed vaccination (A03)'],cmp))+
-      `<div class="callout">Participating-provider names come from the provider list in the Kobo form (still a placeholder until management confirms the names per sentinel).</div>`);
+      `<div class="grid2">${panel('Bought from the participating provider (X03)','',dist(raws,'exp_x03_bought',LB.ynd))}${panel('By participating provider (sentinel)','Provider chosen by the enumerator for the sentinel.',table(['Provider (sentinel)','Interviews','Bought (X03)','Service (X04)'],provRows))}</div>`+
+      panel('Exposed vs not exposed – descriptive comparison','Follow-up interviews. Association only – differences must not be described as Cowtribe effects (claim boundary, EX07).',table(['Group','Households','Any vaccination','Any disease deaths','Missed vaccination (A03)'],cmp)));
   }
 
   function recruitment(ss){
@@ -1945,8 +1974,30 @@ const v2=(()=>{
       ['Counted as Accepted Valid',fmt(allI.filter(x=>x.qa==='approved'&&x.consent!=='no').length)],
       ['04 Contact – records received',fmt(LIVE.raw.contact.length)],['06 Back-check – records received',fmt(LIVE.raw.backcheck.length)],
     ];
-    const dataCheck=panel('Data check – what the dashboard receives from Kobo','All records, ignoring the page filters. An interview counts as Accepted Valid when its Kobo validation status is Approved, or – if none is set – when MERL’s final decision in form 05 is Accepted Valid.',
+    const dataCheck0=panel('Data check – what the dashboard receives from Kobo','All records, ignoring the page filters. An interview counts as Accepted Valid when its Kobo validation status is Approved, or – if none is set – when MERL’s final decision in form 05 is Accepted Valid.',
       `<div class="metriclist">${check.map(([a,b])=>`<div class="metricrow"><div><b>${a}</b></div><div class="mv">${b}</div></div>`).join('')}</div>`);
+    // Approval status of every interview, with the reason it is or is not counted
+    const KV={validation_status_approved:'Approved',validation_status_on_hold:'On hold',validation_status_not_approved:'Not approved',none:'not set'};
+    const when=t=>{const d=new Date(t);return isNaN(d)?'—':d.toLocaleString('en-GB',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'})};
+    const decision={};merlCases.forEach(q=>{const k=esc(q.meta_study_id)+'|'+(q.qa_wave||'baseline');if(!decision[k]||String(q._submission_time)>String(decision[k]._submission_time))decision[k]=q});
+    const apRows=[...allI].sort((a,b)=>String(b.submitted).localeCompare(String(a.submitted))).slice(0,60).map(x=>{
+      const kvs=(x.raw&&x.raw._kobo_validation)||'none',d=decision[x.studyId+'|'+x.round];
+      const why=x.consent==='no'?statusBadge('Not counted – no consent / not eligible','bad'):x.qa==='approved'?statusBadge(LIVE.testMode&&x.qaReal!=='approved'?'Counted (TEST MODE)':'Counted','good'):
+        x.qa==='not_approved'?statusBadge('Not counted – rejected','bad'):x.qa==='on_hold'?statusBadge('Not counted – on hold','warn'):statusBadge('Waiting – approve in Kobo (03 Baseline → Data → Validation)','warn');
+      return [x.studyId||'—',LB.wave[x.round]||esc(x.round),esc(x.baselineDate||'—'),esc(x.enumerator),KV[kvs]||esc(kvs),d?(LB.qast[d.qa_status]||esc(d.qa_status)):'—',why]});
+    const approvals=panel('Approval status of each interview (03 Baseline)','Newest first. Shows exactly why an interview is or is not counted in the results.',table(['Study ID','Round','Interview date','Enumerator','Kobo validation','MERL decision (form 05)','Counted in results?'],apRows,99));
+    // Latest records received from each form – quick proof that a submission arrived
+    const latest=[];
+    const addL=(form,rows,id,staff,detail)=>rows.slice().sort((a,b)=>String(b._submission_time).localeCompare(String(a._submission_time))).slice(0,5)
+      .forEach(r=>latest.push([form,when(r._submission_time),esc(r.meta_sentinel||'—'),esc(String(staff(r)||'—').toUpperCase()),esc(id(r)||'—'),detail(r)]));
+    addL('01 Attendance',LIVE.raw.attendance,r=>r.att_id,r=>r.meta_recorder,r=>esc(r.att_gender||''));
+    addL('02 Screening',LIVE.raw.screening,r=>r.scr_screening_id,r=>r.scr_officer,r=>esc((r.scr_disposition||'').replace(/_/g,' ')));
+    addL('03 Baseline',allI.map(x=>x.raw).filter(Boolean),r=>r.meta_study_id,r=>r.meta_enumerator,r=>esc((LB.wave[r.meta_wave]||r.meta_wave||'')+(String(r.meta_consented)==='1'?' · consented':' · not consented')));
+    addL('04 Contact',LIVE.raw.contact,r=>r.meta_study_id,r=>r.meta_enumerator,r=>esc(r.con_record_type==='attempt'?'follow-up attempt':'enrolment'));
+    addL('05 Supervisor QA',LIVE.raw.qa,r=>r.meta_study_id||r.meta_event_id,r=>'',r=>esc(r.qa_record_type||''));
+    addL('06 Back-check',LIVE.raw.backcheck,r=>r.meta_study_id,r=>r.bc_assigned_to,r=>esc(r.bc_outcome||r.bc_reached||''));
+    const latestP=panel('Latest records received from each form','The 5 newest records per form (ignoring filters). If a submission is not here a minute after sending, it has not reached Kobo, or the project ID in Streamlit Secrets is wrong.',table(['Form','Received','Sentinel','Staff','ID','Detail'],latest,99));
+    const dataCheck=dataCheck0+approvals+latestP;
     set('v2Supervisor',dataCheck+
       `<div class="kpis">${kpi('Daily reviews',fmt(daily.length),'Form 05, one per event/day')}${kpi('NO-GO decisions',fmt(daily.filter(q=>q.rd_decision==='no_go'||q.cl_next==='no_go').length),'Morning or next deployment','bad')}${kpi('QA cases',fmt(cases.length),`${sup.length} supervisor · ${merl.length} MERL`)}${kpi('Recommended / decided rejections',fmt(rej.length),'QA cases','warn')}${kpi('Incidents',fmt(inc.length),`${inc.filter(q=>['high','critical'].includes(q.inc_severity)).length} high or critical`,'bad')}${kpi('Back-checks',fmt(bc.length),'Form 06 in scope')}</div>`+
       panel('Daily review log','Morning go / no-go and end-of-day closeout per event.',table(['Date','Sentinel','Readiness decision','Readiness items failed','Data sync','QA disposition','Quota','Next deployment'],dRows,3))+
@@ -1959,7 +2010,13 @@ const v2=(()=>{
   return function(ss,data){
     if(!(LIVE.on&&LIVE.v2&&LIVE.raw))return;
     const raws=data.map(x=>x.raw).filter(Boolean);
-    birds(raws);health(raws);eggs(raws);gesi(raws);exposure(raws);recruitment(ss);followup(ss,data);supervisor(ss);
+    // approved follow-up interviews in the current filter (for provider exposure, asked only at follow-ups)
+    const ids=new Set(ss.map(s=>s.id));
+    const fu=(LIVE.all||[]).filter(x=>x.round!=='baseline'&&x.consent!=='no'&&x.qa==='approved'&&ids.has(x.id)&&inPeriod(x.baselineDate)).map(x=>x.raw).filter(Boolean);
+    const run=(name,fn)=>{try{fn()}catch(e){showDashError(e,name)}};
+    run('Profile detail',()=>profile(raws));run('By bird type',()=>birds(raws));run('Health & vaccination',()=>health(raws));run('Eggs & prices',()=>eggs(raws));
+    run('Gender roles',()=>gesi(raws));run('Exposure & records',()=>exposure(raws,fu));run('Recruitment detail',()=>recruitment(ss));
+    run('Follow-up',()=>followup(ss,data));run('Supervisor review',()=>supervisor(ss));
   };
 })();
 window.renderV2Extras=v2;
