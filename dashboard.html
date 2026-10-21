@@ -1574,8 +1574,15 @@ function apply(p){
   if(V2){   // follow-up contact details recorded in form 04 (only a one-way phone code reaches the page)
     const enrolled={};(forms.contact||[]).filter(c=>c.con_record_type==='enrol'&&c.con_recontact==='yes').forEach(c=>{enrolled[esc(c.meta_study_id)]=c._phone_hash||'-'});
     all.forEach(x=>{const h=enrolled[x.studyId];if(h){x.contactComplete=true;if(h!=='-')x.phoneHash=h}});
+    // Approval: the Kobo validation status wins. If an interview has none, MERL's final decision in a
+    // form 05 QA case counts (AV = approved, RJ = rejected, query / correction / back-check = on hold).
+    const DEC={av:'approved',rj:'not_approved',qo:'on_hold',cr:'on_hold',pb:'on_hold'},merl={};
+    (forms.qa||[]).filter(q=>q.qa_record_type==='case'&&q.qa_approver_role==='merl'&&DEC[q.qa_status]).forEach(q=>{
+      const k=esc(q.meta_study_id)+'|'+(q.qa_wave||'baseline');if(!merl[k]||String(q._submission_time)>String(merl[k]._submission_time))merl[k]=q});
+    all.forEach(x=>{x.qaSource=x.qa==='pending'?'none':'kobo';const d=merl[x.studyId+'|'+x.round];if(x.qa==='pending'&&d){x.qa=DEC[d.qa_status];x.qaSource='form05'}});
   }
-  all.forEach(x=>{const s=reg[x.id];if(x.submitted)s.dates.push(day(x.submitted));if(x.consent==='no'){s.refused++;return}s.submitted++;if(x.qa==='approved')s.accepted++;else if(x.qa==='not_approved')s.rejected++;else s.pending++});
+  all.forEach(x=>{if(!/^(1|baseline)$/i.test(x.round))return;   // baseline progress counts baseline interviews only (follow-ups are tracked under Cohort)
+    const s=reg[x.id];if(x.submitted)s.dates.push(day(x.submitted));if(x.consent==='no'){s.refused++;return}s.submitted++;if(x.qa==='approved')s.accepted++;else if(x.qa==='not_approved')s.rejected++;else s.pending++});
   const consented=all.filter(x=>x.consent!=='no');
   submissions=consented.map(x=>({date:x.baselineDate,qa:x.qa,sentinel:x.id}));
   records=consented.filter(x=>(x.qa==='approved'||(S.inclPending&&x.qa!=='not_approved'))&&/^(1|baseline)$/i.test(x.round));
@@ -1894,7 +1901,21 @@ const v2=(()=>{
     const merl=cases.filter(q=>q.qa_approver_role==='merl'),sup=cases.filter(q=>q.qa_approver_role==='supervisor');
     const rej=cases.filter(q=>q.qa_status==='rj'||q.qa_sup_recommendation==='rj');
     const bc=scope(LIVE.raw.backcheck,'bc_date',ss);
-    set('v2Supervisor',
+    // Data check: everything received from Kobo (no filters), so it is easy to see where records stop
+    const allI=LIVE.all||[],kv=v=>allI.filter(x=>(x.raw&&x.raw._kobo_validation)===v).length;
+    const merlCases=LIVE.raw.qa.filter(q=>q.qa_record_type==='case'&&q.qa_approver_role==='merl');
+    const check=[
+      ['01 Attendance – records received',fmt(LIVE.raw.attendance.length)],['02 Screening – records received',fmt(LIVE.raw.screening.length)],
+      ['03 Baseline – interviews received',fmt(allI.length)],['03 Baseline – consented (counted)',fmt(allI.filter(x=>x.consent!=='no').length)],
+      ['Kobo validation: Approved',fmt(kv('validation_status_approved'))],['Kobo validation: On hold',fmt(kv('validation_status_on_hold'))],
+      ['Kobo validation: Not approved',fmt(kv('validation_status_not_approved'))],['Kobo validation: not set',fmt(kv('none'))],
+      ['Form 05 – MERL final decisions',fmt(merlCases.length)],['Approved via form 05 (no Kobo status)',fmt(allI.filter(x=>x.qaSource==='form05'&&x.qa==='approved').length)],
+      ['Counted as Accepted Valid',fmt(allI.filter(x=>x.qa==='approved'&&x.consent!=='no').length)],
+      ['04 Contact – records received',fmt(LIVE.raw.contact.length)],['06 Back-check – records received',fmt(LIVE.raw.backcheck.length)],
+    ];
+    const dataCheck=panel('Data check – what the dashboard receives from Kobo','All records, ignoring the page filters. An interview counts as Accepted Valid when its Kobo validation status is Approved, or – if none is set – when MERL’s final decision in form 05 is Accepted Valid.',
+      `<div class="metriclist">${check.map(([a,b])=>`<div class="metricrow"><div><b>${a}</b></div><div class="mv">${b}</div></div>`).join('')}</div>`);
+    set('v2Supervisor',dataCheck+
       `<div class="kpis">${kpi('Daily reviews',fmt(daily.length),'Form 05, one per event/day')}${kpi('NO-GO decisions',fmt(daily.filter(q=>q.rd_decision==='no_go'||q.cl_next==='no_go').length),'Morning or next deployment','bad')}${kpi('QA cases',fmt(cases.length),`${sup.length} supervisor · ${merl.length} MERL`)}${kpi('Recommended / decided rejections',fmt(rej.length),'QA cases','warn')}${kpi('Incidents',fmt(inc.length),`${inc.filter(q=>['high','critical'].includes(q.inc_severity)).length} high or critical`,'bad')}${kpi('Back-checks',fmt(bc.length),'Form 06 in scope')}</div>`+
       panel('Daily review log','Morning go / no-go and end-of-day closeout per event.',table(['Date','Sentinel','Readiness decision','Readiness items failed','Data sync','QA disposition','Quota','Next deployment'],dRows,3))+
       `<div class="grid2">${panel('Readiness items marked No','Across daily reviews in scope.',fails.length?bars(fails,daily.length,v=>fmt(v)):EMPTY)}${panel('QA decisions','Supervisor recommendation and MERL final status.',`<h4 class="desc" style="margin:4px 0">Supervisor recommendation</h4>${dist(sup,'qa_sup_recommendation',LB.qast)}<h4 class="desc" style="margin:10px 0 4px">MERL final status</h4>${dist(merl,'qa_status',LB.qast)}`)}</div>`+

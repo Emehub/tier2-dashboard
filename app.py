@@ -170,7 +170,9 @@ def _clean(form: str, raw: dict, salt: str) -> dict:
         if isinstance(val, str) and PHONE_RX.search(val):
             rec[key] = PHONE_RX.sub("[number removed]", val)
     vs = raw.get("_validation_status") or {}
-    rec["_qa_status"] = QA_STATUS.get(vs.get("uid", "") if isinstance(vs, dict) else "", "pending")
+    uid = (vs.get("uid") or "") if isinstance(vs, dict) else str(vs or "")
+    rec["_qa_status"] = QA_STATUS.get(uid, "pending")
+    rec["_kobo_validation"] = uid or "none"      # shown in the dashboard's Data check panel
     return rec
 
 
