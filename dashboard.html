@@ -1546,6 +1546,14 @@ function mapBaseline(row,S,ctx){
   };
 }
 
+function testBanner(on){
+  let box=document.getElementById('testBanner');
+  if(!on){if(box)box.remove();return}
+  if(!box){box=document.createElement('div');box.id='testBanner';box.className='callout warn';box.style.cssText='margin:0 0 14px;font-size:14px';
+    const first=document.querySelector('.page');if(first)first.parentNode.insertBefore(box,first);else document.body.prepend(box)}
+  box.innerHTML='<b>TEST MODE – not real results.</b> Every interview is treated as approved (except those marked Not approved) so all score cards can be checked. Remove <code>TEST_MODE</code> from Streamlit Secrets before fieldwork.';
+}
+
 function apply(p){
   const cfg=p.config||{},st=cfg.settings||{},forms=p.forms||{};
   const S={yardMax:num(st.backyard_max_birds)||49,semiMax:num(st.semi_commercial_max_birds)||500,attTarget:num(st.attendance_target),minMin:num(st.min_interview_minutes)||10,inclPending:yes(st.include_pending_in_results)};
@@ -1601,6 +1609,10 @@ function apply(p){
       const k=esc(q.meta_study_id)+'|'+(q.qa_wave||'baseline');if(!merl[k]||String(q._submission_time)>String(merl[k]._submission_time))merl[k]=q});
     all.forEach(x=>{x.qaSource=x.qa==='pending'?'none':'kobo';const d=merl[x.studyId+'|'+x.round];if(x.qa==='pending'&&d){x.qa=DEC[d.qa_status];x.qaSource='form05'}});
   }
+  // TEST MODE (Streamlit Secrets TEST_MODE = true): every interview except "Not approved" counts as approved
+  LIVE.testMode=yes(st.test_mode);
+  if(LIVE.testMode)all.forEach(x=>{if(x.qa!=='not_approved'){x.qaReal=x.qa;x.qa='approved'}});
+  testBanner(LIVE.testMode);
   all.forEach(x=>{if(!/^(1|baseline)$/i.test(x.round))return;   // baseline progress counts baseline interviews only (follow-ups are tracked under Cohort)
     const s=reg[x.id];if(x.submitted)s.dates.push(day(x.submitted));if(x.consent==='no'){s.refused++;return}s.submitted++;if(x.qa==='approved')s.accepted++;else if(x.qa==='not_approved')s.rejected++;else s.pending++});
   const consented=all.filter(x=>x.consent!=='no');

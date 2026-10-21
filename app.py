@@ -15,6 +15,7 @@ Secrets (Streamlit Cloud → App settings → Secrets):
     contact    = "…"   qa        = "…"   backcheck = "…"
     feedback   = "…"   # optional: the existing Feedback Log form, keeps the Feedback page
     SHEET_ID = "…"     GCP_SERVICE_ACCOUNT_JSON = '''{ … }'''   # optional in Kobo mode
+    TEST_MODE = true   # optional, testing only: treat every interview as approved (remove before fieldwork)
 """
 import hashlib
 import json
@@ -199,6 +200,9 @@ def load_kobo_payload() -> dict:
         config = _config_from_sheet()
     except Exception:          # the Sheet is optional in Kobo mode
         config = {"sentinels": [], "actions": [], "readiness": [], "settings": {}}
+    # TEST_MODE = true in Secrets: the dashboard treats every interview (except Not approved) as approved
+    if str(st.secrets.get("TEST_MODE", "")).strip().lower() in ("true", "yes", "1", "on"):
+        config.setdefault("settings", {})["test_mode"] = "yes"
     now = datetime.now(timezone.utc).isoformat()
     return {"schema": "v2", "generatedAt": now, "lastWebhook": now, "lastScheduled": now, "forms": forms, "config": config}
 
