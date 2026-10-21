@@ -1505,7 +1505,9 @@ const SENTINEL_REGISTER=[['AWE-01','Awutu Senya East','Kasoa East','Team A'],['A
   ['SAG-02','Sagnarigu','Danjima South','Team B'],['TEC-01','Techiman South','Techiman Central','Team B'],['TEC-02','Techiman South','Tanoso','Team B'],
   ['TEC-03','Techiman South','Kenten','Team B'],['ASU-01','Asutifi North','Kenyasi','Team B'],['MAM-01','Mampong Municipal','Mampong Central','Team B'],
   ['MAM-02','Mampong Municipal','Kofiase','Team B'],['MAM-03','Mampong Municipal','Nintin','Team B'],['BIB-01','Bibiani Anhwiaso Bekwai','Bibiani Central','Team B'],
-  ['BIB-02','Bibiani Anhwiaso Bekwai','Sefwi Bekwai','Team B'],['BIB-03','Bibiani Anhwiaso Bekwai','Chirano','Team B'],['KWW-TBC','Kwahu West','To be confirmed','To be confirmed']];
+  ['BIB-02','Bibiani Anhwiaso Bekwai','Sefwi Bekwai','Team B'],['BIB-03','Bibiani Anhwiaso Bekwai','Chirano','Team B']];
+// Kwahu West (KWW-TBC) is still in the Kobo forms but not counted on the dashboard until its sentinel and quota are confirmed.
+// If a Kwahu West record arrives anyway, it appears under its own name (not counted towards the 20 sentinels' quota).
 
 function mapBaseline(row,S,ctx){
   const consent=String(row.meta_consented)==='1'?'yes':'no';
