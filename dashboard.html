@@ -1506,8 +1506,8 @@ const SENTINEL_REGISTER=[['AWE-01','Awutu Senya East','Kasoa East','Team A'],['A
   ['TEC-03','Techiman South','Kenten','Team B'],['ASU-01','Asutifi North','Kenyasi','Team B'],['MAM-01','Mampong Municipal','Mampong Central','Team B'],
   ['MAM-02','Mampong Municipal','Kofiase','Team B'],['MAM-03','Mampong Municipal','Nintin','Team B'],['BIB-01','Bibiani Anhwiaso Bekwai','Bibiani Central','Team B'],
   ['BIB-02','Bibiani Anhwiaso Bekwai','Sefwi Bekwai','Team B'],['BIB-03','Bibiani Anhwiaso Bekwai','Chirano','Team B']];
-// Kwahu West (KWW-TBC) is still in the Kobo forms but not counted on the dashboard until its sentinel and quota are confirmed.
-// If a Kwahu West record arrives anyway, it appears under its own name (not counted towards the 20 sentinels' quota).
+// Kwahu West (KWW-TBC) is still in the Kobo forms but left out of the dashboard until its sentinel and quota are confirmed.
+const EXCLUDED_SENTINELS=new Set(['KWW-TBC']),EXCLUDED_DISTRICTS=new Set(['kwahu_west','kwaku_west_district']);
 
 function mapBaseline(row,S,ctx){
   const consent=String(row.meta_consented)==='1'?'yes':'no';
@@ -1581,6 +1581,12 @@ function apply(p){
 
   /* which forms: the six GH_T2 projects (v2) or the older four */
   const V2=p.schema==='v2'||!!forms.baseline;LIVE.v2=V2;
+  // Kwahu West stays in the Kobo forms but is not part of the dashboard until its sentinel and quota are confirmed:
+  // its records (any form) are left out here and counted in the Data check.
+  LIVE.excluded={};
+  if(V2)Object.keys(forms).forEach(k=>{if(!Array.isArray(forms[k]))return;
+    const keep=forms[k].filter(r=>!(EXCLUDED_SENTINELS.has(r.meta_sentinel)||EXCLUDED_DISTRICTS.has(r.meta_district)||EXCLUDED_DISTRICTS.has(r.district)));
+    if(keep.length<forms[k].length)LIVE.excluded[k]=forms[k].length-keep.length;forms[k]=keep});
   let surveyRows=forms.survey||[],attRows=forms.attendance||[],attendeeRows=forms.attendance_attendee||[],bcRows=forms.backcheck||[];
   if(V2){
     surveyRows=forms.baseline||[];
@@ -1975,6 +1981,7 @@ const v2=(()=>{
       ['Form 05 – MERL final decisions',fmt(merlCases.length)],['Approved via form 05 (no Kobo status)',fmt(allI.filter(x=>x.qaSource==='form05'&&x.qa==='approved').length)],
       ['Counted as Accepted Valid',fmt(allI.filter(x=>x.qa==='approved'&&x.consent!=='no').length)],
       ['04 Contact – records received',fmt(LIVE.raw.contact.length)],['06 Back-check – records received',fmt(LIVE.raw.backcheck.length)],
+      ['Kwahu West records left out (all forms)',fmt(Object.values(LIVE.excluded||{}).reduce((a,b)=>a+b,0))],
     ];
     const dataCheck0=panel('Data check – what the dashboard receives from Kobo','All records, ignoring the page filters. An interview counts as Accepted Valid when its Kobo validation status is Approved, or – if none is set – when MERL’s final decision in form 05 is Accepted Valid.',
       `<div class="metriclist">${check.map(([a,b])=>`<div class="metricrow"><div><b>${a}</b></div><div class="mv">${b}</div></div>`).join('')}</div>`);
