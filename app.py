@@ -290,8 +290,10 @@ def live_dashboard():
     except Exception as err:   # show a clear message instead of a stack trace
         st.error(friendly_error(err))
         return
-    # Only reload the page when the data actually changed, so viewers keep their place.
-    sig = hashlib.sha256(json.dumps([payload["forms"], payload["config"]], sort_keys=True).encode()).hexdigest()
+    # Only reload the page when the data or the dashboard itself changed, so viewers keep their place
+    # but always get a new dashboard version (a reconnected session would otherwise keep the old page).
+    page_version = hashlib.sha256((HERE / "dashboard.html").read_bytes()).hexdigest()
+    sig = hashlib.sha256(json.dumps([page_version, payload["forms"], payload["config"]], sort_keys=True).encode()).hexdigest()
     if st.session_state.get("sig") != sig:
         st.session_state["sig"] = sig
         st.session_state["html"] = build_html(payload)
