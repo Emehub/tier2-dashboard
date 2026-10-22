@@ -1160,9 +1160,13 @@ function bulletRows(items){
 /** Recruitment funnel with stage-to-stage conversion. steps: [[label, value, cls]] */
 function funnelHtml(steps){
  const first=Math.max(1,steps[0][1]);
+ const widest=Math.max(1,...steps.map(s=>s[1]||0));   // bars scale to the largest stage, so none can run past the box
  return steps.map(([label,v,cls],i)=>{
-  const prev=i>0?steps[i-1][1]:null,conv=i>0&&cls!=='bad'&&prev?`<div class="fconv">↓ <b>${pct(v,prev)}</b> carried forward · ${fmt(Math.max(0,prev-v))} lost</div>`:'';
-  return conv+`<div class="fstep ${cls}" data-tip="${label}|${fmt(v)} (${pct(v,first)} of mobilised)"><span class="fl">${label}</span><div><div class="fb" style="width:${Math.max(1,100*v/first)}%"></div></div><span class="fv">${fmt(v)}</span></div>`}).join('');
+  const prev=i>0?steps[i-1][1]:null;
+  const conv=!(i>0&&cls!=='bad'&&prev)?'':v>prev
+    ? `<div class="fconv" style="color:var(--warn)">⚠ ${fmt(v-prev)} more than the stage above – check the ${steps[i-1][0].toLowerCase()} count</div>`
+    : `<div class="fconv">↓ <b>${pct(v,prev)}</b> carried forward · ${fmt(prev-v)} lost</div>`;
+  return conv+`<div class="fstep ${cls}" data-tip="${label}|${fmt(v)} (${pct(v,first)} of mobilised)"><span class="fl">${label}</span><div><div class="fb" style="width:${Math.min(100,Math.max(1,100*v/widest))}%"></div></div><span class="fv">${fmt(v)}</span></div>`}).join('');
 }
 
 /* Trend data: one row per survey submission {date, qa, sentinel}. Demo data is derived from the sentinel table. */
