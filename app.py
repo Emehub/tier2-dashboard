@@ -13,7 +13,6 @@ Secrets (Streamlit Cloud → App settings → Secrets):
     [KOBO_FORMS]                                  # project IDs from each project's web address
     attendance = "…"   screening = "…"   baseline = "…"
     contact    = "…"   qa        = "…"   backcheck = "…"
-    feedback   = "…"   # optional: the existing Feedback Log form, keeps the Feedback page
     SHEET_ID = "…"     GCP_SERVICE_ACCOUNT_JSON = '''{ … }'''   # optional in Kobo mode
     TEST_MODE = true   # optional, testing only: treat every interview as approved (remove before fieldwork)
 """
@@ -89,8 +88,7 @@ def _records(values: list) -> list:
 
 
 # ------------------------------------------------------------ KoboToolbox
-KOBO_FORM_KEYS = ["attendance", "screening", "baseline", "contact", "qa", "backcheck",
-                  "feedback"]   # feedback = the existing GT2 Feedback Log form (optional)
+KOBO_FORM_KEYS = ["attendance", "screening", "baseline", "contact", "qa", "backcheck"]
 
 # Fields that identify a person. They are dropped before data leaves this server.
 PII_FIELDS = {
