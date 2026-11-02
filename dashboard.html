@@ -729,7 +729,7 @@ td.heat{font-weight:650}
       <div class="kpi"><div class="eyebrow">Attendance</div><div class="value" id="ovAttendance">0</div><div class="sub" id="ovAttendanceSub">0% of mobilised</div><div class="spark" id="ovAttendanceSpark"></div></div>
       <div class="kpi"><div class="eyebrow">Recruitment Yield</div><div class="value" id="ovYield">0%</div><div class="sub">Accepted Valid ÷ attended</div></div>
       <div class="kpi warn"><div class="eyebrow">Pending QA</div><div class="value" id="ovPending">0</div><div class="sub">Requires review before analysis</div></div>
-      <div class="kpi"><div class="eyebrow">Sentinels Complete</div><div class="value" id="ovSentinels">0/0</div><div class="sub">Quota achieved</div></div>
+      <div class="kpi"><div class="eyebrow">Sentinels Complete</div><div class="value" id="ovSentinels">0/0</div><div class="sub">25+ farmers attended</div></div>
       <div class="kpi bad"><div class="eyebrow">Open Actions</div><div class="value" id="ovOpenActions">0</div><div class="sub">Operational or research issues</div></div>
     </div>
     <div class="panel" style="margin-bottom:16px">
@@ -1014,7 +1014,7 @@ function populateFilters(){fillSelect(teamFilter,[...new Set(sentinelStats.map(s
  [dateFrom,dateTo].forEach(i=>{i.min=ds[0]||'';i.max=ds.at(-1)||''})}
 populateFilters();
 function totals(ss){return ss.reduce((a,s)=>{['quota','mobilised','attended','screened','ineligible','eligible','selected','refused','consented','submitted','pending','rejected','accepted','femaleAtt','transport','materials'].forEach(k=>a[k]=(a[k]||0)+(s[k]||0));return a},{})}
-function renderOverview(ss,data,fb){const t=totals(ss),complete=ss.filter(s=>s.quota&&s.accepted>=s.quota).length,openActions=actions.filter(a=>a.status!=='Resolved').length+fb.filter(x=>x.status!=='Resolved'&&x.priority==='Urgent').length;
+function renderOverview(ss,data,fb){const t=totals(ss),complete=ss.filter(s=>!s.extra&&s.quota&&s.attended>=s.quota).length,openActions=actions.filter(a=>a.status!=='Resolved').length+fb.filter(x=>x.status!=='Resolved'&&x.priority==='Urgent').length;
  setText('ovAccepted',fmt(t.accepted));setText('ovAcceptedSub',`${pct(t.accepted,t.quota)} of ${fmt(t.quota)} filtered target`);setText('ovAttendance',fmt(t.attended));setText('ovAttendanceSub',`${pct(t.attended,t.mobilised)} of mobilised`);setText('ovYield',pct(t.accepted,t.attended));setText('ovPending',fmt(t.pending));setText('ovSentinels',`${complete}/${ss.filter(s=>!s.extra).length}`);setText('ovOpenActions',fmt(openActions));setText('overviewN',`Accepted-valid n=${data.length}`);setText('snapshotN',`n=${data.length}`);
  const prog=t.quota?Math.min(1,t.accepted/t.quota):0;$('heroRing').style.strokeDashoffset=(326.73*(1-prog)).toFixed(2);setText('heroPct',`${Math.round(prog*100)}%`);setText('sidePct',`${Math.round(prog*100)}%`);$('sideProg').style.width=`${(prog*100).toFixed(1)}%`;setText('sideNote',`${fmt(t.accepted)} of ${fmt(t.quota)} Accepted Valid`);setText('heroAccepted',fmt(t.accepted));setText('heroTarget',fmt(t.quota));setText('heroSentinels',`${complete}/${ss.filter(s=>!s.extra).length}`);setText('heroActive',`${ss.filter(s=>!s.extra&&s.status==='Active').length}/${ss.filter(s=>!s.extra).length}`);setText('heroYield',pct(t.accepted,t.attended));
  const nextUp=ss.filter(s=>s.status==='Upcoming'&&s.date).map(s=>s.date).sort()[0];setText('heroNext',nextUp?new Date(nextUp+'T00:00:00').toLocaleDateString('en-GB',{day:'2-digit',month:'short'}):'—');setText('heroNote',`${new Set(ss.filter(s=>!s.extra).map(s=>s.district)).size} districts · ${ss.filter(s=>!s.extra).length} sentinels in scope · ${fmt(t.pending)} pending QA · preliminary, QA-approved records only`);
@@ -1214,7 +1214,7 @@ const KPI_HELP={
  'no-shows':'Mobilised minus attended.',
  'recruitment yield':'Accepted Valid interviews ÷ meeting attendees.',
  'pending qa':'Submitted interviews not yet approved or rejected by a supervisor.',
- 'sentinels complete':'Sentinels whose Accepted Valid count has reached their quota.',
+ 'sentinels complete':'Sentinels where at least 25 farmers (the sentinel quota) are recorded as attending in the attendance form.',
  'open actions':'Open rows in the action list.',
  'rejected':'Interviews a supervisor marked Not approved. Excluded from analysis.',
  'qa rejected':'Interviews a supervisor marked Not approved. Excluded from analysis.',
@@ -1641,7 +1641,7 @@ function apply(p){
     const f=s.scr;   // v2: real screening funnel from form 02
     const consentedN=f?f.consented:s.submitted,selected=f?f.selected:consentedN+s.refused,screened=f?f.screened:Math.max(s.screened,selected);
     const date=s.date||s.dates.sort()[0]||'';
-    const status=['Complete','Active','Upcoming'].includes(s.cfgStatus)?s.cfgStatus:(s.quota&&s.accepted>=s.quota)?'Complete':(selected||s.attended)?'Active':'Upcoming';
+    const status=['Complete','Active','Upcoming'].includes(s.cfgStatus)?s.cfgStatus:(s.quota&&s.attended>=s.quota)?'Complete':(selected||s.attended)?'Active':'Upcoming';
     return {...s,date,status,screened,eligible:f?f.eligible:selected,ineligible:f?f.ineligible:0,selected,consented:consentedN,refused:f?f.refused:s.refused,attendanceSource:'—',recruitSource:'—'};
   }).sort((a,b)=>a.id.localeCompare(b.id));
   sentinels=sentinelStats;
