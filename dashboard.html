@@ -1588,8 +1588,10 @@ function apply(p){
     const mob={};(forms.qa||[]).filter(q=>q.qa_record_type==='daily').forEach(q=>{mob[q.meta_event_id]=(mob[q.meta_event_id]||0)+num(q.fn01_actual)});
     const scrByEvent={};(forms.screening||[]).forEach(r=>{scrByEvent[r.meta_event_id]=(scrByEvent[r.meta_event_id]||0)+1});
     const ev={};attendeeRows=[];
-    (forms.attendance||[]).forEach(a=>{const id=a.meta_event_id||`${a.meta_sentinel}-${day(a.meta_event_date)}`;
-      const e=ev[id]??={_uuid:id,district:a.meta_district,sentinel:a.meta_sentinel,event_date:a.meta_event_date,staff_code:a.meta_recorder,mobilised:mob[id]||0,attended_total:0,female_total:0,transport_total:0,materials_total:0,screened_total:scrByEvent[id]||0,register_matches:'yes',_submission_time:a._submission_time};
+    (forms.attendance||[]).forEach(a=>{const eid=a.meta_event_id||`${a.meta_sentinel}-${day(a.meta_event_date)}`;
+      // one group per sentinel + event, so a shared or blank Event ID can never move farmers to another sentinel
+      const id=`${a.meta_sentinel||''}|${a.meta_district||''}|${eid}`;
+      const e=ev[id]??={_uuid:id,district:a.meta_district,sentinel:a.meta_sentinel,event_date:a.meta_event_date,staff_code:a.meta_recorder,mobilised:mob[eid]||0,attended_total:0,female_total:0,transport_total:0,materials_total:0,screened_total:scrByEvent[eid]||0,register_matches:'yes',_submission_time:a._submission_time};
       e.attended_total++;if(a.att_gender==='female')e.female_total++;if(yes(a.att_transport))e.transport_total++;if(yes(a.att_materials))e.materials_total++;
       attendeeRows.push({_parent_uuid:id,heard_from:a.att_source,screened:a.att_referred_screening,att_sex:a.att_gender})});
     // Mobilised comes from the supervisor's daily review (form 05, funnel line 1). If it is missing, don't divide by it.
