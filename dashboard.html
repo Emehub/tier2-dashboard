@@ -270,6 +270,7 @@ button,select,input{font:inherit;color:inherit}.app{min-height:100vh;position:re
 
 /* ---------- KPI tiles ---------- */
 .kpis{display:grid;grid-template-columns:repeat(6,minmax(140px,1fr));gap:12px;margin-bottom:16px}
+.kpis7{grid-template-columns:repeat(7,minmax(120px,1fr))}
 /* KPI scorecards: solid card, hairline border, soft low shadow, slim state accent on top */
 .kpi{--accent:var(--c-plan);background:var(--card);-webkit-backdrop-filter:none;backdrop-filter:none;
   border:1px solid var(--card-line);border-radius:14px;padding:16px 16px 14px;min-height:118px;overflow:hidden;
@@ -724,12 +725,13 @@ td.heat{font-weight:650}
         </div>
       </div>
     </div>
-    <div class="kpis">
+    <div class="kpis kpis7">
       <div class="kpi good featured"><div class="eyebrow">Accepted Valid</div><div class="value" id="ovAccepted">0</div><div class="sub" id="ovAcceptedSub">0% of target</div><div class="delta" id="ovAcceptedDelta"></div><div class="spark" id="ovAcceptedSpark"></div></div>
       <div class="kpi"><div class="eyebrow">Attendance</div><div class="value" id="ovAttendance">0</div><div class="sub" id="ovAttendanceSub">0% of mobilised</div><div class="spark" id="ovAttendanceSpark"></div></div>
       <div class="kpi"><div class="eyebrow">Recruitment Yield</div><div class="value" id="ovYield">0%</div><div class="sub">Accepted Valid ÷ attended</div></div>
       <div class="kpi warn"><div class="eyebrow">Pending QA</div><div class="value" id="ovPending">0</div><div class="sub">Requires review before analysis</div></div>
       <div class="kpi"><div class="eyebrow">Sentinels Complete</div><div class="value" id="ovSentinels">0/0</div><div class="sub">25+ farmers attended</div></div>
+      <div class="kpi"><div class="eyebrow">Sentinels Active</div><div class="value" id="ovActive">0/0</div><div class="sub">Started, under 25 attended</div></div>
       <div class="kpi bad"><div class="eyebrow">Open Actions</div><div class="value" id="ovOpenActions">0</div><div class="sub">Operational or research issues</div></div>
     </div>
     <div class="panel" style="margin-bottom:16px">
@@ -1015,7 +1017,7 @@ function populateFilters(){fillSelect(teamFilter,[...new Set(sentinelStats.map(s
 populateFilters();
 function totals(ss){return ss.reduce((a,s)=>{['quota','mobilised','attended','screened','ineligible','eligible','selected','refused','consented','submitted','pending','rejected','accepted','femaleAtt','transport','materials'].forEach(k=>a[k]=(a[k]||0)+(s[k]||0));return a},{})}
 function renderOverview(ss,data,fb){const t=totals(ss),complete=ss.filter(s=>!s.extra&&s.quota&&s.attended>=s.quota).length,openActions=actions.filter(a=>a.status!=='Resolved').length+fb.filter(x=>x.status!=='Resolved'&&x.priority==='Urgent').length;
- setText('ovAccepted',fmt(t.accepted));setText('ovAcceptedSub',`${pct(t.accepted,t.quota)} of ${fmt(t.quota)} filtered target`);setText('ovAttendance',fmt(t.attended));setText('ovAttendanceSub',`${pct(t.attended,t.mobilised)} of mobilised`);setText('ovYield',pct(t.accepted,t.attended));setText('ovPending',fmt(t.pending));setText('ovSentinels',`${complete}/${ss.filter(s=>!s.extra).length}`);setText('ovOpenActions',fmt(openActions));setText('overviewN',`Accepted-valid n=${data.length}`);setText('snapshotN',`n=${data.length}`);
+ setText('ovAccepted',fmt(t.accepted));setText('ovAcceptedSub',`${pct(t.accepted,t.quota)} of ${fmt(t.quota)} filtered target`);setText('ovAttendance',fmt(t.attended));setText('ovAttendanceSub',`${pct(t.attended,t.mobilised)} of mobilised`);setText('ovYield',pct(t.accepted,t.attended));setText('ovPending',fmt(t.pending));setText('ovSentinels',`${complete}/${ss.filter(s=>!s.extra).length}`);setText('ovActive',`${ss.filter(s=>!s.extra&&s.status==='Active').length}/${ss.filter(s=>!s.extra).length}`);setText('ovOpenActions',fmt(openActions));setText('overviewN',`Accepted-valid n=${data.length}`);setText('snapshotN',`n=${data.length}`);
  const prog=t.quota?Math.min(1,t.accepted/t.quota):0;$('heroRing').style.strokeDashoffset=(326.73*(1-prog)).toFixed(2);setText('heroPct',`${Math.round(prog*100)}%`);setText('sidePct',`${Math.round(prog*100)}%`);$('sideProg').style.width=`${(prog*100).toFixed(1)}%`;setText('sideNote',`${fmt(t.accepted)} of ${fmt(t.quota)} Accepted Valid`);setText('heroAccepted',fmt(t.accepted));setText('heroTarget',fmt(t.quota));setText('heroSentinels',`${complete}/${ss.filter(s=>!s.extra).length}`);setText('heroActive',`${ss.filter(s=>!s.extra&&s.status==='Active').length}/${ss.filter(s=>!s.extra).length}`);setText('heroYield',pct(t.accepted,t.attended));
  const nextUp=ss.filter(s=>s.status==='Upcoming'&&s.date).map(s=>s.date).sort()[0];setText('heroNext',nextUp?new Date(nextUp+'T00:00:00').toLocaleDateString('en-GB',{day:'2-digit',month:'short'}):'—');setText('heroNote',`${new Set(ss.filter(s=>!s.extra).map(s=>s.district)).size} districts · ${ss.filter(s=>!s.extra).length} sentinels in scope · ${fmt(t.pending)} pending QA · preliminary, QA-approved records only`);
  const dm={};ss.forEach(s=>{dm[s.district]??={q:0,a:0,p:0};dm[s.district].q+=s.quota;dm[s.district].a+=s.accepted;dm[s.district].p+=s.pending});
@@ -1214,6 +1216,7 @@ const KPI_HELP={
  'no-shows':'Mobilised minus attended.',
  'recruitment yield':'Accepted Valid interviews ÷ meeting attendees.',
  'pending qa':'Submitted interviews not yet approved or rejected by a supervisor.',
+ 'sentinels active':'Sentinels where farmers have been registered or selected, but fewer than 25 have attended so far.',
  'sentinels complete':'Sentinels where at least 25 farmers (the sentinel quota) are recorded as attending in the attendance form.',
  'open actions':'Open rows in the action list.',
  'rejected':'Interviews a supervisor marked Not approved. Excluded from analysis.',
