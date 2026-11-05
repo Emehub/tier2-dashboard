@@ -1539,7 +1539,11 @@ function mapBaseline(row,S,ctx){
     barrier:lab(BARRIER,row.acc_a06_barrier),
     distance:NaN,travel:row.acc_a04_mode==='travel'&&num(row.acc_a04_minutes)>=0?num(row.acc_a04_minutes):NaN,
     transportCowtribe:0,transportOther:0,transportCost:g('acc_a05_cost'),
-    vaxSpend:V10.reduce((a,[k])=>a+g(k),0),   // V10a–V10e: cost per vaccine, added togetherserviceCharge:0,feed:g('econ_g06_feed'),other:g('econ_g07_health')+g('econ_g08_labour')+g('econ_g12_other_cost'),retained:NaN,
+    vaxSpend:V10.reduce((a,[k])=>a+g(k),0),   // V10a–V10e: cost per vaccine, added together
+    serviceCharge:0,
+    // "unable to say" = unknown (left out of medians), not GH₵0
+    feed:row.econ_g06_feed_basis==='unable'?NaN:g('econ_g06_feed'),
+    other:row.econ_g07_health_basis==='unable'?NaN:g('econ_g07_health')+g('econ_g08_labour')+g('econ_g12_other_cost'),retained:NaN,
     cashSales,followConsent:row.qa_cl02_recontact?yes(row.qa_cl02_recontact):undefined,contactComplete:false,
     phoneHash:'',gpsOk:true,
     duration:minutes(row.start,row.end),baselineDate:day(row.meta_interview_date||row._submission_time),submitted:row._submission_time||'',
