@@ -4,8 +4,10 @@ Two data sources:
   1. KoboToolbox directly (the six GH_T2 forms) – used when KOBO_TOKEN is set in Secrets.
      Names and phone numbers are removed here, on the server, before anything reaches the browser.
   2. The Google Sheet "Ghana Tier 2 – Dashboard Data" (the older four forms) – used otherwise.
-     If SHEET_ID is set, its config_* tabs (sentinel register, actions, readiness, settings) are
-     also read in Kobo mode.
+
+Settings (sentinel register, readiness checklist, rules) live in the config/ folder of this repo:
+    config/sentinels.csv   config/settings.csv   config/readiness.csv
+Edit them on GitHub. In Kobo mode the Google Sheet is only used if the config/ folder is missing.
 
 Secrets (Streamlit Cloud → App settings → Secrets):
     KOBO_TOKEN  = "your Kobo API key"            # Kobo → Account settings → Security → API key
@@ -13,9 +15,10 @@ Secrets (Streamlit Cloud → App settings → Secrets):
     [KOBO_FORMS]                                  # project IDs from each project's web address
     attendance = "…"   screening = "…"   baseline = "…"
     contact    = "…"   qa        = "…"   backcheck = "…"
-    SHEET_ID = "…"     GCP_SERVICE_ACCOUNT_JSON = '''{ … }'''   # optional in Kobo mode
+    SHEET_ID = "…"     GCP_SERVICE_ACCOUNT_JSON = '''{ … }'''   # not needed in Kobo mode when config/ exists
     TEST_MODE = true   # optional, testing only: treat every interview as approved (remove before fieldwork)
 """
+import csv
 import hashlib
 import json
 import os
@@ -188,16 +191,41 @@ def _config_from_sheet() -> dict:
     }
 
 
+CONFIG_DIR = HERE / "config"
+
+
+def _csv_rows(name: str) -> list:
+    path = CONFIG_DIR / name
+    if not path.exists():
+        return []
+    with path.open(encoding="utf-8-sig", newline="") as f:      # utf-8-sig: also reads files saved by Excel
+        return [{k.strip(): (v or "").strip() for k, v in row.items() if k} for row in csv.DictReader(f)
+                if any((v or "").strip() for v in row.values())]
+
+
+def _config_from_files() -> dict:
+    """Dashboard settings kept in this repo (config/*.csv) – replaces the Google Sheet's config_* tabs."""
+    return {
+        "sentinels": _csv_rows("sentinels.csv"),
+        "actions": [],
+        "readiness": _csv_rows("readiness.csv"),
+        "settings": {r["key"]: r.get("value", "") for r in _csv_rows("settings.csv") if r.get("key")},
+    }
+
+
 def load_kobo_payload() -> dict:
     forms_cfg = _kobo_forms()
     if not forms_cfg:
         raise KeyError("KOBO_FORMS (add the six project IDs)")
     salt = hashlib.sha256(str(st.secrets["KOBO_TOKEN"]).encode()).hexdigest()[:12]
     forms = {name: [_clean(name, r, salt) for r in _fetch_kobo(uid)] for name, uid in forms_cfg.items()}
-    try:
-        config = _config_from_sheet()
-    except Exception:          # the Sheet is optional in Kobo mode
-        config = {"sentinels": [], "actions": [], "readiness": [], "settings": {}}
+    if CONFIG_DIR.exists():
+        config = _config_from_files()
+    else:
+        try:
+            config = _config_from_sheet()
+        except Exception:          # the Sheet is optional in Kobo mode
+            config = {"sentinels": [], "actions": [], "readiness": [], "settings": {}}
     # TEST_MODE = true in Secrets: the dashboard treats every interview (except Not approved) as approved
     if str(st.secrets.get("TEST_MODE", "")).strip().lower() in ("true", "yes", "1", "on"):
         config.setdefault("settings", {})["test_mode"] = "yes"

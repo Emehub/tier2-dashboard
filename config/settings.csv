@@ -1,0 +1,5 @@
+key,value
+backyard_max_birds,49
+semi_commercial_max_birds,500
+include_pending_in_results,no
+min_interview_minutes,10
