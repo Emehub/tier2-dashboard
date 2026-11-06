@@ -1886,16 +1886,17 @@ const v2=(()=>{
     const tot=raws.map(r=>num(r.econ_g03_eggs_total)),layers=raws.filter(r=>num(r.econ_g03_eggs_total)>0);
     const typical=raws.map(r=>r.econ_g04_typical==='no'?num(r.econ_g04_typical_eggs):num(r.econ_g03_eggs_total));
     const sellers=raws.filter(r=>num(r.econ_g05_qty)>0);
-    const dk=(rows,f)=>rows.filter(r=>num(r[f])<0).length;   // -88 don't know / -99 refused
+    const dk=(rows,f)=>rows.filter(r=>[-88,-99].includes(num(r[f]))).length;   // -88 don't know / -99 refused
+const na=(rows,f)=>rows.filter(r=>num(r[f])===-77).length;               // -77 not applicable (e.g. sold no birds)
     const dkNote=(rows,f)=>{const c=dk(rows,f);return c?` · ${fmt(c)} don’t know`:''};
-    const priceRows=BK.map(k=>[BIRD_LABEL[k],medMoney(raws.map(r=>num(r['econ_g09_price_'+k]))),fmt(dk(raws,'econ_g09_price_'+k)),fmt(raws.filter(r=>pos(r['econ_g01_sold_'+k])>0).length),medMoney(raws.filter(r=>pos(r['econ_g01_sold_'+k])>0).map(r=>num(r['econ_g01_price_'+k]))),fmt(sumOf(raws,'econ_g01_sold_'+k))]);
+    const priceRows=BK.map(k=>[BIRD_LABEL[k],medMoney(raws.map(r=>num(r['econ_g09_price_'+k]))),fmt(dk(raws,'econ_g09_price_'+k)),fmt(na(raws,'econ_g09_price_'+k)),fmt(raws.filter(r=>pos(r['econ_g01_sold_'+k])>0).length),medMoney(raws.filter(r=>pos(r['econ_g01_sold_'+k])>0).map(r=>num(r['econ_g01_price_'+k]))),fmt(sumOf(raws,'econ_g01_sold_'+k))]);
     const unitRows=Object.entries(group(sellers,r=>r.econ_g05_unit||'not recorded')).map(([u,xs])=>[esc({egg:'Single egg',tray:'Tray/crate',other:'Other unit'}[u]||u),fmt(xs.length),med(xs.map(r=>num(r.econ_g05_qty))),medMoney(xs.map(r=>num(r.econ_g05_price))),fmt(dk(xs,'econ_g05_price'))]);
     const qtyDk=raws.filter(r=>num(r.econ_g05_qty)<0);
     if(qtyDk.length)unitRows.push(['Quantity not known (don’t know)',fmt(qtyDk.length),'—',medMoney(qtyDk.map(r=>num(r.econ_g05_price))),fmt(dk(qtyDk,'econ_g05_price'))]);
     const oi=raws.filter(r=>num(r.econ_g11_other_income)>0);
     set('v2Eggs',
       `<div class="kpis">${kpi('Households with eggs',pctOf(layers.length,n),`Eggs collected in the last 7 days (G03)${dkNote(raws,'econ_g03_eggs_total')}`,'good')}${kpi('Median eggs, last 7 days',med(layers.map(r=>num(r.econ_g03_eggs_total))),'Among households with eggs')}${kpi('Median eggs, typical week',med(typical.filter(v=>v>0)),'G04 (typical week)')}${kpi('Households selling eggs',pctOf(sellers.length,n),`In a typical week (G05)${dkNote(raws,'econ_g05_qty')}`)}${kpi('Other poultry income',pctOf(oi.length,n),`Median ${medMoney(oi.map(r=>num(r.econ_g11_other_income)))} (G11)`)}${kpi('Median other operating cost',medMoney(raws.map(r=>num(r.econ_g12_other_cost))),'Where reported (G12)')}</div>`+
-      panel('Bird prices, by bird type','Usual selling price today (G09–G10) and average price of birds sold in the last 3 months (G01). Medians leave out zero, don’t know and refused; the “Don’t know” column counts them.',table(['Bird type','Price today (median)','Don’t know (price today)','Households that sold','Price when sold (median)','Birds sold'],priceRows))+
+      panel('Bird prices, by bird type','Usual selling price today (G09–G10) and average price of birds sold in the last 3 months (G01). Medians leave out zero, don’t know, refused and not applicable; the next two columns count them (-77 = not applicable: the farmer sold no birds).',table(['Bird type','Price today (median)','Don’t know (price today)','Not applicable (price today)','Households that sold','Price when sold (median)','Birds sold'],priceRows))+
       panel('Egg sales in a typical week (G05)','By selling unit. Farmers who did not know how many eggs they sell are shown on a separate row.',table(['Unit','Households','Median quantity','Median price per unit','Don’t know (price)'],unitRows))+
       `<div class="callout">Egg values are reported quantities and prices; any 3-month egg income is a modelled value and is kept separate until MERL locks the net-margin formula.</div>`);
   }
