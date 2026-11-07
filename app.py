@@ -6,7 +6,7 @@ Two data sources:
   2. The Google Sheet "Ghana Tier 2 – Dashboard Data" (the older four forms) – used otherwise.
 
 Settings (sentinel register, readiness checklist, rules) live in the config/ folder of this repo:
-    config/sentinels.csv   config/settings.csv   config/readiness.csv
+    config/sentinels.csv   config/settings.csv   config/readiness.csv   config/mobilised.csv
 Edit them on GitHub. In Kobo mode the Google Sheet is only used if the config/ folder is missing.
 
 Secrets (Streamlit Cloud → App settings → Secrets):
@@ -210,6 +210,7 @@ def _config_from_files() -> dict:
         "actions": [],
         "readiness": _csv_rows("readiness.csv"),
         "settings": {r["key"]: r.get("value", "") for r in _csv_rows("settings.csv") if r.get("key")},
+        "mobilised": _csv_rows("mobilised.csv"),   # farmers mobilised per event, when no daily review (form 05) has it
     }
 
 

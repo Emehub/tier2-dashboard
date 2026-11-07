@@ -1653,6 +1653,8 @@ function apply(p){
     surveyRows=forms.baseline||[];
     // Attendance: one submission per attendee → one summary row per event (same shape as the old register)
     const mob={};(forms.qa||[]).filter(q=>q.qa_record_type==='daily').forEach(q=>{mob[q.meta_event_id]=(mob[q.meta_event_id]||0)+num(q.fn01_actual)});
+    // events with no daily review: mobilised count from config/mobilised.csv (figures given by the field team)
+    (cfg.mobilised||[]).forEach(m=>{if(m.event_id&&!(mob[m.event_id]>0)&&num(m.mobilised)>0)mob[m.event_id]=num(m.mobilised)});
     const scrByEvent={};(forms.screening||[]).forEach(r=>{scrByEvent[r.meta_event_id]=(scrByEvent[r.meta_event_id]||0)+1});
     const ev={};attendeeRows=[];
     (forms.attendance||[]).forEach(a=>{const eid=a.meta_event_id||`${a.meta_sentinel}-${day(a.meta_event_date)}`;
