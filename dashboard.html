@@ -1647,7 +1647,7 @@ function apply(p){
     if(keep.length<forms[k].length)LIVE.excluded[k]=forms[k].length-keep.length;forms[k]=keep});
   // Duplicates a supervisor marked Not approved in Kobo are left out of attendance, screening and contact counts.
   // (Rejected baseline interviews stay in, so they show as Rejected and are left out of the results.)
-  if(V2)['attendance','screening','contact'].forEach(k=>{if(Array.isArray(forms[k]))forms[k]=forms[k].filter(r=>r._qa_status!=='not_approved')});
+  if(V2)['attendance','screening','contact','qa'].forEach(k=>{if(Array.isArray(forms[k]))forms[k]=forms[k].filter(r=>r._qa_status!=='not_approved')});   // rejected (Not approved) records, incl. test QA reviews, are left out
   let surveyRows=forms.survey||[],attRows=forms.attendance||[],attendeeRows=forms.attendance_attendee||[],bcRows=forms.backcheck||[];
   if(V2){
     surveyRows=forms.baseline||[];
