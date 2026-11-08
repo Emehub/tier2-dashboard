@@ -1811,9 +1811,10 @@ function apply(p){
   if(prev){const fresh=[...keys].filter(k=>!prev.has(k)).length;if(fresh)showToast(`⚠ ${fresh} new data issue${fresh===1?'':'s'} detected`,6000)}
   LIVE.issueKeys=keys;
   try{localStorage.setItem('gt2-issue-keys',JSON.stringify([...keys]))}catch(e){}
-  const enumMap={};consented.forEach(x=>{const e=enumMap[x.enumerator]??={name:x.enumerator,team:x.team,submitted:0,accepted:0,durations:[],flags:0,back:0};e.submitted++;if(x.qa==='approved')e.accepted++;if(Number.isFinite(x.duration))e.durations.push(x.duration);e.flags+=x.consent==='no'?0:checks.filter(([,f])=>f(x)).length});
-  LIVE.backchecks.forEach(b=>{if(b.outcome==='Material discrepancy'&&enumMap[b.enumerator])enumMap[b.enumerator].back++});
-  enumerators=Object.values(enumMap).map(e=>({...e,accepted:e.accepted||0})).sort((a,b)=>a.name.localeCompare(b.name));
+  // One row per enumerator per team: the same enumerators worked in Team A districts and then in Sagnarigu (Team B).
+  const enumMap={},teamBySid={};consented.forEach(x=>{teamBySid[x.studyId]=x.team;const e=enumMap[x.enumerator+'|'+x.team]??={name:x.enumerator,team:x.team,submitted:0,accepted:0,durations:[],flags:0,back:0};e.submitted++;if(x.qa==='approved')e.accepted++;if(Number.isFinite(x.duration))e.durations.push(x.duration);e.flags+=x.consent==='no'?0:checks.filter(([,f])=>f(x)).length});
+  LIVE.backchecks.forEach(b=>{if(b.outcome!=='Material discrepancy')return;const e=enumMap[b.enumerator+'|'+teamBySid[b.studyId]]||Object.values(enumMap).find(e=>e.name===b.enumerator);if(e)e.back++});
+  enumerators=Object.values(enumMap).map(e=>({...e,accepted:e.accepted||0})).sort((a,b)=>a.name.localeCompare(b.name)||String(a.team).localeCompare(String(b.team)));
 
   /* team-maintained tabs */
   actions=(cfg.actions||[]).filter(a=>a.title).map(a=>({id:esc(a.id),title:esc(a.title),detail:esc(a.detail),severity:['critical','warning','review'].includes(a.severity)?a.severity:'review',owner:esc(a.owner),due:esc(a.due),status:esc(a.status||'Open')})).filter(a=>a.status!=='Resolved');
