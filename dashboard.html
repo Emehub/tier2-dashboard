@@ -1901,7 +1901,10 @@ const v2=(()=>{
     return items.length?bars(items,rows.length,v=>pctOf(v,rows.length)):EMPTY;
   };
   // free-text answers grouped (case-insensitive), top N
-  const topText=(rows,field,n=8)=>{const c={};rows.forEach(r=>{const t=String(r[field]||'').trim().toLowerCase();if(t)c[t]=(c[t]||0)+1});
+  // Dropdown codes (forms changed 8 Nov 2026) → the same words used before, so old typed and new dropdown answers count together
+  const DD_LABEL={prof_p04_livelihood:{crop_poultry:'Crop and poultry farming',poultry:'Poultry farming',crop:'Crop farming',business:'Business/ trading',paid_employment:'Paid employment',professional:'Professional/ technical work',artisan:'Artisan/ skilled work',other:'Other'},
+    hlt_h10_cause:{newcastle:'Newcastle disease',gumboro:'Gumboro disease',crd:'Chronic respiratory disease (CRD)',fowl_pox:'Fowl pox',coccidiosis:'Coccidiosis',ib:'Infectious bronchitis (IB)',worms:'Worms/ parasites',weather_stress:'Weather stress',other:'Other',dont_know:"Don't know"}};
+  const topText=(rows,field,n=8)=>{const c={},L=DD_LABEL[field]||{};rows.forEach(r=>{const v=String(r[field]||'').trim();const t=(L[v]||v).toLowerCase();if(t)c[t]=(c[t]||0)+1});
     const items=Object.entries(c).sort((a,b)=>b[1]-a[1]).slice(0,n).map(([label,value])=>({label:esc(label.charAt(0).toUpperCase()+label.slice(1)),value,n:value}));
     return items.length?bars(items,rows.length,v=>pctOf(v,rows.length)):EMPTY};
   const med=xs=>{const m=median(xs.filter(v=>Number.isFinite(v)&&v>=0));return m==null?'—':fmt(m)};
