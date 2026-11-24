@@ -291,6 +291,13 @@ button,select,input{font:inherit;color:inherit}.app{min-height:100vh;position:re
 /* ---------- grids & panels ---------- */
 .grid2{display:grid;grid-template-columns:1.55fr .95fr;gap:16px;margin-bottom:16px}
 .grid2eq{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+.kpis.k4{grid-template-columns:repeat(4,minmax(140px,1fr))}
+.flnote{margin-bottom:16px;border-left:4px solid var(--brand)}.flnote h3{margin-bottom:6px}.flnote p,.flnote li{font-size:13px;line-height:1.55;color:var(--ink2)}.flnote ul{margin:6px 0 0;padding-left:20px}.flnote li{margin:3px 0}.flnote .flgo{margin-top:10px;display:inline-block;font-weight:650;color:var(--good);cursor:pointer;text-decoration:underline}
+.flsw{display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:6px;vertical-align:-1px}.flsw.base{background:var(--sage)}.flsw.now{background:var(--brand)}
+.flpair{display:grid;grid-template-columns:92px 1fr 58px;gap:10px;align-items:center;margin:7px 0;font-size:12px;color:var(--ink2)}.flpair .bars{display:grid;gap:3px}.flpair .bar{height:8px;border-radius:99px;background:var(--track);overflow:hidden}.flpair .bar span{display:block;height:100%;border-radius:99px}.flpair .bar .base{background:var(--sage)}.flpair .bar .now{background:var(--brand)}.flpair .pct{text-align:right;font-size:11px;line-height:1.25;font-variant-numeric:tabular-nums}
+.flwf svg{width:100%;height:auto;display:block}
+#res-flock .grid2eq>div,#res-flock .panel{min-width:0}
+@media (max-width:900px){.kpis.k4{grid-template-columns:1fr 1fr}}
 .grid3{display:grid;grid-template-columns:1.15fr 1fr 1fr;gap:16px;margin-bottom:16px;align-items:start}
 .grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}
 .panel{border-radius:var(--r-xl);padding:20px 20px 18px;min-width:0;margin-bottom:0}
@@ -707,6 +714,7 @@ td.heat{font-weight:650}
 
   <section class="page active" id="page-overview">
     <div class="sectiontitle"><div><h2>Executive Overview</h2><p>A single management view combining field readiness, attendance, recruitment, Accepted Valid progress, data quality, preliminary baseline signals and unresolved actions.</p></div><span class="pill good" id="overviewN">Accepted-valid n=0</span></div>
+    <div class="panel flnote" id="ovFlockNote"><h3>Understanding the Poultry Flock Baseline and Dynamics Dashboard</h3><p>The survey records each farmer's flock <b>three months before the interview</b> (the baseline), the flock <b>now</b>, and what happened in between (bought, hatched, received, died, stolen, sold, eaten, given away). Reference month: <b>October interviews → July</b>, <b>November interviews → August</b>.</p><ul><li><b>The flock three months before the interview is the primary baseline measurement</b>; the current flock is a comparison point.</li><li><b>Flock movements explain the change</b> over the recall period.</li><li><b>The indicative flock</b> (baseline + additions − losses and removals) <b>is an analytical estimate.</b> Differences from the reported current flock are a data diagnostic, not automatically errors and not a performance indicator.</li></ul><span class="flgo" id="ovFlockGo" role="button" tabindex="0" onclick="goFlock()" onkeydown="if(event.key==='Enter')goFlock()">Open Flock Dynamics and Baseline Holdings →</span></div>
     <div class="hero">
       <span class="glow" aria-hidden="true"></span>
       <div class="ring-wrap">
@@ -791,7 +799,7 @@ td.heat{font-weight:650}
 
   <section class="page" id="page-results">
     <div class="sectiontitle"><div><h2>Survey Results</h2><p>The baseline analytical workspace. All findings are calculated only from Accepted Valid records and display the current analysis n.</p></div><span class="pill" id="resultsN">Accepted-valid n=0</span></div>
-    <div class="subnav" data-group="results"><button class="subbtn active" data-sub="res-profile">Farmer Profile</button><button class="subbtn" data-sub="res-flock">Flock & Mortality</button><button class="subbtn" data-sub="res-birds">By Bird Type</button><button class="subbtn" data-sub="res-vaccination">Vaccination</button><button class="subbtn" data-sub="res-health">Health & Vaccination Detail</button><button class="subbtn" data-sub="res-access">Access & Services</button><button class="subbtn" data-sub="res-economics">Economics</button><button class="subbtn" data-sub="res-eggs">Eggs & Prices</button><button class="subbtn" data-sub="res-gesi">Gender Roles (GESI)</button><button class="subbtn" data-sub="res-exposure">Exposure & Records</button><button class="subbtn" data-sub="res-geography">Geography</button><button class="subbtn" data-sub="res-cohort">Cohort & Follow-up</button></div>
+    <div class="subnav" data-group="results"><button class="subbtn active" data-sub="res-profile">Farmer Profile</button><button class="subbtn" data-sub="res-flock">Flock Dynamics</button><button class="subbtn" data-sub="res-birds">By Bird Type</button><button class="subbtn" data-sub="res-vaccination">Vaccination</button><button class="subbtn" data-sub="res-health">Health & Vaccination Detail</button><button class="subbtn" data-sub="res-access">Access & Services</button><button class="subbtn" data-sub="res-economics">Economics</button><button class="subbtn" data-sub="res-eggs">Eggs & Prices</button><button class="subbtn" data-sub="res-gesi">Gender Roles (GESI)</button><button class="subbtn" data-sub="res-exposure">Exposure & Records</button><button class="subbtn" data-sub="res-geography">Geography</button><button class="subbtn" data-sub="res-cohort">Cohort & Follow-up</button></div>
     <div class="subpage" id="res-birds"><div class="v2host" id="v2Birds"><div class="callout">Shown when the dashboard is connected to the six GH_T2 Kobo forms.</div></div></div>
     <div class="subpage" id="res-health"><div class="v2host" id="v2Health"><div class="callout">Shown when the dashboard is connected to the six GH_T2 Kobo forms.</div></div></div>
     <div class="subpage" id="res-eggs"><div class="v2host" id="v2Eggs"><div class="callout">Shown when the dashboard is connected to the six GH_T2 Kobo forms.</div></div></div>
@@ -803,8 +811,41 @@ td.heat{font-weight:650}
       <div class="v2host" id="v2Profile"></div>
     </div>
     <div class="subpage" id="res-flock">
-      <div class="kpis"><div class="kpi"><div class="eyebrow">Median Opening Flock</div><div class="value" id="flOpening">0</div><div class="sub">Beginning of recall window</div></div><div class="kpi good"><div class="eyebrow">Median Closing Flock</div><div class="value" id="flClosing">0</div><div class="sub">At baseline interview</div></div><div class="kpi warn"><div class="eyebrow">Households Reporting Deaths</div><div class="value" id="flDeathHH">0%</div><div class="sub">Any death in recall window</div></div><div class="kpi"><div class="eyebrow">Total Reported Deaths</div><div class="value" id="flDeaths">0</div><div class="sub">Farmer reported</div></div><div class="kpi locked"><div class="eyebrow">Mortality Rate</div><div class="value">LOCKED</div><div class="sub">Pending approved denominator</div></div><div class="kpi"><div class="eyebrow">Flock Balance Reconciled</div><div class="value" id="flBalancePass">0%</div><div class="sub" id="flBalancePassSub">Of farmers with all flock answers known</div></div></div>
-      <div class="panel" id="flReconPanel"><h3>Flock balance reconciliation</h3><div class="desc">Expected current flock = birds at the start (C02) + bought (C03) + hatched (C04) + received (C05) − died (H04–H07, H09) − stolen (H08) − sold (C06) − eaten (C07) − given away (C08). Variance = actual current flock (C01) − expected. Each farmer's own 3-month window is used: October interviews recall from July, November interviews from August.</div><div class="kpis" id="flReconKpis"></div><div class="grid2eq"><div><h4>Negative flock balance variance (fewer birds than expected)</h4><div class="desc">Size of the difference, as a share of birds at the start + added.</div><div class="chartbar" id="flNegBars"></div></div><div><h4>Positive flock balance variance (more birds than expected)</h4><div class="desc">Size of the difference, as a share of birds at the start + added.</div><div class="chartbar" id="flPosBars"></div></div></div><h4>By interview month</h4><div class="tablewrap"><table><thead><tr><th>Interview month</th><th>Recall reference month</th><th class="num">Assessed</th><th class="num">Reconciled</th><th class="num">Negative variance</th><th class="num">Positive variance</th><th class="num">Not computable</th><th class="num">Mean start</th><th class="num">Mean expected</th><th class="num">Mean actual</th><th class="num">Mean variance</th><th class="num">Median variance</th></tr></thead><tbody id="flReconMonthBody"></tbody></table></div><h4 style="margin-top:14px">By district</h4><div class="tablewrap"><table><thead><tr><th>District</th><th class="num">Assessed</th><th class="num">Reconciled</th><th class="num">Negative variance</th><th class="num">Positive variance</th><th class="num">Not computable</th><th class="num">Mean variance</th><th class="num">Median variance</th></tr></thead><tbody id="flReconDistrictBody"></tbody></table></div><div class="callout" style="margin-top:14px"><b>How to read this</b> Differences between the reconstructed and actual flock may reflect additional or unrecorded flock movements (for example deaths, sales, eating or gifts not mentioned, or purchases, hatching or gifts received not mentioned) and recall limits. They are not automatically data-quality errors, and no record is rejected or changed because of them. “Not computable” = at least one flock answer was don't know (-88), refused (-99) or “unable to estimate”, so no expected flock is calculated rather than treating it as zero. Genuine data-quality checks (for example birds lost or sold exceeding birds owned) stay on the Data issues page. Means are pulled up by large commercial farms; medians are shown alongside.</div></div><div class="grid2"><div class="panel"><h3>Households reporting deaths by district</h3><div class="desc">Descriptive only; not a nationally representative estimate.</div><div class="chartbar" id="deathDistrictBars"></div></div><div class="panel"><h3>Farmer-reported suspected causes</h3><div class="desc">Suspected cause is not a confirmed veterinary diagnosis.</div><div class="chartbar" id="causeBars"></div></div></div><div class="callout warn"><b>Mortality metric lock</b> The dashboard must not publish a mortality percentage until the technical plan approves the denominator, recall-window treatment and handling of opening stock, additions and age transitions.</div>
+      <div class="panel flnote"><h3>Understanding the Poultry Flock Baseline and Dynamics Dashboard</h3>
+        <p>The survey asked each farmer for three things: how many birds they had <b>three months before the interview</b> (C02), how many they have <b>now</b> (C01), and what happened to the flock in between (bought, hatched, received, died, stolen, sold, eaten, given away).</p>
+        <ul>
+          <li><b>The flock three months before the interview is the primary baseline measurement.</b> The reference month depends on the interview date: <b>October interviews → July</b>, <b>November interviews → August</b>.</li>
+          <li><b>The current flock is a comparison point</b>, so we can see how holdings changed.</li>
+          <li><b>Flock movements explain the change</b> over the three-month recall period.</li>
+          <li><b>The indicative flock is an analytical estimate:</b> baseline + bought + hatched + received − died − stolen − sold − eaten − given away.</li>
+          <li><b>Differences between the indicative and the reported current flock are a data diagnostic only.</b> They can come from recall limits, birds that changed age group, or movements the farmer did not mention. They are not automatically errors, and they are not a programme performance indicator.</li>
+        </ul></div>
+      <div class="kpis"><div class="kpi"><div class="eyebrow">Birds at Baseline</div><div class="value" id="flTotBase">0</div><div class="sub" id="flTotBaseSub">Three months before interview (C02)</div></div><div class="kpi good"><div class="eyebrow">Birds Now</div><div class="value" id="flTotNow">0</div><div class="sub">Reported at interview (C01)</div></div><div class="kpi"><div class="eyebrow">Net Flock Change</div><div class="value" id="flNet">0</div><div class="sub" id="flNetSub">Birds now − birds at baseline</div></div><div class="kpi"><div class="eyebrow">Average Baseline Flock</div><div class="value" id="flAvgBase">0</div><div class="sub" id="flAvgBaseSub">Birds per farmer</div></div><div class="kpi"><div class="eyebrow">Average Current Flock</div><div class="value" id="flAvgNow">0</div><div class="sub" id="flAvgNowSub">Birds per farmer</div></div><div class="kpi"><div class="eyebrow">Farmers</div><div class="value" id="flFarmers">0</div><div class="sub">Accepted Valid interviews</div></div></div>
+
+      <div class="panel" style="margin-bottom:16px"><div class="panelhead"><div><h3>A. Baseline and current flock holdings</h3><div class="desc">How many birds farmers had three months before the interview (baseline) and how many they have now. All bird types together unless shown by type.</div></div><span class="mini-pill" id="flHoldN">n=0</span></div>
+        <div class="grid2eq"><div><h4>Farmers by flock size</h4><div class="desc">Number of farmers in each flock-size group, at baseline and now.</div><div class="legend"><span><i class="flsw base"></i>Baseline</span><span><i class="flsw now"></i>Now</span></div><div id="flSizeBars"></div></div>
+        <div><h4>Baseline and current holdings by bird type</h4><div class="desc">Total birds across all farmers.</div><div class="tablewrap"><table><thead><tr><th>Bird type</th><th class="num">Baseline</th><th class="num">Now</th><th class="num">Net change</th><th class="num">% change</th></tr></thead><tbody id="flTypeBody"></tbody></table></div>
+        <h4 style="margin-top:14px">Direction of change per farmer</h4><div class="chartbar" id="flDirBars"></div></div></div>
+        <h4>By district</h4><div class="tablewrap"><table><thead><tr><th>District</th><th class="num">Farmers</th><th class="num">Birds at baseline</th><th class="num">Birds now</th><th class="num">Net change</th><th class="num">% change</th><th class="num">Average baseline</th><th class="num">Average now</th></tr></thead><tbody id="flDistrictBody"></tbody></table></div>
+      </div>
+
+      <div class="panel" style="margin-bottom:16px"><div class="panelhead"><div><h3>B. Flock movements during the recall period</h3><div class="desc">Birds added to and removed from flocks in the three months before the interview, as reported by farmers.</div></div><span class="mini-pill" id="flMoveN">n=0</span></div>
+        <div class="kpis k4" id="flMoveKpis"></div>
+        <h4>From baseline to current flock</h4><div class="desc">Each bar adds or removes birds, starting from the baseline. The indicative flock is where the reported movements lead; the last bar is the flock farmers reported at the interview. Totals for all farmers; don't-know answers count as 0 here.</div>
+        <div id="flWaterfall" class="flwf"></div>
+        <h4 style="margin-top:14px">Movements by bird type</h4><div class="tablewrap"><table><thead><tr><th>Bird type</th><th class="num">Baseline</th><th class="num">+ Bought</th><th class="num">+ Hatched</th><th class="num">+ Received</th><th class="num">− Died</th><th class="num">− Stolen</th><th class="num">− Sold</th><th class="num">− Eaten</th><th class="num">− Given away</th><th class="num">Indicative</th><th class="num">Now</th></tr></thead><tbody id="flMoveTypeBody"></tbody></table></div>
+        <div class="desc" style="margin-top:8px">Birds move between groups as they grow (for example chicks become mature chickens), so a bird type can show more or fewer birds now than its own movements suggest. Deaths from disease use the lower figure when the farmer gave a range.</div>
+      </div>
+
+      <div class="panel" id="flReconPanel" style="margin-bottom:16px"><div class="panelhead"><div><h3>C. Indicative flock comparison (data diagnostic)</h3><div class="desc">Compares each farmer's reported current flock with the indicative flock calculated from the baseline and reported movements. This is a diagnostic for data review, not a pass/fail test and not a performance indicator.</div></div><span class="mini-pill" id="flDiagN">n=0</span></div>
+        <div class="kpis" id="flReconKpis"></div>
+        <div class="grid2eq"><div><h4>Reported flock lower than indicative flock</h4><div class="desc">Size of the difference, as a share of birds at baseline + added.</div><div class="chartbar" id="flNegBars"></div></div><div><h4>Reported flock higher than indicative flock</h4><div class="desc">Size of the difference, as a share of birds at baseline + added.</div><div class="chartbar" id="flPosBars"></div></div></div>
+        <h4>By interview month</h4><div class="tablewrap"><table><thead><tr><th>Interview month</th><th>Reference month</th><th class="num">Farmers compared</th><th class="num">Equal to indicative</th><th class="num">Lower than indicative</th><th class="num">Higher than indicative</th><th class="num">Not computable</th><th class="num">Mean baseline</th><th class="num">Mean indicative</th><th class="num">Mean reported</th><th class="num">Mean difference</th><th class="num">Median difference</th></tr></thead><tbody id="flReconMonthBody"></tbody></table></div>
+        <h4 style="margin-top:14px">By district</h4><div class="tablewrap"><table><thead><tr><th>District</th><th class="num">Farmers compared</th><th class="num">Equal to indicative</th><th class="num">Lower than indicative</th><th class="num">Higher than indicative</th><th class="num">Not computable</th><th class="num">Mean difference</th><th class="num">Median difference</th></tr></thead><tbody id="flReconDistrictBody"></tbody></table></div>
+        <div class="callout" style="margin-top:14px"><b>How to read this</b> Difference = reported current flock − indicative flock. “Equal” includes farmers whose reported flock falls inside the range given by their disease-death estimate. A difference can reflect recall limits, birds changing age group, or flock movements not mentioned; it is not automatically an error, and no answer is changed or rejected because of it. Zero difference does not prove the answers are accurate. “Not computable” = at least one flock answer was don't know (-88), refused (-99) or “unable to estimate”, or reported losses were larger than all birds owned (this is checked separately on the Data issues page). Means are pulled up by large commercial farms; medians are shown alongside.</div>
+      </div>
+      <div class="kpis"><div class="kpi warn"><div class="eyebrow">Households Reporting Deaths</div><div class="value" id="flDeathHH">0%</div><div class="sub">Any death in recall window</div></div><div class="kpi"><div class="eyebrow">Total Reported Deaths</div><div class="value" id="flDeaths">0</div><div class="sub">Farmer reported</div></div><div class="kpi locked"><div class="eyebrow">Mortality Rate</div><div class="value">LOCKED</div><div class="sub">Pending approved denominator</div></div></div>
+      <div class="grid2"><div class="panel"><h3>Households reporting deaths by district</h3><div class="desc">Descriptive only; not a nationally representative estimate.</div><div class="chartbar" id="deathDistrictBars"></div></div><div class="panel"><h3>Farmer-reported suspected causes</h3><div class="desc">Suspected cause is not a confirmed veterinary diagnosis.</div><div class="chartbar" id="causeBars"></div></div></div><div class="callout warn"><b>Mortality metric lock</b> The dashboard must not publish a mortality percentage until the technical plan approves the denominator, recall-window treatment and handling of opening stock, additions and age transitions.</div>
     </div>
     <div class="subpage" id="res-vaccination">
       <div class="kpis"><div class="kpi good"><div class="eyebrow">Any Vaccination</div><div class="value" id="vAny">0%</div><div class="sub">Household practice</div></div><div class="kpi"><div class="eyebrow">Newcastle</div><div class="value" id="vND">0%</div><div class="sub">Reported use</div></div><div class="kpi"><div class="eyebrow">Gumboro</div><div class="value" id="vGumboro">0%</div><div class="sub">Reported use</div></div><div class="kpi"><div class="eyebrow">Fowl Pox</div><div class="value" id="vFowlPox">0%</div><div class="sub">Reported use</div></div><div class="kpi warn"><div class="eyebrow">Stock-out Experience</div><div class="value" id="vStockout">0%</div><div class="sub">Reported access constraint</div></div><div class="kpi"><div class="eyebrow">Median Vaccine Spend</div><div class="value" id="vSpend">GH₵0</div><div class="sub">Recall-period spend</div></div></div>
@@ -987,7 +1028,9 @@ const definitions=[
 ['Consent rate','Participants providing research consent divided by those selected for enrolment.'],
 ['Any vaccination','Share of Accepted Valid respondents reporting that their poultry enterprise used at least one poultry vaccine during the approved recall period.'],
 ['Households reporting deaths','Share of Accepted Valid respondents reporting at least one bird death during the recall period. This is not the same as a mortality rate.'],
-['Flock balance reconciliation','Actual current flock (C01) minus the expected flock reconstructed from reported start, additions and removals over the farmer\'s own 3-month recall window. Reconciled = no difference; negative / positive variance = fewer / more birds than expected. Informational, not a data-quality error.'],
+['Baseline flock','Birds the farmer had three months before the interview (C02): the primary baseline measurement. October interviews refer to July, November interviews to August.'],
+['Net flock change','Birds now (C01) minus birds at baseline (C02), in birds and as a percentage of the baseline.'],
+['Indicative flock comparison','Reported current flock (C01) minus the indicative flock = baseline + bought + hatched + received − died − stolen − sold − eaten − given away. An analytical estimate and data diagnostic only: higher, lower or equal is not a pass/fail result, not automatically an error, and not a performance indicator.'],
 ['Mortality rate','Locked until the analysis plan approves the denominator and flock-stock/flow treatment.'],
 ['Stock-out experience','Share of respondents reporting that a desired vaccine or preventive product was unavailable during the recall period.'],
 ['Prevention spend','Reported vaccine expenditure plus applicable preventive service charges; excludes modelled value.'],
@@ -1050,30 +1093,90 @@ function renderRecruitment(ss){const t=totals(ss);setText('recruitmentN',`Accept
  const src={};if(LIVE.on){const ids=new Set(ss.map(s=>s.id));LIVE.attendees.filter(a=>ids.has(a.sentinel)&&a.screened).forEach(a=>{src[a.source]=(src[a.source]||0)+1})}else ss.forEach(s=>src[s.recruitSource]=(src[s.recruitSource]||0)+s.screened);const srcN=Object.values(src).reduce((a,b)=>a+b,0);$('recruitmentSourceBars').innerHTML=bars(Object.entries(src).map(([label,value])=>({label,value,n:value})),srcN,v=>pct(v,srcN));$('selectionDispositionBars').innerHTML=bars([{label:'Selected',value:t.selected},{label:'Eligible reserve / not selected',value:Math.max(t.eligible-t.selected,0)},{label:'Ineligible',value:t.ineligible},{label:'Refused after selection',value:t.refused}],Math.max(t.eligible,1),v=>fmt(v));
 }
 const FL_CAT=x=>x.flockCat||'Not computable';
+// Neutral labels for the indicative-flock diagnostic (MERL, 24 Nov 2026): never "reconciled / failed".
+const FL_LAB={Reconciled:'Equal to indicative flock',Negative:'Lower than indicative flock',Positive:'Higher than indicative flock','Not computable':'Not computable'};
 const REF_MONTH=m=>{const [y,mo]=m.split('-').map(Number);if(!y||!mo)return '—';const d=new Date(Date.UTC(y,mo-1-3,1));return d.toLocaleString('en-GB',{month:'long',year:'numeric',timeZone:'UTC'})};
 const MONTH_LABEL=m=>{const [y,mo]=m.split('-').map(Number);return y&&mo?new Date(Date.UTC(y,mo-1,1)).toLocaleString('en-GB',{month:'long',year:'numeric',timeZone:'UTC'}):'Date not recorded'};
+const FL_TYPES=[['chicks','Chicks'],['mature_chicken','Mature chickens'],['keets','Keets'],['mature_guinea','Mature guinea fowl'],['others','Others (turkey, duck)']];
+const FL_MOVES=[['bought','Bought','C03',1],['hatched','Hatched','C04',1],['received','Received','C05',1],['died','Died','H04–H07, H09',-1],['stolen','Stolen','H08',-1],['sold','Sold','C06',-1],['eaten','Eaten','C07',-1],['given','Given away','C08',-1]];
+const flSgn=v=>Number.isFinite(v)?(v>0?'+':v<0?'−':'')+fmt(Math.abs(v)):'—';
+const flPct=(a,b)=>b>0?`${a-b>=0?'+':'−'}${Math.abs(100*(a-b)/b).toFixed(1)}%`:'—';
+const flShort=v=>{const a=Math.abs(v);return a>=1e6?(v/1e6).toFixed(1)+'M':a>=1e4?Math.round(v/1e3)+'k':a>=1e3?(v/1e3).toFixed(1)+'k':fmt(v)};
+const flPos=v=>{const n=parseFloat(v);return Number.isFinite(n)&&n>0?n:0},FL_YK=['chicks','keets','others'];
+// per bird type, from the raw answers (blank / -88 / -99 count as 0, as in the totals)
+function flTypeRow(raw,k){const p=f=>flPos(raw[f+'_'+k]);const kind=raw['hlt_h04_'+k+'_kind'];
+  const h4=kind==='exact'?p('hlt_h04'):kind==='range'?flPos(raw['hlt_h04_'+k+'_low']):0;
+  return {base:p('flk_c02'),now:p('flk_c01'),bought:p('flk_c03'),hatched:FL_YK.includes(k)?p('flk_c04'):0,received:p('flk_c05'),
+    died:h4+p('hlt_h05')+p('hlt_h06')+p('hlt_h07')+p('hlt_h09'),stolen:p('hlt_h08'),sold:p('flk_c06'),eaten:p('flk_c07'),given:p('flk_c08')}}
+function flWaterfall(steps){
+  const W=820,H=250,top=24,bot=40,left=8,n=steps.length,bw=(W-left*2)/n,mx=Math.max(1,...steps.map(s=>Math.max(s.from,s.to)));
+  const y=v=>top+(H-top-bot)*(1-v/mx);
+  const svg=steps.map((s,i)=>{const x=left+i*bw+bw*.14,w=bw*.72,y1=y(Math.max(s.from,s.to)),y2=y(Math.min(s.from,s.to)),h=Math.max(1.5,y2-y1);
+    const col=s.kind==='total'?'var(--brand)':s.kind==='calc'?'var(--sage)':s.kind==='up'?'var(--green3)':'var(--c-rej)';
+    const val=s.kind==='total'||s.kind==='calc'?flShort(s.to):(s.kind==='up'?'+':'−')+flShort(Math.abs(s.to-s.from));
+    const link=i<n-1&&s.kind!=='calc'?`<line x1="${x+w}" x2="${x+w+bw*.28}" y1="${y(s.to)}" y2="${y(s.to)}" style="stroke:var(--c-axis)" stroke-dasharray="3 3"/>`:'';
+    return `<g data-tip="${s.label}|${s.tip}"><rect x="${x}" y="${y1}" width="${w}" height="${h}" rx="3" style="fill:${col}"${s.kind==='calc'?' opacity=".75"':''}/>${link}<text x="${x+w/2}" y="${y1-6}" text-anchor="middle" style="fill:var(--ink2);font-size:11px;font-weight:650">${val}</text><text x="${x+w/2}" y="${H-bot+16}" text-anchor="middle" style="fill:var(--muted);font-size:11px">${s.label}</text>${s.sub?`<text x="${x+w/2}" y="${H-bot+30}" text-anchor="middle" style="fill:var(--faint);font-size:10px">${s.sub}</text>`:''}</g>`}).join('');
+  return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Flock change from baseline to current flock"><line x1="0" x2="${W}" y1="${y(0)}" y2="${y(0)}" style="stroke:var(--c-axis)"/>${svg}</svg>`}
 function renderFlockRecon(data){
   const mean=a=>{const x=a.filter(Number.isFinite);return x.length?x.reduce((p,q)=>p+q,0)/x.length:NaN};
-  const sgn=v=>Number.isFinite(v)?(v>0?'+':'')+fmt(v):'—';
+  const sum=a=>a.reduce((p,q)=>p+(Number.isFinite(q)?q:0),0);
+  const n=data.length,sgn=flSgn;
+  /* ---- A. holdings */
+  const tb=sum(data.map(x=>x.opening)),tn=sum(data.map(x=>x.closing)),bUnk=data.filter(x=>x.openUnknown).length;
+  setText('flTotBase',fmt(tb));setText('flTotBaseSub',bUnk?`Three months before interview (C02) · ${fmt(bUnk)} farmers with a don't-know count as 0`:'Three months before interview (C02)');
+  setText('flTotNow',fmt(tn));setText('flNet',sgn(tn-tb));setText('flNetSub',`${flPct(tn,tb)} change since baseline`);
+  setText('flAvgBase',fmt(mean(data.map(x=>x.opening))));setText('flAvgBaseSub',`Mean per farmer · median ${fmt(median(data.map(x=>x.opening)))}`);
+  setText('flAvgNow',fmt(mean(data.map(x=>x.closing))));setText('flAvgNowSub',`Mean per farmer · median ${fmt(median(data.map(x=>x.closing)))}`);
+  setText('flFarmers',fmt(n));['flHoldN','flMoveN'].forEach(id=>setText(id,`n=${fmt(n)}`));
+  const BANDS=[['No birds',0,0],['1–20',1,20],['21–50',21,50],['51–100',51,100],['101–500',101,500],['501–1,000',501,1000],['1,001–5,000',1001,5000],['Over 5,000',5001,Infinity]];
+  const inB=(v,[,lo,hi])=>v>=lo&&v<=hi,mxB=Math.max(1,...BANDS.flatMap(b=>[data.filter(x=>inB(x.opening,b)).length,data.filter(x=>inB(x.closing,b)).length]));
+  const el=$('flSizeBars');if(!el)return;
+  el.innerHTML=BANDS.map(b=>{const a=data.filter(x=>inB(x.opening,b)).length,c=data.filter(x=>inB(x.closing,b)).length;
+    return `<div class="flpair" data-tip="${b[0]} birds|Baseline ${fmt(a)} farmers (${pct(a,n)}) · now ${fmt(c)} farmers (${pct(c,n)})"><span class="lbl">${b[0]}</span><div class="bars"><div class="bar"><span class="base" style="width:${Math.max(a?2:0,100*a/mxB)}%"></span></div><div class="bar"><span class="now" style="width:${Math.max(c?2:0,100*c/mxB)}%"></span></div></div><span class="pct">${fmt(a)}<br>${fmt(c)}</span></div>`}).join('');
+  const raws=data.map(x=>x.raw).filter(Boolean),TT={};
+  FL_TYPES.forEach(([k])=>{TT[k]={};raws.forEach(r=>{const t=flTypeRow(r,k);Object.entries(t).forEach(([f,v])=>TT[k][f]=(TT[k][f]||0)+v)})});
+  const tRow=(lab,t,b)=>`<tr${b?' style="font-weight:700"':''}><td>${b?`<b>${lab}</b>`:lab}</td><td class="num">${fmt(t.base)}</td><td class="num">${fmt(t.now)}</td><td class="num">${sgn(t.now-t.base)}</td><td class="num">${flPct(t.now,t.base)}</td></tr>`;
+  $('flTypeBody').innerHTML=raws.length?FL_TYPES.map(([k,l])=>tRow(l,TT[k])).join('')+tRow('All birds',{base:tb,now:tn},1):`<tr><td><b>All birds</b></td><td class="num">${fmt(tb)}</td><td class="num">${fmt(tn)}</td><td class="num">${sgn(tn-tb)}</td><td class="num">${flPct(tn,tb)}</td></tr>`;
+  const up=data.filter(x=>x.closing>x.opening).length,dn=data.filter(x=>x.closing<x.opening).length,eq=n-up-dn;
+  $('flDirBars').innerHTML=bars([{label:'More birds now than at baseline',value:up,n:up},{label:'Fewer birds now than at baseline',value:dn,n:dn},{label:'Same number',value:eq,n:eq}],Math.max(n,1),v=>pct(v,n));
+  $('flDistrictBody').innerHTML=Object.entries(group(data,'district')).sort((p,q)=>p[0].localeCompare(q[0])).map(([d,xs])=>{const b=sum(xs.map(x=>x.opening)),c=sum(xs.map(x=>x.closing));
+    return `<tr><td><b>${d}</b></td><td class="num">${fmt(xs.length)}</td><td class="num">${fmt(b)}</td><td class="num">${fmt(c)}</td><td class="num">${sgn(c-b)}</td><td class="num">${flPct(c,b)}</td><td class="num">${fmt(mean(xs.map(x=>x.opening)))}</td><td class="num">${fmt(mean(xs.map(x=>x.closing)))}</td></tr>`}).join('')+
+    (n?`<tr style="font-weight:700"><td><b>All districts</b></td><td class="num">${fmt(n)}</td><td class="num">${fmt(tb)}</td><td class="num">${fmt(tn)}</td><td class="num">${sgn(tn-tb)}</td><td class="num">${flPct(tn,tb)}</td><td class="num">${fmt(mean(data.map(x=>x.opening)))}</td><td class="num">${fmt(mean(data.map(x=>x.closing)))}</td></tr>`:'<tr><td colspan="8">No interviews.</td></tr>');
+  /* ---- B. movements */
+  const mv=k=>sum(data.map(x=>(x.mv||{})[k]||0)),M={};FL_MOVES.forEach(([k])=>M[k]=mv(k));
+  const k4=(eb,v,sub,cls)=>`<div class="kpi${cls?' '+cls:''}"><div class="eyebrow">${eb}</div><div class="value">${v}</div><div class="sub">${sub}</div></div>`;
+  $('flMoveKpis').innerHTML=FL_MOVES.map(([k,l,q,s])=>{const f=data.filter(x=>((x.mv||{})[k]||0)>0).length;
+    return k4(`Birds ${l.toLowerCase()} (${q})`,(s>0?'+':'−')+fmt(M[k]),`${fmt(f)} farmers (${pct(f,n)}) reported any`)}).join('');
+  let run=tb;const steps=[{label:'Baseline',sub:'C02',kind:'total',from:0,to:tb,tip:`${fmt(tb)} birds three months before interview`}];
+  FL_MOVES.forEach(([k,l,q,s])=>{const to=run+s*M[k];steps.push({label:l,sub:q,kind:s>0?'up':'down',from:run,to:Math.max(to,0),tip:`${s>0?'+':'−'}${fmt(M[k])} birds`});run=to});
+  steps.push({label:'Indicative',sub:'calculated',kind:'calc',from:0,to:Math.max(run,0),tip:`${fmt(run)} birds expected from the reported movements`});
+  steps.push({label:'Reported now',sub:'C01',kind:'total',from:0,to:tn,tip:`${fmt(tn)} birds reported at interview · ${sgn(tn-run)} vs indicative`});
+  $('flWaterfall').innerHTML=n?flWaterfall(steps):'<p class="desc">No interviews in this scope.</p>';
+  const ind=t=>t.base+t.bought+t.hatched+t.received-t.died-t.stolen-t.sold-t.eaten-t.given;
+  const mRow=(lab,t,b)=>`<tr${b?' style="font-weight:700"':''}><td>${b?`<b>${lab}</b>`:lab}</td>${['base','bought','hatched','received','died','stolen','sold','eaten','given'].map(f=>`<td class="num">${fmt(t[f])}</td>`).join('')}<td class="num">${fmt(ind(t))}</td><td class="num">${fmt(t.now)}</td></tr>`;
+  const all={base:tb,now:tn,...M};
+  $('flMoveTypeBody').innerHTML=(raws.length?FL_TYPES.map(([k,l])=>mRow(l,TT[k])).join(''):'')+mRow('All birds',all,1);
+  /* ---- C. indicative flock comparison (diagnostic) */
   const cnt=(xs,c)=>xs.filter(x=>FL_CAT(x)===c).length;
-  const ok=data.filter(x=>FL_CAT(x)!=='Not computable'),na=data.length-ok.length;
-  const rec=cnt(ok,'Reconciled'),neg=cnt(ok,'Negative'),posN=cnt(ok,'Positive');
-  setText('flBalancePass',pct(rec,ok.length));setText('flBalancePassSub',`${fmt(rec)} of ${fmt(ok.length)} farmers with all flock answers known and possible`);
+  const ok=data.filter(x=>FL_CAT(x)!=='Not computable'),na=n-ok.length;
+  const eqN=cnt(ok,'Reconciled'),lo=cnt(ok,'Negative'),hi=cnt(ok,'Positive');
+  setText('flDiagN',`compared n=${fmt(ok.length)}`);
   const k=(eb,v,sub,sm)=>`<div class="kpi"><div class="eyebrow">${eb}</div><div class="value"${sm?' style="font-size:21px"':''}>${v}</div><div class="sub">${sub}</div></div>`;
   const box=$('flReconKpis');if(!box)return;
-  box.innerHTML=k('Farmers Assessed',fmt(ok.length),`${fmt(na)} not computable (don’t know / refused)`)+
-    k('Reconciled',fmt(rec),`${pct(rec,ok.length)} of assessed`)+
-    k('Negative Flock Balance Variance',fmt(neg),`${pct(neg,ok.length)} of assessed`)+
-    k('Positive Flock Balance Variance',fmt(posN),`${pct(posN,ok.length)} of assessed`)+
-    k('Mean Start / Expected / Actual',ok.length?`${fmt(mean(ok.map(x=>x.flockStart)))} / ${fmt(mean(ok.map(x=>x.flockExpected)))} / ${fmt(mean(ok.map(x=>x.flockActual)))}`:'—','Birds per farmer',1)+
-    k('Mean Flock Balance Variance',sgn(mean(ok.map(x=>x.flockVar))),`Median ${sgn(median(ok.map(x=>x.flockVar)))} birds`);
-  const BANDS=[['Up to 5%',0,5],['5–25%',5,25],['25–50%',25,50],['Over 50%',50,Infinity]];
+  const ti=sum(ok.map(x=>x.flockExpected)),tr=sum(ok.map(x=>x.flockActual));
+  box.innerHTML=k('Farmers Compared',fmt(ok.length),`${fmt(na)} not computable (don't know / refused / losses above birds owned)`)+
+    k('Higher than Indicative',fmt(hi),`${pct(hi,ok.length)} of farmers compared`)+
+    k('Lower than Indicative',fmt(lo),`${pct(lo,ok.length)} of farmers compared`)+
+    k('Equal to Indicative',fmt(eqN),`${pct(eqN,ok.length)} of farmers compared`)+
+    k('Indicative / Reported',ok.length?`${fmt(ti)} / ${fmt(tr)}`:'—',`Total birds, farmers compared · difference ${sgn(tr-ti)}`,1)+
+    k('Difference per Farmer',sgn(median(ok.map(x=>x.flockVar))),`Median · mean ${sgn(mean(ok.map(x=>x.flockVar)))} birds`);
+  const SB=[['Up to 5%',0,5],['5–25%',5,25],['25–50%',25,50],['Over 50%',50,Infinity]];
   const dist=c=>{const xs=ok.filter(x=>FL_CAT(x)===c),sh=x=>100*Math.abs(x.flockVar)/Math.max(x.flockIn,1);
-    return xs.length?bars(BANDS.map(([label,lo,hi])=>{const v=xs.filter(x=>sh(x)>lo&&sh(x)<=hi||(lo===0&&sh(x)===0)).length;return {label,value:v,n:v}}),xs.length,v=>pct(v,xs.length))+
+    return xs.length?bars(SB.map(([label,l,h])=>{const v=xs.filter(x=>sh(x)>l&&sh(x)<=h||(l===0&&sh(x)===0)).length;return {label,value:v,n:v}}),xs.length,v=>pct(v,xs.length))+
       `<div class="desc" style="margin-top:6px">${fmt(xs.length)} farmers · median difference ${fmt(median(xs.map(x=>Math.abs(x.flockVar))))} birds · largest ${fmt(Math.max(...xs.map(x=>Math.abs(x.flockVar))))}</div>`:'<div class="desc">None.</div>'};
   $('flNegBars').innerHTML=dist('Negative');$('flPosBars').innerHTML=dist('Positive');
   const row=(label,xs,extra)=>{const a=xs.filter(x=>FL_CAT(x)!=='Not computable');
-    return `<tr><td><b>${label}</b></td>${extra||''}<td class="num">${fmt(a.length)}</td><td class="num">${fmt(cnt(a,'Reconciled'))} (${pct(cnt(a,'Reconciled'),a.length)})</td><td class="num">${fmt(cnt(a,'Negative'))} (${pct(cnt(a,'Negative'),a.length)})</td><td class="num">${fmt(cnt(a,'Positive'))} (${pct(cnt(a,'Positive'),a.length)})</td><td class="num">${fmt(xs.length-a.length)}</td>`};
+    return `<tr><td><b>${label}</b></td>${extra||''}<td class="num">${fmt(a.length)}</td>${['Reconciled','Negative','Positive'].map(c=>`<td class="num">${fmt(cnt(a,c))} (${pct(cnt(a,c),a.length)})</td>`).join('')}<td class="num">${fmt(xs.length-a.length)}</td>`};
   const byM={};data.forEach(x=>{const m=String(x.baselineDate||'').slice(0,7);(byM[m]??=[]).push(x)});
   $('flReconMonthBody').innerHTML=Object.keys(byM).sort().map(m=>{const xs=byM[m],a=xs.filter(x=>FL_CAT(x)!=='Not computable');
     return row(MONTH_LABEL(m),xs,`<td>${REF_MONTH(m)}</td>`)+`<td class="num">${fmt(mean(a.map(x=>x.flockStart)))}</td><td class="num">${fmt(mean(a.map(x=>x.flockExpected)))}</td><td class="num">${fmt(mean(a.map(x=>x.flockActual)))}</td><td class="num">${sgn(mean(a.map(x=>x.flockVar)))}</td><td class="num">${sgn(median(a.map(x=>x.flockVar)))}</td></tr>`}).join('')||'<tr><td colspan="12">No interviews.</td></tr>';
@@ -1400,6 +1503,7 @@ function renderAll(){
   safe('Data Quality',()=>renderQuality(ss,data));safe('Detailed v2 tabs',()=>{if(window.renderV2Extras)window.renderV2Extras(ss,data)});
   safe('Tables',()=>enhanceTables());
   setText('lastRefresh',`Dashboard refreshed: ${new Date().toLocaleString('en-GB',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'})}`)}
+function goFlock(){showPage('results');const b=document.querySelector('.subbtn[data-sub="res-flock"]');if(b)b.click()}
 function showPage(name){document.querySelectorAll('.page').forEach(x=>x.classList.toggle('active',x.id===`page-${name}`));document.querySelectorAll('.navbtn').forEach(x=>x.classList.toggle('active',x.dataset.page===name));try{history.replaceState(null,'',`#${name}`)}catch(e){/* not allowed inside some embeds (e.g. Streamlit) */}const nb=document.querySelector(`.navbtn[data-page="${name}"]`);setText('crumb',nb.querySelector('.navtitle').textContent);document.body.classList.remove('nav-open');window.scrollTo({top:0,behavior:'smooth'})}
 document.querySelectorAll('.navbtn').forEach(b=>b.addEventListener('click',()=>showPage(b.dataset.page)));document.querySelectorAll('.subbtn').forEach(b=>b.addEventListener('click',()=>{const group=b.closest('.subnav');group.querySelectorAll('.subbtn').forEach(x=>x.classList.remove('active'));b.classList.add('active');const page=group.parentElement;page.querySelectorAll(':scope > .subpage').forEach(x=>x.classList.toggle('active',x.id===b.dataset.sub))}));
 [teamFilter,districtFilter,sentinelFilter,sexFilter,productionFilter,dateFrom,dateTo].forEach(x=>x.addEventListener('change',renderAll));$('resetFilters').addEventListener('click',()=>{[teamFilter,districtFilter,sentinelFilter,sexFilter,productionFilter].forEach(x=>x.value='All');dateFrom.value='';dateTo.value='';renderAll()});
@@ -1603,6 +1707,9 @@ function mapBaseline(row,S,ctx){
     balanceOk:Math.abs(expected-closing)<=tol,balanceGap:expected-closing,
     flockCat,flockStart:unk.length?NaN:fs('flk_c02'),flockIn:unk.length?NaN:fIn,flockExpected:unk.length?NaN:expMid,flockActual:fNow,
     flockVar:unk.length?NaN:(flockCat==='Reconciled'?0:fNow<expLo?fNow-expLo:fNow-expHi),flockUnknown:unk.length,
+    // flock movements in the recall period (for the Flock Dynamics page); don't know / refused count as 0
+    mv:{bought:bs(row,'flk_c03'),hatched:bs(row,'flk_c04',YK),received:bs(row,'flk_c05'),died:deaths,stolen:theft,sold,eaten:consumed,given:giftOut},
+    openUnknown:BK.some(k=>[-88,-99].includes(parseFloat(row['flk_c02_'+k]))),
     vaccinated,nd:dis('newcastle'),gumboro:dis('gumboro'),fowlpox:dis('fowl_pox'),vaccinatedBirds:vaxBirds,ndBirds,
     sources:vaccinated?ddNames(row.vax_v08_source,row.vax_v08_source_oth,PROV_LABEL).map(esc):[],providers:ddNames(row.acc_a01_provider,row.acc_a01_provider_oth,PROV_LABEL).map(esc),stockout,
     barrier:lab(BARRIER,row.acc_a06_barrier),
