@@ -271,7 +271,7 @@ button,select,input{font:inherit;color:inherit}.app{min-height:100vh;position:re
 /* ---------- KPI tiles ---------- */
 .kpis{display:grid;grid-template-columns:repeat(6,minmax(140px,1fr));gap:12px;margin-bottom:16px}
 .kpis7{grid-template-columns:repeat(4,minmax(140px,1fr))}
-.kpis.scorecard{grid-template-columns:repeat(5,minmax(0,1fr))}@media(max-width:1360px){.kpis.scorecard{grid-template-columns:repeat(3,minmax(0,1fr))}}@media(max-width:700px){.kpis.scorecard{grid-template-columns:1fr 1fr}}
+.kpis.scorecard{grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}.kpis.scorecard .kpi{padding:10px 14px;min-height:0}.kpis.scorecard .kpi .eyebrow{font-size:10px}.kpis.scorecard .kpi .value{font-size:22px;margin:2px 0 0}.kpis.scorecard .kpi .sub{font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}@media(max-width:1100px){.kpis.scorecard{grid-template-columns:repeat(3,minmax(0,1fr))}}@media(max-width:700px){.kpis.scorecard{grid-template-columns:1fr 1fr}}
 /* KPI scorecards: solid card, hairline border, soft low shadow, slim state accent on top */
 .kpi{--accent:var(--c-plan);background:var(--card);-webkit-backdrop-filter:none;backdrop-filter:none;
   border:1px solid var(--card-line);border-radius:14px;padding:16px 16px 14px;min-height:118px;overflow:hidden;
@@ -719,13 +719,6 @@ td.heat{font-weight:650}
 
   <section class="page active" id="page-overview">
     <div class="sectiontitle"><div><h2>Executive Overview</h2><p>A single management view combining field readiness, attendance, recruitment, Accepted Valid progress, data quality, preliminary baseline signals and unresolved actions.</p></div><span class="pill good" id="overviewN">Accepted-valid n=0</span></div>
-    <div class="kpis scorecard" id="sentScorecard">
-      <div class="kpi good"><div class="eyebrow">Districts Held</div><div class="value" id="scDistricts">0/0</div><div class="sub">Meeting took place (01 Attendance)</div></div>
-      <div class="kpi"><div class="eyebrow">Sentinels Held</div><div class="value" id="scHeld">0/0</div><div class="sub">At least one attendee registered</div></div>
-      <div class="kpi good"><div class="eyebrow">Target Reached</div><div class="value" id="scReached">0</div><div class="sub" id="scReachedSub">25+ attendees</div></div>
-      <div class="kpi warn"><div class="eyebrow">Held, Below Target</div><div class="value" id="scBelow">0</div><div class="sub" id="scBelowSub">Under 25 attendees</div></div>
-      <div class="kpi"><div class="eyebrow">Not Held</div><div class="value" id="scNotHeld">0</div><div class="sub" id="scNotHeldSub">No attendance registered</div></div>
-    </div>
     <div class="hero">
       <span class="glow" aria-hidden="true"></span>
       <div class="ring-wrap">
@@ -742,6 +735,13 @@ td.heat{font-weight:650}
           <div><b id="heroYield">0%</b><span>Recruitment yield</span></div>
         </div>
       </div>
+    </div>
+    <div class="kpis scorecard" id="sentScorecard">
+      <div class="kpi good"><div class="eyebrow">Districts Held</div><div class="value" id="scDistricts">0/0</div><div class="sub">Meeting took place</div></div>
+      <div class="kpi"><div class="eyebrow">Sentinels Held</div><div class="value" id="scHeld">0/0</div><div class="sub">At least one attendee registered</div></div>
+      <div class="kpi good"><div class="eyebrow">Target Reached</div><div class="value" id="scReached">0</div><div class="sub" id="scReachedSub">25+ attendees</div></div>
+      <div class="kpi warn"><div class="eyebrow">Held, Below Target</div><div class="value" id="scBelow">0</div><div class="sub" id="scBelowSub">Under 25 attendees</div></div>
+      <div class="kpi"><div class="eyebrow">Not Held</div><div class="value" id="scNotHeld">0</div><div class="sub" id="scNotHeldSub">No attendance registered</div></div>
     </div>
     <div class="kpis kpis7">
       <div class="kpi good featured"><div class="eyebrow">Accepted Valid</div><div class="value" id="ovAccepted">0</div><div class="sub" id="ovAcceptedSub">0% of target</div><div class="delta" id="ovAcceptedDelta"></div><div class="spark" id="ovAcceptedSpark"></div></div>
@@ -1091,9 +1091,9 @@ function renderOverview(ss,data,fb){const t=totals(ss),complete=ss.filter(s=>!s.
   setText('sentTrackPill',`${all.length} sentinels`);
   const held=all.filter(s=>s.attended>0),dAll=new Set(all.map(s=>s.district)),dHeld=new Set(held.map(s=>s.district));
   setText('scDistricts',`${dHeld.size}/${dAll.size}`);setText('scHeld',`${held.length}/${all.length}`);
-  setText('scReached',fmt(grp[0][2].length));setText('scReachedSub',grp[0][2].length?`25+ attendees · ${grp[0][2].map(s=>s.id).join(', ')}`:'25+ attendees');
-  setText('scBelow',fmt(grp[1][2].length));setText('scBelowSub',grp[1][2].length?`Under 25 · ${grp[1][2].map(s=>`${s.id} ${s.attended}`).join(', ')}`:'Under 25 attendees');
-  setText('scNotHeld',fmt(grp[2][2].length));setText('scNotHeldSub',grp[2][2].length?`Not used · ${grp[2][2].map(s=>s.id).join(', ')}`:'No attendance registered');
+  setText('scReached',fmt(grp[0][2].length));setText('scReachedSub','25+ attendees');
+  setText('scBelow',fmt(grp[1][2].length));setText('scBelowSub','Under 25 attendees');
+  setText('scNotHeld',fmt(grp[2][2].length));setText('scNotHeldSub','No attendance registered');
   $('sentTracker').innerHTML=grp.map(([h,tone,xs])=>`<div><h4>${h} ${statusBadge(String(xs.length),tone)}</h4>${xs.length?xs.sort((a,b)=>acc(b)/q(b)-acc(a)/q(a)||a.id.localeCompare(b.id)).map(s=>`<div class="strow"><div><b>${s.id}</b> <span>${s.community}</span></div><div class="stn">${acc(s)} / ${q(s)}</div><div class="stbar${acc(s)<q(s)?' warn':''}"><i style="width:${Math.min(100,Math.round(acc(s)/q(s)*100))}%"></i></div></div>`).join(''):'<div class="desc">None</div>'}</div>`).join('');
  }
  const evDays=ds=>{const f=d=>new Date(d+'T00:00:00').toLocaleDateString('en-GB',{day:'2-digit',month:'short'});return ds.length>1?ds.slice(0,-1).map(d=>f(d).split(' ')[0]).join(', ')+' and '+f(ds.at(-1)):f(ds[0])};
