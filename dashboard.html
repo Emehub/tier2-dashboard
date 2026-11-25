@@ -263,7 +263,7 @@ button,select,input{font:inherit;color:inherit}.app{min-height:100vh;position:re
 .hero-copy h3{font-size:22px;margin:6px 0 4px;letter-spacing:-.02em;font-weight:720;line-height:1.25}
 .hero-copy h3 span{font-variant-numeric:tabular-nums}
 .hero-copy p{margin:0 0 16px;color:var(--muted);font-size:13px}
-.hero-stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.hero-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
 .hero-stats div{padding:11px 13px;border-radius:var(--r-md);background:var(--glass-soft);border:1px solid var(--hair2)}
 .hero-stats b{display:block;font-size:19px;font-weight:750;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
 .hero-stats span{font-size:11.5px;color:var(--muted)}
@@ -271,6 +271,7 @@ button,select,input{font:inherit;color:inherit}.app{min-height:100vh;position:re
 /* ---------- KPI tiles ---------- */
 .kpis{display:grid;grid-template-columns:repeat(6,minmax(140px,1fr));gap:12px;margin-bottom:16px}
 .kpis7{grid-template-columns:repeat(4,minmax(140px,1fr))}
+.kpis.scorecard{grid-template-columns:repeat(5,minmax(0,1fr))}@media(max-width:1360px){.kpis.scorecard{grid-template-columns:repeat(3,minmax(0,1fr))}}@media(max-width:700px){.kpis.scorecard{grid-template-columns:1fr 1fr}}
 /* KPI scorecards: solid card, hairline border, soft low shadow, slim state accent on top */
 .kpi{--accent:var(--c-plan);background:var(--card);-webkit-backdrop-filter:none;backdrop-filter:none;
   border:1px solid var(--card-line);border-radius:14px;padding:16px 16px 14px;min-height:118px;overflow:hidden;
@@ -718,6 +719,13 @@ td.heat{font-weight:650}
 
   <section class="page active" id="page-overview">
     <div class="sectiontitle"><div><h2>Executive Overview</h2><p>A single management view combining field readiness, attendance, recruitment, Accepted Valid progress, data quality, preliminary baseline signals and unresolved actions.</p></div><span class="pill good" id="overviewN">Accepted-valid n=0</span></div>
+    <div class="kpis scorecard" id="sentScorecard">
+      <div class="kpi good"><div class="eyebrow">Districts Held</div><div class="value" id="scDistricts">0/0</div><div class="sub">Meeting took place (01 Attendance)</div></div>
+      <div class="kpi"><div class="eyebrow">Sentinels Held</div><div class="value" id="scHeld">0/0</div><div class="sub">At least one attendee registered</div></div>
+      <div class="kpi good"><div class="eyebrow">Target Reached</div><div class="value" id="scReached">0</div><div class="sub" id="scReachedSub">25+ attendees</div></div>
+      <div class="kpi warn"><div class="eyebrow">Held, Below Target</div><div class="value" id="scBelow">0</div><div class="sub" id="scBelowSub">Under 25 attendees</div></div>
+      <div class="kpi"><div class="eyebrow">Not Held</div><div class="value" id="scNotHeld">0</div><div class="sub" id="scNotHeldSub">No attendance registered</div></div>
+    </div>
     <div class="hero">
       <span class="glow" aria-hidden="true"></span>
       <div class="ring-wrap">
@@ -730,7 +738,6 @@ td.heat{font-weight:650}
         <p id="heroNote">Preliminary · QA-approved records only</p>
         <div class="hero-stats">
           <div><b id="heroSentinels">0/0</b><span>Sentinels complete</span></div>
-          <div><b id="heroActive">0</b><span>Sentinels active now</span></div>
           <div><b id="heroNext">—</b><span>Next event</span></div>
           <div><b id="heroYield">0%</b><span>Recruitment yield</span></div>
         </div>
@@ -743,7 +750,7 @@ td.heat{font-weight:650}
       <div class="kpi"><div class="eyebrow">Recruitment Yield</div><div class="value" id="ovYield">0%</div><div class="sub">Accepted Valid ÷ attended</div></div>
       <div class="kpi warn"><div class="eyebrow">Pending QA</div><div class="value" id="ovPending">0</div><div class="sub">Requires review before analysis</div></div>
       <div class="kpi"><div class="eyebrow">Sentinels Complete</div><div class="value" id="ovSentinels">0/0</div><div class="sub">25+ farmers attended</div></div>
-      <div class="kpi"><div class="eyebrow">Sentinels Active</div><div class="value" id="ovActive">0/0</div><div class="sub">Started, under 25 attended</div></div>
+      <div class="kpi"><div class="eyebrow">Sentinels Below Target</div><div class="value" id="ovActive">0/0</div><div class="sub">Held, under 25 attended</div></div>
       <div class="kpi bad"><div class="eyebrow">Open Data Issues</div><div class="value" id="ovOpenActions">0</div><div class="sub">Details in Data Quality → QA Queue</div></div>
     </div>
     <div class="panel" style="margin-bottom:16px">
@@ -1071,17 +1078,22 @@ function populateFilters(){fillSelect(teamFilter,[...new Set(sentinelStats.map(s
 populateFilters();
 function totals(ss){return ss.reduce((a,s)=>{['quota','mobilised','attended','screened','ineligible','eligible','selected','refused','consented','submitted','pending','rejected','accepted','femaleAtt','transport','materials','noScr'].forEach(k=>a[k]=(a[k]||0)+(s[k]||0));return a},{})}
 function renderOverview(ss,data,fb){const t=totals(ss),complete=ss.filter(s=>!s.extra&&s.quota&&s.attended>=s.quota).length,openActions=scopedIssues(ss).filter(i=>i.open).length;
- setText('ovAccepted',fmt(t.accepted));setText('ovAcceptedSub',`${pct(t.accepted,t.quota)} of ${fmt(t.quota)} filtered target`);setText('ovAttendance',fmt(t.attended));setText('ovAttendanceSub',`${pct(t.attended,t.mobilised)} of mobilised`);setText('ovYield',pct(t.accepted,t.attended));setText('ovPending',fmt(t.pending));setText('ovSentinels',`${complete}/${ss.filter(s=>!s.extra).length}`);{const evs=Object.values(group(ss.filter(s=>!s.extra),s=>`${s.date}|${s.district}`)),held=evs.filter(xs=>xs.some(s=>s.attended>0)).length,nxt=evs.filter(xs=>!xs.some(s=>s.attended>0)&&xs[0].date&&xs[0].date>=new Date().toLocaleDateString('en-CA')).map(xs=>xs[0]).sort((a,b)=>a.date.localeCompare(b.date))[0];setText('ovEvents',`${held}/${evs.length}`);setText('ovEventsSub',nxt?`Held · next ${fmtDay(nxt.date)}, ${nxt.district}`:'Held this cycle')}setText('ovActive',`${ss.filter(s=>!s.extra&&s.status==='Active').length}/${ss.filter(s=>!s.extra).length}`);setText('ovOpenActions',fmt(openActions));setText('overviewN',`Accepted-valid n=${data.length}`);setText('snapshotN',`n=${data.length}`);
- const prog=t.quota?Math.min(1,t.accepted/t.quota):0;$('heroRing').style.strokeDashoffset=(326.73*(1-prog)).toFixed(2);setText('heroPct',`${Math.round(prog*100)}%`);setText('sidePct',`${Math.round(prog*100)}%`);$('sideProg').style.width=`${(prog*100).toFixed(1)}%`;setText('sideNote',`${fmt(t.accepted)} of ${fmt(t.quota)} Accepted Valid`);setText('heroAccepted',fmt(t.accepted));setText('heroTarget',fmt(t.quota));setText('heroSentinels',`${complete}/${ss.filter(s=>!s.extra).length}`);setText('heroActive',`${ss.filter(s=>!s.extra&&s.status==='Active').length}/${ss.filter(s=>!s.extra).length}`);setText('heroYield',pct(t.accepted,t.attended));
+ setText('ovAccepted',fmt(t.accepted));setText('ovAcceptedSub',`${pct(t.accepted,t.quota)} of ${fmt(t.quota)} filtered target`);setText('ovAttendance',fmt(t.attended));setText('ovAttendanceSub',`${pct(t.attended,t.mobilised)} of mobilised`);setText('ovYield',pct(t.accepted,t.attended));setText('ovPending',fmt(t.pending));setText('ovSentinels',`${complete}/${ss.filter(s=>!s.extra).length}`);{const evs=Object.values(group(ss.filter(s=>!s.extra),s=>`${s.date}|${s.district}`)),held=evs.filter(xs=>xs.some(s=>s.attended>0)).length,nxt=evs.filter(xs=>!xs.some(s=>s.attended>0)&&xs[0].date&&xs[0].date>=new Date().toLocaleDateString('en-CA')).map(xs=>xs[0]).sort((a,b)=>a.date.localeCompare(b.date))[0];setText('ovEvents',`${held}/${evs.length}`);setText('ovEventsSub',nxt?`Held · next ${fmtDay(nxt.date)}, ${nxt.district}`:'Held this cycle')}setText('ovActive',`${ss.filter(s=>!s.extra&&s.attended>0&&s.attended<(s.quota||25)).length}/${ss.filter(s=>!s.extra).length}`);setText('ovOpenActions',fmt(openActions));setText('overviewN',`Accepted-valid n=${data.length}`);setText('snapshotN',`n=${data.length}`);
+ const prog=t.quota?Math.min(1,t.accepted/t.quota):0;$('heroRing').style.strokeDashoffset=(326.73*(1-prog)).toFixed(2);setText('heroPct',`${Math.round(prog*100)}%`);setText('sidePct',`${Math.round(prog*100)}%`);$('sideProg').style.width=`${(prog*100).toFixed(1)}%`;setText('sideNote',`${fmt(t.accepted)} of ${fmt(t.quota)} Accepted Valid`);setText('heroAccepted',fmt(t.accepted));setText('heroTarget',fmt(t.quota));setText('heroSentinels',`${complete}/${ss.filter(s=>!s.extra).length}`);setText('heroYield',pct(t.accepted,t.attended));
  const nextUp=ss.filter(s=>s.status==='Upcoming'&&s.date&&s.date>=new Date().toLocaleDateString('en-CA')).map(s=>s.date).sort()[0];setText('heroNext',nextUp?new Date(nextUp+'T00:00:00').toLocaleDateString('en-GB',{day:'2-digit',month:'short'}):(ss.some(s=>s.status==='Complete')?'Completed':'—'));setText('heroNote',`${new Set(ss.filter(s=>!s.extra).map(s=>s.district)).size} districts · ${ss.filter(s=>!s.extra).length} sentinels in scope · ${fmt(t.pending)} pending QA · preliminary, QA-approved records only`);
  const dm={};ss.forEach(s=>{dm[s.district]??={q:0,a:0,p:0};dm[s.district].q+=s.quota;dm[s.district].a+=s.accepted;dm[s.district].p+=s.pending});
  $('legendDistrict').innerHTML=legend([{name:'Approved',color:cssVar('--c-acc')},{name:'Pending review',color:cssVar('--c-pend')},{name:'Grey track = district quota',color:cssVar('--c-axis')}]);
  $('overviewDistrictBars').innerHTML=bulletRows(Object.entries(dm).sort((a,b)=>(b[1].q?b[1].a/b[1].q:0)-(a[1].q?a[1].a/a[1].q:0)).map(([label,v])=>({label,district:label,acc:v.a,pend:v.p,max:v.q||Math.max(1,v.a+v.p),value:v.q?`${Math.round(100*v.a/v.q)}%`:'—',sub:`${fmt(v.a)} of ${fmt(v.q)}`,tip:`Approved ${fmt(v.a)} · Pending ${fmt(v.p)} · Quota ${fmt(v.q)} · click to filter`})));setText('districtProgressPill',`${Object.keys(dm).length} districts`);
  $('readinessGrid').innerHTML=readiness.map(([a,b,c])=>`<div class="readyitem"><b>${a}</b>${statusBadge(b,c==='bad'?'bad':c==='warn'?'warn':'good')}</div>`).join('');
- { // sentinel tracker: target reached / held but below target / not held
+ { // scorecard + sentinel tracker: target reached / held but below target / not held
   const all=ss.filter(s=>!s.extra),q=s=>s.quota||25,acc=s=>s.attended||0;   // grouped by attendance (01 Attendance) against the target
   const grp=[['Target reached','good',all.filter(s=>s.attended>0&&acc(s)>=q(s))],['Held, below target','warn',all.filter(s=>s.attended>0&&acc(s)<q(s))],['Not held','blue',all.filter(s=>!(s.attended>0))]];
   setText('sentTrackPill',`${all.length} sentinels`);
+  const held=all.filter(s=>s.attended>0),dAll=new Set(all.map(s=>s.district)),dHeld=new Set(held.map(s=>s.district));
+  setText('scDistricts',`${dHeld.size}/${dAll.size}`);setText('scHeld',`${held.length}/${all.length}`);
+  setText('scReached',fmt(grp[0][2].length));setText('scReachedSub',grp[0][2].length?`25+ attendees · ${grp[0][2].map(s=>s.id).join(', ')}`:'25+ attendees');
+  setText('scBelow',fmt(grp[1][2].length));setText('scBelowSub',grp[1][2].length?`Under 25 · ${grp[1][2].map(s=>`${s.id} ${s.attended}`).join(', ')}`:'Under 25 attendees');
+  setText('scNotHeld',fmt(grp[2][2].length));setText('scNotHeldSub',grp[2][2].length?`Not used · ${grp[2][2].map(s=>s.id).join(', ')}`:'No attendance registered');
   $('sentTracker').innerHTML=grp.map(([h,tone,xs])=>`<div><h4>${h} ${statusBadge(String(xs.length),tone)}</h4>${xs.length?xs.sort((a,b)=>acc(b)/q(b)-acc(a)/q(a)||a.id.localeCompare(b.id)).map(s=>`<div class="strow"><div><b>${s.id}</b> <span>${s.community}</span></div><div class="stn">${acc(s)} / ${q(s)}</div><div class="stbar${acc(s)<q(s)?' warn':''}"><i style="width:${Math.min(100,Math.round(acc(s)/q(s)*100))}%"></i></div></div>`).join(''):'<div class="desc">None</div>'}</div>`).join('');
  }
  const evDays=ds=>{const f=d=>new Date(d+'T00:00:00').toLocaleDateString('en-GB',{day:'2-digit',month:'short'});return ds.length>1?ds.slice(0,-1).map(d=>f(d).split(' ')[0]).join(', ')+' and '+f(ds.at(-1)):f(ds[0])};
