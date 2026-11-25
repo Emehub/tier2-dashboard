@@ -1,5 +1,5 @@
 item,status,level
 Sentinel register,Approved,good
-Kobo forms deployed,In progress,warn
+Kobo forms deployed,Deployed (all 6 forms live),good
 Enumerator certification,In progress,warn
 Devices and power,Ready,good
